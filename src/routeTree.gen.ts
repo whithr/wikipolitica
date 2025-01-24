@@ -19,6 +19,10 @@ import { Route as rootRoute } from './routes/__root'
 const CountriesLazyImport = createFileRoute('/countries')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
+const ExecutiveVicePresidentLazyImport = createFileRoute(
+  '/executive/vice-president',
+)()
+const ExecutivePresidentLazyImport = createFileRoute('/executive/president')()
 
 // Create/Update Routes
 
@@ -39,6 +43,24 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
+  {
+    id: '/executive/vice-president',
+    path: '/executive/vice-president',
+    getParentRoute: () => rootRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/executive/vice-president.lazy').then((d) => d.Route),
+)
+
+const ExecutivePresidentLazyRoute = ExecutivePresidentLazyImport.update({
+  id: '/executive/president',
+  path: '/executive/president',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/executive/president.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -65,6 +87,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CountriesLazyImport
       parentRoute: typeof rootRoute
     }
+    '/executive/president': {
+      id: '/executive/president'
+      path: '/executive/president'
+      fullPath: '/executive/president'
+      preLoaderRoute: typeof ExecutivePresidentLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/executive/vice-president': {
+      id: '/executive/vice-president'
+      path: '/executive/vice-president'
+      fullPath: '/executive/vice-president'
+      preLoaderRoute: typeof ExecutiveVicePresidentLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -74,12 +110,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/countries': typeof CountriesLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/countries': typeof CountriesLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesById {
@@ -87,14 +127,32 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/countries': typeof CountriesLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/countries'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/president'
+    | '/executive/vice-president'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/countries'
-  id: '__root__' | '/' | '/about' | '/countries'
+  to:
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/president'
+    | '/executive/vice-president'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/president'
+    | '/executive/vice-president'
   fileRoutesById: FileRoutesById
 }
 
@@ -102,12 +160,16 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
   CountriesLazyRoute: typeof CountriesLazyRoute
+  ExecutivePresidentLazyRoute: typeof ExecutivePresidentLazyRoute
+  ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
   CountriesLazyRoute: CountriesLazyRoute,
+  ExecutivePresidentLazyRoute: ExecutivePresidentLazyRoute,
+  ExecutiveVicePresidentLazyRoute: ExecutiveVicePresidentLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -122,7 +184,9 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/countries"
+        "/countries",
+        "/executive/president",
+        "/executive/vice-president"
       ]
     },
     "/": {
@@ -133,6 +197,12 @@ export const routeTree = rootRoute
     },
     "/countries": {
       "filePath": "countries.lazy.tsx"
+    },
+    "/executive/president": {
+      "filePath": "executive/president.lazy.tsx"
+    },
+    "/executive/vice-president": {
+      "filePath": "executive/vice-president.lazy.tsx"
     }
   }
 }

@@ -23,7 +23,7 @@ export function NavSingle({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild tooltip={item.title}>
               <Link to={item.url} className='text-nowrap'>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>

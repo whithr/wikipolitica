@@ -19,106 +19,61 @@ import {
 import { NavHeader } from './nav-header';
 import { NavSingle } from '@/nav-single';
 
-const data = {
+export type NavItem = {
+  title: string;
+  url: string;
+  items?: NavItem[]; // Optional sub-items for nested navigation
+};
+
+export type NavData = {
+  navMain: NavItem[];
+};
+
+export const navItems = {
   navMain: [
     {
       title: 'Executive Branch',
-      url: '#',
+      url: '/executive',
       icon: UserCircle,
-      isActive: true,
       items: [
-        {
-          title: 'President',
-          url: '#',
-        },
-        {
-          title: 'Vice President',
-          url: '#',
-        },
+        { title: 'President', url: '/executive/president' },
+        { title: 'Vice President', url: '/executive/vice-president' },
         {
           title: 'Cabinet',
-          url: '#',
+          url: '/executive/cabinet',
           items: [
-            { title: 'Secretaries', url: '#' },
-            { title: 'Agencies', url: '#' },
+            { title: 'Secretaries', url: '/executive/cabinet/secretaries' },
+            { title: 'Agencies', url: '/executive/cabinet/agencies' },
           ],
         },
-        {
-          title: 'Executive Orders',
-          url: '#',
-        },
+        { title: 'Executive Orders', url: '/executive/orders' },
       ],
     },
     {
       title: 'Legislative Branch',
-      url: '#',
+      url: '/legislative',
       icon: Gavel,
       items: [
-        {
-          title: 'Senate',
-          url: '#',
-          items: [
-            { title: 'Senators', url: '#' },
-            { title: 'Committees', url: '#' },
-          ],
-        },
-        {
-          title: 'House of Representatives',
-          url: '#',
-          items: [
-            { title: 'Representatives', url: '#' },
-            { title: 'Committees', url: '#' },
-          ],
-        },
-        {
-          title: 'Bills & Legislation',
-          url: '#',
-        },
-        {
-          title: 'Voting Records',
-          url: '#',
-        },
+        { title: 'Senate', url: '/legislative/senate' },
+        { title: 'House of Representatives', url: '/legislative/house' },
+        { title: 'Bills & Legislation', url: '/legislative/bills' },
+        { title: 'Voting Records', url: '/legislative/voting' },
       ],
     },
     {
       title: 'Judicial Branch',
-      url: '#',
+      url: '/judicial',
       icon: Scale,
       items: [
-        {
-          title: 'Supreme Court',
-          url: '#',
-          items: [
-            { title: 'Justices', url: '#' },
-            { title: 'Major Cases', url: '#' },
-          ],
-        },
-        {
-          title: 'Federal Courts',
-          url: '#',
-          items: [
-            { title: 'Circuit Courts', url: '#' },
-            { title: 'District Courts', url: '#' },
-          ],
-        },
-        {
-          title: 'Legal Opinions',
-          url: '#',
-        },
+        { title: 'Supreme Court', url: '/judicial/supreme' },
+        { title: 'Federal Courts', url: '/judicial/federal' },
+        { title: 'Legal Opinions', url: '/judicial/opinions' },
       ],
     },
   ],
   navSingle: [
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-    },
-    {
-      title: 'FAQ',
-      url: '#',
-      icon: MessageCircleQuestion,
-    },
+    { title: 'Settings', url: '/settings', icon: Settings2 },
+    { title: 'FAQ', url: '/faq', icon: MessageCircleQuestion },
   ],
 };
 
@@ -129,9 +84,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavHeader />
       </SidebarHeader>
       <SidebarContent className='gap-1'>
-        <NavMain items={data.navMain} />
+        <NavMain items={navItems.navMain} />
         <SidebarSeparator />
-        <NavSingle items={data.navSingle} />
+        <NavSingle items={navItems.navSingle} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
