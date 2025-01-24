@@ -1,173 +1,139 @@
-import * as React from "react"
+import * as React from 'react';
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
+  Gavel,
+  MessageCircleQuestion,
+  Scale,
   Settings2,
-  SquareTerminal,
-} from "lucide-react"
+  UserCircle,
+} from 'lucide-react';
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from '@/components/nav-main';
+
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+  SidebarSeparator,
+} from '@/components/ui/sidebar';
+import { NavHeader } from './nav-header';
+import { NavSingle } from '@/nav-single';
 
-// This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: 'Executive Branch',
+      url: '#',
+      icon: UserCircle,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: 'President',
+          url: '#',
         },
         {
-          title: "Starred",
-          url: "#",
+          title: 'Vice President',
+          url: '#',
         },
         {
-          title: "Settings",
-          url: "#",
+          title: 'Cabinet',
+          url: '#',
+          items: [
+            { title: 'Secretaries', url: '#' },
+            { title: 'Agencies', url: '#' },
+          ],
+        },
+        {
+          title: 'Executive Orders',
+          url: '#',
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: 'Legislative Branch',
+      url: '#',
+      icon: Gavel,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: 'Senate',
+          url: '#',
+          items: [
+            { title: 'Senators', url: '#' },
+            { title: 'Committees', url: '#' },
+          ],
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: 'House of Representatives',
+          url: '#',
+          items: [
+            { title: 'Representatives', url: '#' },
+            { title: 'Committees', url: '#' },
+          ],
         },
         {
-          title: "Quantum",
-          url: "#",
+          title: 'Bills & Legislation',
+          url: '#',
+        },
+        {
+          title: 'Voting Records',
+          url: '#',
         },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
+      title: 'Judicial Branch',
+      url: '#',
+      icon: Scale,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: 'Supreme Court',
+          url: '#',
+          items: [
+            { title: 'Justices', url: '#' },
+            { title: 'Major Cases', url: '#' },
+          ],
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: 'Federal Courts',
+          url: '#',
+          items: [
+            { title: 'Circuit Courts', url: '#' },
+            { title: 'District Courts', url: '#' },
+          ],
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: 'Legal Opinions',
+          url: '#',
         },
       ],
     },
+  ],
+  navSingle: [
     {
-      title: "Settings",
-      url: "#",
+      title: 'Settings',
+      url: '#',
       icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+    },
+    {
+      title: 'FAQ',
+      url: '#',
+      icon: MessageCircleQuestion,
     },
   ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <NavHeader />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className='gap-1'>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <SidebarSeparator />
+        <NavSingle items={data.navSingle} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

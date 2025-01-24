@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* html {
+  @apply "Inter Variable";
+} */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
