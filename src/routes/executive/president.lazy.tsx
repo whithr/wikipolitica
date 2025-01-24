@@ -1,7 +1,13 @@
+import { DailyItinerary } from '@/components/president/daily-itinerary';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 const President = () => {
-  return <div className='p-2'>Hello from President!</div>;
+  return (
+    <div className='p-2'>
+      Hello from President!
+      <DailyItinerary />
+    </div>
+  );
 };
 
 export const Route = createLazyFileRoute('/executive/president')({
