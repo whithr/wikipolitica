@@ -79,7 +79,7 @@ export const DailyItinerary = () => {
       <div className='rounded-md bg-background p-4 text-center text-xl font-semibold shadow-md'>
         Presidential Daily Schedule
       </div>
-      <div className='flex flex-col gap-10 rounded-md bg-background p-2 shadow-md'>
+      <div className='flex flex-col gap-10 rounded-md bg-background p-2 pt-4 shadow-md'>
         {Object.entries(groupedByDate).map(([date, events]) => {
           // Sort events descending by time
           const sortedEvents = [...events].sort((a, b) => {
