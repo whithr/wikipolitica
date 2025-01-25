@@ -33,7 +33,9 @@ export const Route = createRootRoute({
           <Outlet />
         </div>
       </SidebarInset>
-      <TanStackRouterDevtools position='bottom-right' />
+      {import.meta.env.MODE === 'development' && (
+        <TanStackRouterDevtools position='bottom-right' />
+      )}
     </SidebarProvider>
   ),
 })
