@@ -108,7 +108,7 @@ export const DailyItinerary = () => {
   return (
     <div className='flex flex-col gap-4 text-foreground'>
       <div className='flex flex-wrap items-center justify-center gap-2 bg-background p-4 text-center shadow-md'>
-        <h2 className='whitespace-nowrap text-xl font-semibold'>
+        <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
           Presidential Daily Schedule
         </h2>
 
