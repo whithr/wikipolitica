@@ -6,7 +6,7 @@ export const Map = () => {
   const { resolvedTheme } = useTheme()
 
   return (
-    <div className='dark rounded-md bg-background shadow-md' id='map'>
+    <div className='dark z-10 rounded-md bg-background shadow-md' id='map'>
       <MapContainer
         center={[51.505, -0.09]}
         zoom={13}
