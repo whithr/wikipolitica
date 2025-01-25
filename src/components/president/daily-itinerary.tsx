@@ -52,24 +52,23 @@ const fetchTrumpCalendar = async (): Promise<PoolReportSchedules> => {
 }
 
 export const DailyItinerary = () => {
-  const { data, isLoading } = useQuery<PoolReportSchedules>(
-    ['trumpCalendar'],
-    fetchTrumpCalendar
-  )
+  const { data, isLoading } = useQuery<PoolReportSchedules>({
+    queryKey: ['trumpCalendar'],
+    queryFn: fetchTrumpCalendar,
+  })
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return null
 
-  // Group by date
-  const groupedByDate = data.reduce(
-    (acc, event) => {
+  const groupedByDate = data.reduce<Record<string, PoolReportSchedule[]>>(
+    (acc: Record<string, PoolReportSchedule[]>, event: PoolReportSchedule) => {
       if (!acc[event.date]) {
         acc[event.date] = []
       }
       acc[event.date].push(event)
       return acc
     },
-    {} as Record<string, PoolReportSchedule[]>
+    {}
   )
 
   // Get user's local time in minutes
