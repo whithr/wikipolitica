@@ -1,22 +1,22 @@
-import { type LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react'
 
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { Link } from '@tanstack/react-router';
+} from '@/components/ui/sidebar'
+import { Link } from '@tanstack/react-router'
 
 export function NavSingle({
   items,
 }: {
   items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-  }[];
+    title: string
+    url: string
+    icon?: LucideIcon
+    isActive?: boolean
+  }[]
 }) {
   return (
     <SidebarGroup>
@@ -33,5 +33,5 @@ export function NavSingle({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }

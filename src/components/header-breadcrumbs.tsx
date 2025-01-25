@@ -1,4 +1,4 @@
-import { NavItem, navItems } from '@/components/app-sidebar';
+import { NavItem, navItems } from '@/components/app-sidebar'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -6,9 +6,9 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb';
-import { useLocation } from '@tanstack/react-router';
-import React from 'react';
+} from '@/components/ui/breadcrumb'
+import { useLocation } from '@tanstack/react-router'
+import React from 'react'
 
 const findBreadcrumbs = (
   navItems: NavItem[],
@@ -16,34 +16,34 @@ const findBreadcrumbs = (
 ): NavItem[] => {
   for (const item of navItems) {
     if (item.url === currentPath) {
-      return [item];
+      return [item]
     }
     if (item.items) {
-      const breadcrumbs = findBreadcrumbs(item.items, currentPath);
+      const breadcrumbs = findBreadcrumbs(item.items, currentPath)
       if (breadcrumbs.length) {
-        return [item, ...breadcrumbs];
+        return [item, ...breadcrumbs]
       }
     }
   }
-  return [];
-};
+  return []
+}
 
 export const HeaderBreadcrumbs = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
+  const location = useLocation()
+  const currentPath = location.pathname
 
-  const mainBreadcrumbs = findBreadcrumbs(navItems.navMain, currentPath);
+  const mainBreadcrumbs = findBreadcrumbs(navItems.navMain, currentPath)
   const singleBreadcrumb = navItems.navSingle.find(
     (item) => item.url === currentPath
-  );
+  )
 
   // Combine results: mainBreadcrumbs or singleBreadcrumb
   const breadcrumbs =
     mainBreadcrumbs.length > 0
       ? mainBreadcrumbs
       : singleBreadcrumb
-        ? [singleBreadcrumb]
-        : [];
+      ? [singleBreadcrumb]
+      : []
 
   return (
     <Breadcrumb>
@@ -68,5 +68,5 @@ export const HeaderBreadcrumbs = () => {
         ))}
       </BreadcrumbList>
     </Breadcrumb>
-  );
-};
+  )
+}

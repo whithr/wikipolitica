@@ -1,13 +1,13 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   Gavel,
   MessageCircleQuestion,
   Scale,
   Settings2,
   UserCircle,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import { NavMain } from '@/components/nav-main';
+import { NavMain } from '@/components/nav-main'
 
 import {
   Sidebar,
@@ -15,19 +15,19 @@ import {
   SidebarHeader,
   SidebarRail,
   SidebarSeparator,
-} from '@/components/ui/sidebar';
-import { NavHeader } from './nav-header';
-import { NavSingle } from '@/nav-single';
+} from '@/components/ui/sidebar'
+import { NavHeader } from './nav-header'
+import { NavSingle } from '@/nav-single'
 
 export type NavItem = {
-  title: string;
-  url: string;
-  items?: NavItem[]; // Optional sub-items for nested navigation
-};
+  title: string
+  url: string
+  items?: NavItem[] // Optional sub-items for nested navigation
+}
 
 export type NavData = {
-  navMain: NavItem[];
-};
+  navMain: NavItem[]
+}
 
 export const navItems = {
   navMain: [
@@ -75,9 +75,9 @@ export const navItems = {
     { title: 'Settings', url: '/settings', icon: Settings2 },
     { title: 'FAQ', url: '/faq', icon: MessageCircleQuestion },
   ],
-};
+}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
@@ -90,5 +90,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

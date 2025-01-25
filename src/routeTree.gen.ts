@@ -20,7 +20,7 @@ const CountriesLazyImport = createFileRoute('/countries')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const ExecutiveVicePresidentLazyImport = createFileRoute(
-  '/executive/vice-president',
+  '/executive/vice-president'
 )()
 const ExecutivePresidentLazyImport = createFileRoute('/executive/president')()
 
@@ -49,9 +49,9 @@ const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
     id: '/executive/vice-president',
     path: '/executive/vice-president',
     getParentRoute: () => rootRoute,
-  } as any,
+  } as any
 ).lazy(() =>
-  import('./routes/executive/vice-president.lazy').then((d) => d.Route),
+  import('./routes/executive/vice-president.lazy').then((d) => d.Route)
 )
 
 const ExecutivePresidentLazyRoute = ExecutivePresidentLazyImport.update({
@@ -59,7 +59,7 @@ const ExecutivePresidentLazyRoute = ExecutivePresidentLazyImport.update({
   path: '/executive/president',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/executive/president.lazy').then((d) => d.Route),
+  import('./routes/executive/president.lazy').then((d) => d.Route)
 )
 
 // Populate the FileRoutesByPath interface

@@ -41,7 +41,7 @@ export interface PoolReportSchedule {
 
 export type PoolReportSchedules = PoolReportSchedule[]
 
-const fetchTrumpCalendar = async (): Promise<PoolReportSchedules> => {
+const fetchTrumpCalendar = async (): Promise => {
   const response = await fetch(
     'https://media-cdn.factba.se/rss/json/trump/calendar-full.json'
   )
@@ -58,16 +58,13 @@ export const DailyItinerary = () => {
   if (!data) return null
 
   // Group by date
-  const groupedByDate = data.reduce(
-    (acc, event) => {
-      if (!acc[event.date]) {
-        acc[event.date] = []
-      }
-      acc[event.date].push(event)
-      return acc
-    },
-    {} as Record<string, PoolReportSchedule[]>
-  )
+  const groupedByDate = data.reduce((acc, event) => {
+    if (!acc[event.date]) {
+      acc[event.date] = []
+    }
+    acc[event.date].push(event)
+    return acc
+  }, {} as Record)
 
   // Get user's local time in minutes
   const localNowInMinutes = getLocalNowInMinutes()
