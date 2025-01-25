@@ -1,14 +1,14 @@
-import { AppSidebar } from '@/components/app-sidebar';
-import { HeaderBreadcrumbs } from '@/components/header-breadcrumbs';
+import { AppSidebar } from '@/components/app-sidebar'
+import { HeaderBreadcrumbs } from '@/components/header-breadcrumbs'
 
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from '@/components/ui/sidebar';
-import { Separator } from '@radix-ui/react-separator';
-import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+} from '@/components/ui/sidebar'
+import { Separator } from '@radix-ui/react-separator'
+import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 export const Route = createRootRoute({
   component: () => (
@@ -22,11 +22,11 @@ export const Route = createRootRoute({
             <HeaderBreadcrumbs />
           </div>
         </header>
-        <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min m-4 mt-0 p-4'>
+        <div className='m-0 !mt-0 min-h-[100vh] flex-1 rounded-xl bg-muted/50 p-2 md:m-4 md:min-h-min md:p-4'>
           <Outlet />
         </div>
       </SidebarInset>
       <TanStackRouterDevtools position='bottom-right' />
     </SidebarProvider>
   ),
-});
+})
