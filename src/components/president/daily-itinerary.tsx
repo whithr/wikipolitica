@@ -9,6 +9,10 @@ import {
   parseTimeToMinutes,
 } from '@/lib/time.utils'
 import { ActivityPing } from '@/components/animations/activity-ping'
+import { useState } from 'react'
+import { DatePickerWithRange } from '@/components/ui/date-range-picker'
+import { addDays, isAfter, isBefore } from 'date-fns'
+import { DateRange } from 'react-day-picker'
 
 export interface DaySummary {
   trump_property?: string | null
@@ -56,28 +60,64 @@ export const DailyItinerary = () => {
     queryKey: ['trumpCalendar'],
     queryFn: fetchTrumpCalendar,
   })
+  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>({
+    // For example: last 7 days up to "tomorrow"
+    from: addDays(new Date(), -6),
+    to: addDays(new Date(), 0),
+  })
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return null
 
-  const groupedByDate = data.reduce<Record<string, PoolReportSchedule[]>>(
-    (acc: Record<string, PoolReportSchedule[]>, event: PoolReportSchedule) => {
-      if (!acc[event.date]) {
-        acc[event.date] = []
-      }
-      acc[event.date].push(event)
-      return acc
-    },
-    {}
-  )
+  // Filter by date range if we have from/to
+  let filteredData = data
+  if (selectedRange?.from && selectedRange?.to) {
+    filteredData = data.filter((event) => {
+      // event.date is "YYYY-MM-DD"
+      // Turn it into a real Date at midnight local
+      const eventDate = new Date(`${event.date}T00:00:00`)
+      return (
+        !isBefore(eventDate, selectedRange.from!) &&
+        !isAfter(eventDate, selectedRange.to!)
+      )
+    })
+  }
+
+  // Group the filtered data by date
+  const groupedByDate = filteredData.reduce<
+    Record<string, PoolReportSchedule[]>
+  >((acc, event) => {
+    if (!acc[event.date]) {
+      acc[event.date] = []
+    }
+    acc[event.date].push(event)
+    return acc
+  }, {})
+
+  const parseEventDate = (d: string) => {
+    return new Date(`${d}T00:00:00`)
+  }
+
+  const allDates = data.map((event) => parseEventDate(event.date))
+  const minDate = new Date(Math.min(...allDates.map((d) => d.getTime())))
+  const maxDate = new Date(Math.max(...allDates.map((d) => d.getTime())))
 
   // Get user's local time in minutes
   const localNowInMinutes = getLocalNowInMinutes()
 
   return (
     <div className='flex flex-col gap-4 text-foreground'>
-      <div className='rounded-md bg-background p-4 text-center text-xl font-semibold shadow-md'>
-        Presidential Daily Schedule
+      <div className='flex flex-wrap items-center justify-center gap-2 bg-background p-4 text-center shadow-md'>
+        <h2 className='whitespace-nowrap text-xl font-semibold'>
+          Presidential Daily Schedule
+        </h2>
+
+        <DatePickerWithRange
+          initialRange={selectedRange}
+          onChange={setSelectedRange}
+          minDate={minDate}
+          maxDate={maxDate}
+        />
       </div>
       <div className='flex flex-col gap-10 rounded-md bg-background p-2 pt-4 shadow-md'>
         {Object.entries(groupedByDate).map(([date, events]) => {
