@@ -13,7 +13,7 @@ const supabase = createClient<Database>(
 )
 
 function Country() {
-  const [countries, setCountries] = useState<Tables[] | null>(null)
+  const [countries, setCountries] = useState<Tables<'countries'>[] | null>(null)
 
   useEffect(() => {
     getCountries()
