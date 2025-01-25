@@ -75,7 +75,7 @@ export const DailyItinerary = () => {
   const localNowInMinutes = getLocalNowInMinutes()
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 text-foreground'>
       <div className='rounded-md bg-background p-4 text-center text-xl font-semibold shadow-md'>
         Presidential Daily Schedule
       </div>
