@@ -41,7 +41,7 @@ export interface PoolReportSchedule {
 
 export type PoolReportSchedules = PoolReportSchedule[]
 
-const fetchTrumpCalendar = async (): Promise => {
+const fetchTrumpCalendar = async (): Promise<PoolReportSchedules> => {
   const response = await fetch(
     'https://media-cdn.factba.se/rss/json/trump/calendar-full.json'
   )
@@ -52,118 +52,131 @@ const fetchTrumpCalendar = async (): Promise => {
 }
 
 export const DailyItinerary = () => {
-  const { data, isLoading } = useQuery(['trumpCalendar'], fetchTrumpCalendar)
+  const { data, isLoading } = useQuery<PoolReportSchedules>(
+    ['trumpCalendar'],
+    fetchTrumpCalendar
+  )
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return null
 
   // Group by date
-  const groupedByDate = data.reduce((acc, event) => {
-    if (!acc[event.date]) {
-      acc[event.date] = []
-    }
-    acc[event.date].push(event)
-    return acc
-  }, {} as Record)
+  const groupedByDate = data.reduce(
+    (acc, event) => {
+      if (!acc[event.date]) {
+        acc[event.date] = []
+      }
+      acc[event.date].push(event)
+      return acc
+    },
+    {} as Record<string, PoolReportSchedule[]>
+  )
 
   // Get user's local time in minutes
   const localNowInMinutes = getLocalNowInMinutes()
 
   return (
-    <div className='flex flex-col gap-10 rounded-md bg-background p-2 shadow-md'>
-      {Object.entries(groupedByDate).map(([date, events]) => {
-        // Sort events descending by time
-        const sortedEvents = [...events].sort((a, b) => {
-          if (!a.time && !b.time) return 0
-          if (!a.time) return 1 // no time => last
-          if (!b.time) return -1 // no time => last
-          // Desc by time: b.time.localeCompare(a.time)
-          return b.time.localeCompare(a.time)
-        })
+    <div className='flex flex-col gap-4'>
+      <div className='rounded-md bg-background p-4 text-center text-xl font-semibold shadow-md'>
+        Presidential Daily Schedule
+      </div>
+      <div className='flex flex-col gap-10 rounded-md bg-background p-2 shadow-md'>
+        {Object.entries(groupedByDate).map(([date, events]) => {
+          // Sort events descending by time
+          const sortedEvents = [...events].sort((a, b) => {
+            if (!a.time && !b.time) return 0
+            if (!a.time) return 1 // no time => last
+            if (!b.time) return -1 // no time => last
+            // Desc by time: b.time.localeCompare(a.time)
+            return b.time.localeCompare(a.time)
+          })
 
-        let highlightTime: number | null = null
+          let highlightTime: number | null = null
 
-        // If this date is "today" in the user's local time:
-        if (isLocalToday(date)) {
-          // Find the "largest event time <= localNowInMinutes"
-          for (const evt of sortedEvents) {
-            const evtMins = parseTimeToMinutes(evt.time)
-            if (
-              evtMins !== null &&
-              evtMins <= localNowInMinutes &&
-              (highlightTime === null || evtMins > highlightTime)
-            ) {
-              highlightTime = evtMins
+          // If this date is "today" in the user's local time:
+          if (isLocalToday(date)) {
+            // Find the "largest event time <= localNowInMinutes"
+            for (const evt of sortedEvents) {
+              const evtMins = parseTimeToMinutes(evt.time)
+              if (
+                evtMins !== null &&
+                evtMins <= localNowInMinutes &&
+                (highlightTime === null || evtMins > highlightTime)
+              ) {
+                highlightTime = evtMins
+              }
             }
           }
-        }
 
-        return (
-          <div key={date} className='flex flex-col gap-2'>
-            <h2 className='text-lg font-semibold'>{formatDate(date)}</h2>
-            <Separator />
+          return (
+            <div key={date} className='flex flex-col gap-2'>
+              <h2 className='px-4 text-lg font-semibold'>{formatDate(date)}</h2>
+              <Separator />
 
-            {sortedEvents.map((event, index) => {
-              const isIgnoredEvent =
-                (!event.time_formatted && !event.video_url && !event.details) ||
-                event.details ===
-                  'No official presidential schedule released or announced.'
+              {sortedEvents.map((event, index) => {
+                const isIgnoredEvent =
+                  (!event.time_formatted &&
+                    !event.video_url &&
+                    !event.details) ||
+                  event.details ===
+                    'No official presidential schedule released or announced.'
 
-              if (isIgnoredEvent) {
-                return null
-              }
+                if (isIgnoredEvent) {
+                  return null
+                }
 
-              const eventTimeInMins = parseTimeToMinutes(event.time)
-              const shouldHighlight =
-                eventTimeInMins !== null && eventTimeInMins === highlightTime
+                const eventTimeInMins = parseTimeToMinutes(event.time)
+                const shouldHighlight =
+                  eventTimeInMins !== null && eventTimeInMins === highlightTime
 
-              return (
-                <div
-                  key={index}
-                  className='flex flex-row items-center gap-3 py-2'
-                >
-                  <ActivityPing shouldHighlight={shouldHighlight} />
+                return (
+                  <div
+                    key={index}
+                    className='flex flex-row items-center gap-3 py-2'
+                  >
+                    <ActivityPing shouldHighlight={shouldHighlight} />
 
-                  <div className='flex flex-col'>
-                    {event.time_formatted ? (
-                      <div className='flex items-center gap-2 text-muted-foreground'>
-                        {event.time_formatted} – {event.location}
-                        {event.video_url && (
-                          <Button asChild size='xs' variant='outline'>
-                            <Link
-                              to={event.video_url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                            >
-                              Watch Video
-                            </Link>
-                          </Button>
-                        )}
-                        {event.url && (
-                          <Button asChild size='xs' variant='outline'>
-                            <Link
-                              to={event.url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                            >
-                              More Info
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    ) : (
-                      <div className='flex gap-2 text-muted-foreground'>
-                        Time TBD – {event.location}
-                      </div>
-                    )}
-                    <p>{event.details}</p>
+                    <div className='flex flex-col'>
+                      {event.time_formatted ? (
+                        <div className='flex items-center gap-2 text-muted-foreground'>
+                          {event.time_formatted} – {event.location}
+                          {event.video_url && (
+                            <Button asChild size='xs' variant='outline'>
+                              <Link
+                                to={event.video_url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                Watch Video
+                              </Link>
+                            </Button>
+                          )}
+                          {event.url && (
+                            <Button asChild size='xs' variant='outline'>
+                              <Link
+                                to={event.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                More Info
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      ) : (
+                        <div className='flex gap-2 text-muted-foreground'>
+                          Time TBD – {event.location}
+                        </div>
+                      )}
+                      <p>{event.details}</p>
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        )
-      })}
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
