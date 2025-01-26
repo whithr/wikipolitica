@@ -6,12 +6,15 @@ export const Map = () => {
   const { resolvedTheme } = useTheme()
 
   return (
-    <div className='dark z-10 rounded-md bg-background shadow-md' id='map'>
+    <div
+      className='dark z-10 h-[250px] rounded-md bg-background shadow-md md:h-[500px]'
+      id='map'
+    >
       <MapContainer
         center={[51.505, -0.09]}
         zoom={13}
         scrollWheelZoom={false}
-        className='h-[500px]'
+        className='h-full'
       >
         <TileLayer
           url={
@@ -20,8 +23,6 @@ export const Map = () => {
               : 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
           }
         />
-        {/* <TileLayer url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png' /> */}
-
         <Marker position={[51.505, -0.09]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.

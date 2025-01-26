@@ -63,7 +63,7 @@ export const DailyItinerary = () => {
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>({
     // For example: last 7 days up to "tomorrow"
     from: addDays(new Date(), -6),
-    to: addDays(new Date(), 0),
+    to: addDays(new Date(), 1),
   })
 
   if (isLoading) return <p>Loading...</p>
@@ -94,6 +94,94 @@ export const DailyItinerary = () => {
     return acc
   }, {})
 
+  const sortedDays = Object.keys(groupedByDate).sort(
+    (a, b) => +new Date(`${b}T00:00:00`) - +new Date(`${a}T00:00:00`)
+  )
+
+  const sortedEventsByDay: Record<string, PoolReportSchedule[]> = {}
+  for (const day of sortedDays) {
+    // Sort descending by time (largest first)
+    const dayEvents = [...groupedByDate[day]].sort((a, b) => {
+      if (!a.time && !b.time) return 0
+      if (!a.time) return 1 // no time => last
+      if (!b.time) return -1
+      return b.time.localeCompare(a.time) // desc
+    })
+    sortedEventsByDay[day] = dayEvents
+  }
+
+  // We'll compute highlightDay & highlightTime once
+  let highlightDay: string | null = null
+  let highlightTime: number | null = null
+
+  const formatYMD = (d: Date) => {
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  const localToday = formatYMD(new Date())
+  const localNowInMinutes = getLocalNowInMinutes()
+
+  // 6) If "today" is in sortedDays:
+  //    a) Check if there's an event that already happened => highlight that
+  //    b) If none found, highlight the last event from the previous day
+  // 7) If "today" is not in sortedDays, highlight the last event from the
+  //    latest day < today
+  if (sortedDays.length > 0) {
+    if (sortedDays.includes(localToday)) {
+      // We do the "already passed event" logic
+      const dayEvents = sortedEventsByDay[localToday]
+
+      // Find the largest event time <= localNowInMinutes
+      let foundOne = false
+      for (const evt of dayEvents) {
+        const evtMins = parseTimeToMinutes(evt.time)
+        if (evtMins !== null && evtMins <= localNowInMinutes) {
+          highlightDay = localToday
+          highlightTime = evtMins
+          foundOne = true
+          break // because dayEvents are sorted descending, the first match is the largest
+        }
+      }
+
+      // If no event has started yet, highlight the last event from the previous day
+      if (!foundOne) {
+        // find the index of localToday in sortedDays
+        const idx = sortedDays.indexOf(localToday)
+        if (idx > 0) {
+          // previous day
+          const prevDay = sortedDays[idx - 1]
+          const prevEvents = sortedEventsByDay[prevDay]
+          // The first item in prevEvents is the largest time because we sorted descending
+          const lastEvent = prevEvents[0]
+          highlightDay = prevDay
+          highlightTime = parseTimeToMinutes(lastEvent.time)
+        }
+      }
+    } else {
+      // localToday is not in sortedDays
+      // So we find the last day which is strictly < localToday
+      // (Because sortedDays is ascending, we find the greatest day that is < localToday)
+      // We'll do a simple loop from the end of the array
+      let fallbackDay: string | null = null
+      for (let i = sortedDays.length - 1; i >= 0; i--) {
+        const d = sortedDays[i]
+        if (d < localToday) {
+          fallbackDay = d
+          break
+        }
+      }
+      if (fallbackDay) {
+        // highlight the last event from fallbackDay
+        const fallbackEvents = sortedEventsByDay[fallbackDay]
+        const lastEvent = fallbackEvents[0] // sorted descending
+        highlightDay = fallbackDay
+        highlightTime = parseTimeToMinutes(lastEvent.time)
+      }
+    }
+  }
+
   const parseEventDate = (d: string) => {
     return new Date(`${d}T00:00:00`)
   }
@@ -102,12 +190,9 @@ export const DailyItinerary = () => {
   const minDate = new Date(Math.min(...allDates.map((d) => d.getTime())))
   const maxDate = new Date(Math.max(...allDates.map((d) => d.getTime())))
 
-  // Get user's local time in minutes
-  const localNowInMinutes = getLocalNowInMinutes()
-
   return (
     <div className='flex flex-col gap-4 text-foreground'>
-      <div className='flex flex-wrap items-center justify-center gap-2 bg-background p-4 text-center shadow-md'>
+      <div className='flex flex-wrap items-center justify-center gap-2 rounded-md bg-background p-4 text-center shadow-sm'>
         <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
           Presidential Daily Schedule
         </h2>
@@ -119,40 +204,17 @@ export const DailyItinerary = () => {
           maxDate={maxDate}
         />
       </div>
-      <div className='flex flex-col gap-10 rounded-md bg-background p-2 pt-4 shadow-md'>
-        {Object.entries(groupedByDate).map(([date, events]) => {
-          // Sort events descending by time
-          const sortedEvents = [...events].sort((a, b) => {
-            if (!a.time && !b.time) return 0
-            if (!a.time) return 1 // no time => last
-            if (!b.time) return -1 // no time => last
-            // Desc by time: b.time.localeCompare(a.time)
-            return b.time.localeCompare(a.time)
-          })
-
-          let highlightTime: number | null = null
-
-          // If this date is "today" in the user's local time:
-          if (isLocalToday(date)) {
-            // Find the "largest event time <= localNowInMinutes"
-            for (const evt of sortedEvents) {
-              const evtMins = parseTimeToMinutes(evt.time)
-              if (
-                evtMins !== null &&
-                evtMins <= localNowInMinutes &&
-                (highlightTime === null || evtMins > highlightTime)
-              ) {
-                highlightTime = evtMins
-              }
-            }
-          }
+      <div className='flex flex-col gap-10 rounded-md bg-background p-2 pt-4 shadow-sm'>
+        {sortedDays.map((date) => {
+          // We already have sortedEventsByDay[date]
+          const dayEvents = sortedEventsByDay[date]
 
           return (
             <div key={date} className='flex flex-col gap-2'>
               <h2 className='px-4 text-lg font-semibold'>{formatDate(date)}</h2>
               <Separator />
 
-              {sortedEvents.map((event, index) => {
+              {dayEvents.map((event, index) => {
                 const isIgnoredEvent =
                   (!event.time_formatted &&
                     !event.video_url &&
@@ -166,7 +228,7 @@ export const DailyItinerary = () => {
 
                 const eventTimeInMins = parseTimeToMinutes(event.time)
                 const shouldHighlight =
-                  eventTimeInMins !== null && eventTimeInMins === highlightTime
+                  highlightDay === date && highlightTime === eventTimeInMins
 
                 return (
                   <div
