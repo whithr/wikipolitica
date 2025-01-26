@@ -9,6 +9,7 @@
     "build:web": "pnpm --filter web build",
     "build:server": "pnpm --filter server build",
     "build": "pnpm -r build",
+    "start:web": "pnpm --filter web start",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format",
     "update-types": "pnpm -r update-types"
