@@ -1,8 +1,6 @@
-// useFilteredCalendarData.ts
-
 import { useMemo } from "react";
 import { isAfter, isBefore } from "date-fns";
-import { getLocalNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils"; // or wherever you store these
+import { getLocalNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils";
 import { DateRange } from "react-day-picker";
 import {
   PoolReportSchedule,
@@ -41,7 +39,6 @@ export function useFilteredCalendarData(
 ): FilteredDataResult {
   return useMemo(() => {
     if (!data || data.length === 0) {
-      // Return empty placeholders if no data
       return {
         sortedDays: [],
         sortedEventsByDay: {},
@@ -53,7 +50,7 @@ export function useFilteredCalendarData(
       };
     }
 
-    // 1) Filter by date range if we have from/to
+    // 1) Filter data by the selected range if present
     let filteredData = data;
     if (selectedRange?.from && selectedRange?.to) {
       filteredData = data.filter((event) => {
@@ -89,9 +86,10 @@ export function useFilteredCalendarData(
     for (const day of sortedDays) {
       const dayEvents = [...groupedByDate[day]].sort((a, b) => {
         if (!a.time && !b.time) return 0;
-        if (!a.time) return 1; // no time => last
+        if (!a.time) return 1; // "no time" -> sort last
         if (!b.time) return -1;
-        return b.time.localeCompare(a.time); // desc
+        // Compare times descending
+        return b.time.localeCompare(a.time);
       });
       sortedEventsByDay[day] = dayEvents;
     }
@@ -104,10 +102,11 @@ export function useFilteredCalendarData(
     const localNowInMinutes = getLocalNowInMinutes();
 
     if (sortedDays.length > 0) {
+      // If today's date is one of the sorted days
       if (sortedDays.includes(localToday)) {
-        // a) localToday is in sortedDays
         const dayEvents = sortedEventsByDay[localToday];
-        // Find the largest event time <= localNowInMinutes
+
+        // Find the most recent event that started <= current time
         let foundOne = false;
         for (const evt of dayEvents) {
           const evtMins = parseTimeToMinutes(evt.time);
@@ -118,7 +117,8 @@ export function useFilteredCalendarData(
             break;
           }
         }
-        // If no event has started yet, fallback to previous day's last event
+
+        // If no event has started yet, fallback to the last event of the previous day
         if (!foundOne) {
           const idx = sortedDays.indexOf(localToday);
           if (idx > 0) {
@@ -130,9 +130,9 @@ export function useFilteredCalendarData(
           }
         }
       } else {
-        // b) localToday is not in sortedDays -> fallback to day < today
+        // If today's date is not in sortedDays, fallback to the first day < today
         let fallbackDay: string | null = null;
-        for (let i = sortedDays.length - 1; i >= 0; i--) {
+        for (let i = 0; i < sortedDays.length; i++) {
           const d = sortedDays[i];
           if (d < localToday) {
             fallbackDay = d;
@@ -148,7 +148,21 @@ export function useFilteredCalendarData(
       }
     }
 
-    // 6) Find min/max dates across all data (to restrict date-picker)
+    // TODO: bug here - some days aren't selectable if we dont have data yet, so ping should still show.
+    // 5b) If the selected range does NOT include "today," clear out the highlight
+    if (selectedRange?.from && selectedRange?.to) {
+      const today = new Date();
+      const rangeIncludesToday = !isBefore(today, selectedRange.from) &&
+        !isAfter(today, selectedRange.to);
+
+      // If it's entirely in the past or entirely in the future, no highlight
+      if (!rangeIncludesToday) {
+        highlightDay = null;
+        highlightTime = null;
+      }
+    }
+
+    // 6) Find min/max dates across all data (for date-picker restrictions)
     const allDates = data.map((event) => parseEventDate(event.date));
     const minDate = new Date(Math.min(...allDates.map((d) => d.getTime())));
     const maxDate = new Date(Math.max(...allDates.map((d) => d.getTime())));
