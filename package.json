@@ -5,7 +5,13 @@
   "scripts": {
     "dev:web": "pnpm --filter web dev",
     "dev:server": "pnpm --filter server dev",
-    "dev": "pnpm -r dev"
+    "dev": "pnpm -r dev",
+    "build:web": "pnpm --filter web build",
+    "build:server": "pnpm --filter server build",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "update-types": "pnpm -r update-types"
   },
   "devDependencies": {
     "eslint": "latest",
