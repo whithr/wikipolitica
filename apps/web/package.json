@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "update-types": "npx supabase gen types typescript --project-id syuiizinwoqmdgqziyyr --schema public > src/lib/database.types.ts",
-    "start": "serve dist -l 5173"
+    "start": "serve -s dist -l 5173"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.1",
