@@ -13,7 +13,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarRail,
   SidebarSeparator,
 } from '@/components/ui/sidebar'
 import { NavHeader } from './nav-header'
