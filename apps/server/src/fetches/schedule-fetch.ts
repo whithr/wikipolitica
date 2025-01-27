@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import schedule from "node-schedule";
 import nodeGeocoder from "node-geocoder";
 import "dotenv/config.js";
 
@@ -162,10 +163,27 @@ export async function refreshLast3DaysOfSchedule(): Promise<void> {
 }
 
 // 5) Optionally schedule the job, e.g. daily at midnight
-// schedule.scheduleJob("0 0 * * *", async () => {
-//   console.log("[Scheduled Task] Running refreshLast3DaysOfSchedule at midnight.");
-//   await refreshLast3DaysOfSchedule();
-// });
+// Schedule to run shortly past midnight (e.g., 12:01 AM)
+schedule.scheduleJob("1 0 * * *", async () => {
+  console.log(
+    "[Scheduled Task] Running refreshLast3DaysOfSchedule shortly past midnight.",
+  );
+  await refreshLast3DaysOfSchedule();
+});
+
+// Schedule to run in the middle of the day (e.g., 12:00 PM)
+schedule.scheduleJob("0 12 * * *", async () => {
+  console.log("[Scheduled Task] Running refreshLast3DaysOfSchedule at midday.");
+  await refreshLast3DaysOfSchedule();
+});
+
+// Schedule to run in the evening (e.g., 6:00 PM)
+schedule.scheduleJob("0 18 * * *", async () => {
+  console.log(
+    "[Scheduled Task] Running refreshLast3DaysOfSchedule in the evening.",
+  );
+  await refreshLast3DaysOfSchedule();
+});
 
 // 6) Optionally run once immediately on startup (for testing)
 // refreshLast3DaysOfSchedule().then(() => {
