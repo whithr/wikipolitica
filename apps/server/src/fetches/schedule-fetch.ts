@@ -19,6 +19,7 @@ const geocoder = nodeGeocoder({
 interface PoolReportSchedule {
   date: string;
   time?: string | null;
+  time_formatted?: string | null;
   details: string;
   year: number;
   month: string;
@@ -83,6 +84,7 @@ async function insertScheduleEvent(evt: PoolReportSchedule): Promise<void> {
     .insert({
       date: evt.date,
       time: evt.time,
+      time_formatted: evt.time_formatted,
       details: evt.details,
       year: evt.year,
       month: evt.month,
