@@ -117,9 +117,6 @@ importers:
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
-      leaflet-geosearch:
-        specifier: ^4.1.0
-        version: 4.1.0
       leaflet-providers:
         specifier: ^2.0.0
         version: 2.0.0
@@ -141,9 +138,6 @@ importers:
       react-leaflet:
         specifier: ^5.0.0
         version: 5.0.0(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      react-leaflet-geosearch:
-        specifier: ^0.3.4
-        version: 0.3.4(leaflet-geosearch@4.1.0)(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
@@ -659,9 +653,6 @@ packages:
 
   '@fontsource/inter@5.1.1':
     resolution: {integrity: sha512-weN3E+rq0Xb3Z93VHJ+Rc7WOQX9ETJPTAJ+gDcaMHtjft67L58sfS65rAjC5tZUXQ2FdZ/V1/sSzCwZ6v05kJw==}
-
-  '@googlemaps/js-api-loader@1.16.8':
-    resolution: {integrity: sha512-CROqqwfKotdO6EBjZO/gQGVTbeDps5V7Mt9+8+5Q+jTg5CRMi3Ii/L9PmV3USROrt2uWxtGzJHORmByxyo9pSQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2213,9 +2204,6 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  leaflet-geosearch@4.1.0:
-    resolution: {integrity: sha512-HyqmRWInm5/B28PpAscruOFnYztamJji4OTsueNluvaHg/hYVMWpaReyWvfVUQGVn8U42+Mm01gBpOcRsqh60g==}
-
   leaflet-providers@2.0.0:
     resolution: {integrity: sha512-CWwKEnHd66Qsx0m4o5q5ZOa60s00B91pMxnlr4Y22msubfs7dhbZhdMIz8bvZQkrZqi67ppI1fsZRS6vtrLcOA==}
 
@@ -2611,15 +2599,6 @@ packages:
     resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
       react: ^19.0.0
-
-  react-leaflet-geosearch@0.3.4:
-    resolution: {integrity: sha512-hI1QfdZ4AAKSij9e6HCfAVDVgBuCGqqRN40WOCNfXOvbLH9dzNpzmrGSp/GY2euDCqOTdGqYa0jfy8hwCxKDWg==}
-    peerDependencies:
-      leaflet: ^1.7.1
-      leaflet-geosearch: ^2.7.0
-      react: ^15.0.0 || ^16.0.0 || ^17.0.0
-      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0
-      react-leaflet: ^3.0.5
 
   react-leaflet@5.0.0:
     resolution: {integrity: sha512-CWbTpr5vcHw5bt9i4zSlPEVQdTVcML390TjeDG0cK59z1ylexpqC6M1PJFjV8jD7CF+ACBFsLIDs6DRMoLEofw==}
@@ -3433,9 +3412,6 @@ snapshots:
   '@fontsource-variable/inter@5.1.1': {}
 
   '@fontsource/inter@5.1.1': {}
-
-  '@googlemaps/js-api-loader@1.16.8':
-    optional: true
 
   '@humanfs/core@0.19.1': {}
 
@@ -5059,11 +5035,6 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  leaflet-geosearch@4.1.0:
-    optionalDependencies:
-      '@googlemaps/js-api-loader': 1.16.8
-      leaflet: 1.9.4
-
   leaflet-providers@2.0.0: {}
 
   leaflet@1.9.4: {}
@@ -5339,14 +5310,6 @@ snapshots:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
-
-  react-leaflet-geosearch@0.3.4(leaflet-geosearch@4.1.0)(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0):
-    dependencies:
-      leaflet: 1.9.4
-      leaflet-geosearch: 4.1.0
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
-      react-leaflet: 5.0.0(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
   react-leaflet@5.0.0(leaflet@1.9.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

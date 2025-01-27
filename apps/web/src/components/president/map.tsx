@@ -1,38 +1,36 @@
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { useTheme } from '@/components/theme-provider'
 // import { Slider } from '@/components/ui/slider'
-import { useState, useEffect } from 'react'
-import { OpenStreetMapProvider } from 'leaflet-geosearch'
-import { useDebounce } from '@/hooks/useDebounce'
+import { useMemo } from 'react'
 
-// var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
-//https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png
-export const Map = ({ location }: { location: string }) => {
+import { usePresidentCalendar } from './president-calendar-context'
+
+export const Map = () => {
   const { resolvedTheme } = useTheme()
+  const { isLoading, filteredData } = usePresidentCalendar()
 
-  const [coords, setCoords] = useState<[number, number] | null>(null)
-  const debouncedLocation = useDebounce(location, 5000)
+  // Extract only the events that have lat/long
+  const eventsWithCoords = useMemo(() => {
+    return filteredData.filter((evt) => {
+      return evt.latitude != null && evt.longitude != null
+    })
+  }, [filteredData])
 
-  useEffect(() => {
-    if (!debouncedLocation) return
+  if (isLoading) {
+    return <p>Loading map...</p>
+  }
 
-    // 2. Once the debounced location is stable for 1s, geocode it
-    const provider = new OpenStreetMapProvider()
-    provider
-      .search({ query: debouncedLocation })
-      .then((results) => {
-        if (results && results.length > 0) {
-          // Note: leaflet-geosearch returns { x: lon, y: lat }
-          const { x, y } = results[0]
-          setCoords([y, x])
-        } else {
-          console.warn('No geocoding results found for:', debouncedLocation)
-        }
-      })
-      .catch((err) => console.error('Geocoding error:', err))
-  }, [debouncedLocation])
+  // Fallback if no coords found at all
+  const fallbackCenter: [number, number] = [39.8283, -98.5795]
+  // If we have at least one event, center on the first
+  const firstCoords = eventsWithCoords.length
+    ? ([eventsWithCoords[0].latitude, eventsWithCoords[0].longitude] as [
+        number,
+        number,
+      ])
+    : fallbackCenter
 
-  const fallbackCenter: [number, number] = [39.8283, -98.5795] // roughly the center of the US
+  const zoom = eventsWithCoords.length > 0 ? 5 : 4
 
   return (
     <div
@@ -40,8 +38,8 @@ export const Map = ({ location }: { location: string }) => {
       id='map'
     >
       <MapContainer
-        center={coords || fallbackCenter}
-        zoom={coords ? 13 : 4}
+        center={firstCoords}
+        zoom={zoom}
         scrollWheelZoom={true}
         style={{ height: '500px', width: '100%' }}
       >
@@ -53,32 +51,19 @@ export const Map = ({ location }: { location: string }) => {
           }
         />
 
-        {/* 
-        4. Provide a search control from react-leaflet-geosearch
-           so the user can search for other addresses, too.
-           This will place a search box on the map. 
-      */}
-        {/* <GeoSearchControlElement
-          provider={new OpenStreetMapProvider()}
-          showMarker={true}
-          showPopup={true}
-          popupFormat={({ query, result }) => result.label}
-          maxMarkers={1}
-          retainZoomLevel={false}
-          animateZoom={true}
-          autoClose={true}
-          searchLabel='Enter location'
-          keepResult={true}
-        /> */}
-
-        {/* 5. If we got coordinates from geocoding, place a Marker and Popup */}
-        {coords && (
-          <Marker position={coords}>
-            <Popup>{location}</Popup>
+        {/* Place a Marker for each event with coords */}
+        {eventsWithCoords.map((evt, i) => (
+          <Marker key={i} position={[evt.latitude!, evt.longitude!]}>
+            <Popup>
+              <div>
+                <p>Date: {evt.date}</p>
+                <p>Location: {evt.location}</p>
+                <p>{evt.details}</p>
+              </div>
+            </Popup>
           </Marker>
-        )}
+        ))}
       </MapContainer>
-      {/* <Slider defaultValue={[33]} max={100} step={1} /> */}
     </div>
   )
 }

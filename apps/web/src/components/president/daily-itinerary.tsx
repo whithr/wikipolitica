@@ -7,39 +7,31 @@ import { Link } from '@tanstack/react-router'
 import { ActivityPing } from '@/components/animations/activity-ping'
 
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
-import { useCalendarRange } from '@/hooks/useCalendarRange'
-import { useFilteredCalendarData } from '@/hooks/useFilteredTrumpCalendarData'
-import { useTrumpCalendarData } from '@/hooks/useTrumpCalendarData'
+
+import { usePresidentCalendar } from './president-calendar-context'
 
 export const DailyItinerary = () => {
-  const { data, isLoading } = useTrumpCalendarData()
-  const { selectedRange, setSelectedRange } = useCalendarRange()
-  // Filter/Sort/Group/Highlight logic in a single hook:
   const {
+    isLoading,
+    filteredData,
     sortedDays,
     sortedEventsByDay,
     highlightDay,
     highlightTime,
-    minDate,
-    maxDate,
-  } = useFilteredCalendarData(data, selectedRange)
+  } = usePresidentCalendar()
 
   if (isLoading) return <p>Loading...</p>
-  if (!data || data.length === 0) return <p>No data available.</p>
+  if (!filteredData || filteredData.length === 0)
+    return <p>No data available.</p>
 
   return (
     <div className='flex flex-col gap-4 text-foreground'>
-      {/* Top controls (date picker, etc.) */}
+      {/* Top controls */}
       <div className='flex flex-wrap items-center justify-center gap-2 rounded-md bg-background p-4 text-center shadow-sm'>
         <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
           Presidential Daily Schedule
         </h2>
-        <DatePickerWithRange
-          initialRange={selectedRange}
-          onChange={setSelectedRange}
-          minDate={minDate}
-          maxDate={maxDate}
-        />
+        <DatePickerWithRange />
       </div>
 
       {/* List of grouped & sorted events */}
@@ -60,6 +52,7 @@ export const DailyItinerary = () => {
                     !event.details) ||
                   event.details ===
                     'No official presidential schedule released or announced.'
+
                 if (isIgnoredEvent) return null
 
                 const eventTimeInMins = parseTimeToMinutes(event.time)

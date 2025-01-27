@@ -1,11 +1,8 @@
-// date-picker-with-range.tsx
 'use client'
 
-import * as React from 'react'
-import { addDays, format } from 'date-fns'
+import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { DateRange } from 'react-day-picker'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -15,27 +12,25 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface DatePickerWithRangeProps {
-  minDate: Date
-  maxDate: Date
-  initialRange?: DateRange
-  onChange?: (range: DateRange | undefined) => void
-}
+import { usePresidentCalendar } from '@/components/president/president-calendar-context'
 
-export function DatePickerWithRange({
-  minDate,
-  maxDate,
-  initialRange,
-  onChange,
-}: DatePickerWithRangeProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>(
-    initialRange ?? { from: new Date(), to: addDays(new Date(), 7) }
-  )
+export function DatePickerWithRange() {
+  // 1) Get everything from your context
+  const { selectedRange, setSelectedRange, minDate, maxDate } =
+    usePresidentCalendar()
 
-  React.useEffect(() => {
-    onChange?.(date)
-  }, [date, onChange])
+  // 2) Display text for the button
+  // The user might not have selected any range yet, so handle undefined carefully
+  const getButtonLabel = (range: DateRange) => {
+    if (!range?.from) return 'Pick a range of dates'
+    if (range.to) {
+      return `${format(range.from, 'LLL dd, y')} - ${format(range.to, 'LLL dd, y')}`
+    } else {
+      return format(range.from, 'LLL dd, y')
+    }
+  }
 
+  // 3) Render
   return (
     <div className='grid gap-2'>
       <Popover>
@@ -44,32 +39,23 @@ export function DatePickerWithRange({
             variant='outline'
             className={cn(
               'w-64 justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
+              !selectedRange && 'text-muted-foreground'
             )}
           >
             <CalendarIcon className='mr-2 h-4 w-4' />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, 'LLL dd, y')} -{' '}
-                  {format(date.to, 'LLL dd, y')}
-                </>
-              ) : (
-                format(date.from, 'LLL dd, y')
-              )
-            ) : (
-              <span>Pick a range of dates</span>
-            )}
+            {getButtonLabel(selectedRange)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0' align='start'>
           <Calendar
             mode='range'
             numberOfMonths={1}
-            // If you have a separate "defaultMonth", you can do: defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            // Disable all days before minDate and after maxDate
+            // Show the selected range from context
+            selected={selectedRange}
+            onSelect={(range) => {
+              if (range) setSelectedRange(range)
+            }}
+            // Restrict selection to these bounds
             minDate={minDate}
             maxDate={maxDate}
           />

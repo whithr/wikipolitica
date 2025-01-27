@@ -25,6 +25,8 @@ export type PoolReportSchedule = {
   newmonth?: boolean; // Indicates if this is the start of a new month
   daycount?: number | null; // Optional count of days
   lastdaily: boolean; // Indicates if this is the last daily event
+  latitude?: number | null; // Optional latitude
+  longitude?: number | null; // Optional longitude
 };
 
 export type PoolReportSchedules = PoolReportSchedule[];

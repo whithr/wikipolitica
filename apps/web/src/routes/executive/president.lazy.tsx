@@ -1,17 +1,19 @@
 import { DailyItinerary } from '@/components/president/daily-itinerary'
 // import { Skeleton } from '@/components/ui/skeleton'
 import { Map } from '@/components/president/map'
+import { PresidentCalendarProvider } from '@/components/president/president-calendar-context'
+
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 const President = () => {
-  const exampleLocation = 'South Lawn'
-
+  // Then pass relevant props to each child
   return (
-    <div className='flex flex-col gap-4 p-2'>
-      {/* <Skeleton className='h-[500px] w-full shadow-md' /> */}
-      <Map location={exampleLocation} />
-      <DailyItinerary />
-    </div>
+    <PresidentCalendarProvider>
+      <div className='flex flex-col gap-4 p-2'>
+        <Map />
+        <DailyItinerary />
+      </div>
+    </PresidentCalendarProvider>
   )
 }
 
