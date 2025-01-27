@@ -14,7 +14,6 @@ import { useTrumpCalendarData } from '@/hooks/useTrumpCalendarData'
 export const DailyItinerary = () => {
   const { data, isLoading } = useTrumpCalendarData()
   const { selectedRange, setSelectedRange } = useCalendarRange()
-
   // Filter/Sort/Group/Highlight logic in a single hook:
   const {
     sortedDays,
