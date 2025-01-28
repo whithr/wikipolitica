@@ -5,6 +5,7 @@ import {
   ReactNode,
   useMemo,
   FC,
+  useEffect,
 } from 'react'
 import { useTrumpCalendarData } from '@/hooks/useTrumpCalendarData'
 import { useFilteredCalendarData } from '@/hooks/useFilteredTrumpCalendarData'
@@ -26,6 +27,9 @@ interface PresidentCalendarContextValue {
   highlightTime: number | null
   minDate: Date
   maxDate: Date
+
+  selectedDayIndex: number
+  setSelectedDayIndex: React.Dispatch<React.SetStateAction<number>>
 
   // The date range selected by the user
   selectedRange: DateRange
@@ -66,6 +70,13 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
     maxDate,
     filteredData,
   } = useFilteredCalendarData(rawData, selectedRange)
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(-1)
+
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      setSelectedDayIndex(filteredData.length - 1)
+    }
+  }, [filteredData])
 
   // 4) Memoize the context value
   //    (though often it's fine to just return an object. Up to you.)
@@ -81,6 +92,8 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
       maxDate,
       selectedRange,
       setSelectedRange,
+      selectedDayIndex,
+      setSelectedDayIndex,
     }
   }, [
     isLoading,
@@ -92,6 +105,8 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
     minDate,
     maxDate,
     selectedRange,
+    selectedDayIndex,
+    setSelectedDayIndex,
   ])
 
   return (

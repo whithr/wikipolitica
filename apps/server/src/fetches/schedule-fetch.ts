@@ -61,7 +61,8 @@ async function geocodeLocation(
 ): Promise<[number, number] | [null, null]> {
   if (!location) return [null, null];
   try {
-    const results = await geocoder.geocode(location);
+    const normalizedLocation = normalizeLocation(location);
+    const results = await geocoder.geocode(normalizedLocation);
     if (results && results.length > 0) {
       const { latitude, longitude } = results[0];
       if (!latitude || !longitude) return [null, null];
@@ -110,57 +111,57 @@ async function insertScheduleEvent(evt: PoolReportSchedule): Promise<void> {
 }
 
 // 4) Main function: fetch entire schedule, filter, delete old, re-insert
-export async function refreshLast3DaysOfSchedule(): Promise<void> {
+export async function refreshRecentAndFuture(): Promise<void> {
   try {
+    // 1) Fetch entire schedule
     const data = await fetchTrumpCalendar();
-    console.log(
-      `[Info] Fetched ${data.length} total events from Trump Calendar.`,
-    );
+    console.log(`[Info] Fetched ${data.length} total events.`);
 
-    // A) Figure out which dates we want to refresh
-    const last3days = getLastNDays(3); // returns a Set of the last 3 "YYYY-MM-DD"
+    // 2) Build sets:
+    const last3Days = getLastNDays(3); // e.g. {"2023-10-17","2023-10-16","2023-10-15"}
+    const futureDates = getFutureDates(data); // all >= "2023-10-17" for example
 
-    // B) Filter events that fall in the last 3 days
-    const recentEvents = data.filter((evt) => last3days.has(evt.date));
+    // Combine them
+    const datesToRefresh = new Set<string>([
+      ...last3Days,
+      ...futureDates,
+    ]);
 
-    console.log(
-      `[Info] Found ${recentEvents.length} events in the last 3 days.`,
-    );
+    console.log(`[Info] # of dates to refresh: ${datesToRefresh.size}`);
 
-    // C) Delete rows in those dates from the table
-    //    We'll do a single .delete() call using .in('date', [...last3days])
+    // 3) Delete all rows in those dates
     const { error: deleteError } = await supabase
       .from("president_schedule")
       .delete()
-      .in("date", Array.from(last3days));
+      .in("date", Array.from(datesToRefresh));
 
     if (deleteError) {
-      console.error(
-        "[Error] Deleting existing rows from the last 3 days:",
-        deleteError,
-      );
+      console.error("[Error] Deleting rows in refresh range:", deleteError);
     } else {
-      console.log("[Info] Successfully deleted rows for the last 3 days.");
+      console.log("[Info] Successfully deleted rows in refresh range.");
     }
 
-    // D) For each event in that 3-day window, optionally geocode location, then insert
-    for (const evt of recentEvents) {
-      // Optional geocoding
-      const [lat, lng] = await geocodeLocation(evt.location);
-      if (!lat || !lng) {
-        console.warn(`[Warning] Could not geocode ${evt.location}`);
-        continue;
-      }
-      evt.coords = [lat, lng];
+    // 4) Filter all events that match those dates
+    const eventsToReinsert = data.filter((evt) => datesToRefresh.has(evt.date));
 
+    // 5) (Optional) geocode & insert
+    let insertedCount = 0;
+    for (const evt of eventsToReinsert) {
+      const [lat, lng] = await geocodeLocation(evt.location);
+      if (lat && lng) {
+        evt.coords = [lat, lng];
+      } else {
+        console.warn(`[Warning] Could not geocode ${evt.location}`);
+      }
       await insertScheduleEvent(evt);
+      insertedCount++;
     }
 
     console.log(
-      `[Info] Successfully replaced ${recentEvents.length} events for last 3 days.`,
+      `[Info] Reinserted ${insertedCount} events for last 3 days + future.`,
     );
   } catch (err) {
-    console.error("[Error] refreshLast3DaysOfSchedule:", err);
+    console.error("[Error] refreshRecentAndFuture:", err);
   }
 }
 
@@ -170,30 +171,30 @@ schedule.scheduleJob("1 0 * * *", async () => {
   console.log(
     "[Scheduled Task] Running refreshLast3DaysOfSchedule shortly past midnight.",
   );
-  await refreshLast3DaysOfSchedule();
+  await refreshRecentAndFuture();
 });
 
 // Schedule to run in the middle of the day (e.g., 12:00 PM)
 schedule.scheduleJob("0 12 * * *", async () => {
-  console.log("[Scheduled Task] Running refreshLast3DaysOfSchedule at midday.");
-  await refreshLast3DaysOfSchedule();
+  console.log("[Scheduled Task] Running refreshRecentAndFuture at midday.");
+  await refreshRecentAndFuture();
 });
 
 // Schedule to run in the evening (e.g., 6:00 PM)
 schedule.scheduleJob("0 18 * * *", async () => {
   console.log(
-    "[Scheduled Task] Running refreshLast3DaysOfSchedule in the evening.",
+    "[Scheduled Task] Running refreshRecentAndFuture in the evening.",
   );
-  await refreshLast3DaysOfSchedule();
+  await refreshRecentAndFuture();
 });
 
 // 6) Optionally run once immediately on startup (for testing)
-// refreshLast3DaysOfSchedule().then(() => {
+// refreshRecentAndFuture().then(() => {
 //   console.log("[Startup] Done refreshing last 3 days of schedule.");
 // });
 
 // =============== Helper Functions ===============
-function formatYmd(date: Date): string {
+function formatYMD(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -206,7 +207,25 @@ function getLastNDays(numDays: number): Set<string> {
   for (let i = 0; i < numDays; i++) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    dates.add(formatYmd(d));
+    dates.add(formatYMD(d));
   }
   return dates;
+}
+
+function getFutureDates(data: any): Set<string> {
+  const todayStr = formatYMD(new Date());
+  const futureDates = new Set<string>();
+  for (const evt of data) {
+    if (evt.date >= todayStr) {
+      futureDates.add(evt.date);
+    }
+  }
+  return futureDates;
+}
+
+function normalizeLocation(location: string): string {
+  if (location.toLowerCase() === "south lawn") {
+    return "South Lawn, The White House, Washington, DC 20500";
+  }
+  return location;
 }
