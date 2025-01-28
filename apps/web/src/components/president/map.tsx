@@ -114,7 +114,8 @@ export const Map = () => {
   }
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col'>
+      {/* <div className='h-8 bg-background'> hello</div> */}
       <div
         className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[500px]'
         id='map'
@@ -169,10 +170,11 @@ export const Map = () => {
           })}
         </MapContainer>
       </div>
-      <div className='flex flex-row gap-2'>
+      <div className='z-10 mx-6 -mt-14 flex flex-row gap-2 rounded-sm bg-background/50 bg-clip-padding px-2 py-1 backdrop-blur-sm backdrop-filter'>
         <Button
           size='icon'
           variant={isPlaying ? 'default' : 'outline'}
+          className='min-w-9'
           onClick={() => {
             // If we press play and are already at the last index, reset to 0
             if (selectedDayIndex >= filteredData.length - 1) {
@@ -186,6 +188,7 @@ export const Map = () => {
         <Button
           size='icon'
           variant={playbackSpeed === 1500 ? 'default' : 'outline'}
+          className='min-w-9'
           onClick={() => setPlaybackSpeed(playbackSpeed === 3000 ? 1500 : 3000)} // Toggle speed
         >
           <FastForward />
@@ -193,6 +196,7 @@ export const Map = () => {
         <Button
           size='icon'
           variant={isPlaying ? 'outline' : 'default'}
+          className='min-w-9'
           onClick={() => setIsPlaying(false)} // Toggle speed
         >
           <Pause />

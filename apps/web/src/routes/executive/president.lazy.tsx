@@ -9,7 +9,7 @@ const President = () => {
   // Then pass relevant props to each child
   return (
     <PresidentCalendarProvider>
-      <div className='flex flex-col gap-4 p-2'>
+      <div className='flex flex-col gap-7 p-2'>
         <Map />
         <DailyItinerary />
       </div>

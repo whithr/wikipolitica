@@ -6,6 +6,10 @@
   @apply "Inter Variable";
 } */
 
+.leaflet-control-attribution {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
