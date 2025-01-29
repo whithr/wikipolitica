@@ -1,8 +1,8 @@
 import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '@/components/ui/tooltip'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import React from 'react'
 import { politicalDictionary } from '@/lib/dictonary'
 
@@ -26,14 +26,14 @@ export const WordExplainer: React.FC<WordExplainerProps> = ({ text }) => {
         const wordKey = part.toLowerCase()
         if (politicalDictionary[wordKey]) {
           return (
-            <Tooltip key={index}>
-              <TooltipTrigger className='underline decoration-dashed underline-offset-4'>
+            <Popover key={index}>
+              <PopoverTrigger className='underline decoration-dashed underline-offset-4'>
                 {part}
-              </TooltipTrigger>
-              <TooltipContent className='text-md max-w-64 px-4 py-2'>
+              </PopoverTrigger>
+              <PopoverContent className='text-md max-w-64 bg-foreground px-4 py-2 text-background'>
                 {politicalDictionary[wordKey]}
-              </TooltipContent>
-            </Tooltip>
+              </PopoverContent>
+            </Popover>
           )
         }
         return part
