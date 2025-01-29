@@ -28,8 +28,8 @@ interface PresidentCalendarContextValue {
   minDate: Date
   maxDate: Date
 
-  selectedDayIndex: number
-  setSelectedDayIndex: React.Dispatch<React.SetStateAction<number>>
+  selectedDayId: number
+  setSelectedDayId: React.Dispatch<React.SetStateAction<number>>
 
   // The date range selected by the user
   selectedRange: DateRange
@@ -70,11 +70,11 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
     maxDate,
     filteredData,
   } = useFilteredCalendarData(rawData, selectedRange)
-  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(-1)
+  const [selectedDayId, setSelectedDayId] = useState<number>(-1)
 
   useEffect(() => {
     if (filteredData.length > 0) {
-      setSelectedDayIndex(filteredData.length - 1)
+      setSelectedDayId(filteredData[0]?.id)
     }
   }, [filteredData])
 
@@ -92,8 +92,8 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
       maxDate,
       selectedRange,
       setSelectedRange,
-      selectedDayIndex,
-      setSelectedDayIndex,
+      selectedDayId,
+      setSelectedDayId,
     }
   }, [
     isLoading,
@@ -105,8 +105,8 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
     minDate,
     maxDate,
     selectedRange,
-    selectedDayIndex,
-    setSelectedDayIndex,
+    selectedDayId,
+    setSelectedDayId,
   ])
 
   return (

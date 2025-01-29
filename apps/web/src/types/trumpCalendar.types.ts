@@ -7,6 +7,7 @@ export type DaySummary = {
 };
 
 export type PoolReportSchedule = {
+  id: number;
   date: string; // e.g., "2025-01-23"
   time?: string | null; // e.g., "11:00:00"
   time_formatted?: string | null; // e.g., "11:00 AM"

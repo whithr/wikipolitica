@@ -17,8 +17,8 @@ export const Map = () => {
   const {
     isLoading,
     filteredData,
-    selectedDayIndex,
-    setSelectedDayIndex,
+    selectedDayId,
+    setSelectedDayId,
     highlightDay,
     highlightTime,
   } = usePresidentCalendar()
@@ -30,31 +30,14 @@ export const Map = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackSpeed, setPlaybackSpeed] = useState(3000) // Default playback speed: 3 seconds
 
-  // 2) Whenever isPlaying = true, increment selectedDayIndex every second
-  useEffect(() => {
-    if (!isPlaying) return
-
-    const intervalId = setInterval(() => {
-      setSelectedDayIndex((prev: number) => {
-        if (prev >= filteredData.length - 1) {
-          setIsPlaying(false) // Stop playing if we're at the last index
-          return prev
-        }
-        return prev + 1
-      })
-    }, playbackSpeed)
-
-    return () => clearInterval(intervalId)
-  }, [isPlaying, playbackSpeed, filteredData.length, setSelectedDayIndex])
-
-  // 3) Stop the "animation" if user manually changes the slider or clicks a marker
+  // 2) Stop the "animation" if user manually changes the slider or clicks a marker
   const handleUserAction = useCallback(
-    (newIndex: number) => {
+    (newId: number) => {
       setIsPlaying(false)
       setShouldClosePopup(true)
-      setSelectedDayIndex(newIndex)
+      setSelectedDayId(newId)
     },
-    [setSelectedDayIndex]
+    [setSelectedDayId]
   )
 
   // Extract only the events that have lat/long
@@ -63,6 +46,31 @@ export const Map = () => {
       return evt.latitude != null && evt.longitude != null
     })
   }, [filteredData])
+
+  // 3) Whenever isPlaying = true, increment selectedDayIndex every second
+  useEffect(() => {
+    if (!isPlaying) return
+
+    const intervalId = setInterval(() => {
+      setSelectedDayId((prevId) => {
+        // Find the current index in the reversed order
+        const currentIndex = eventsWithCoords.findIndex(
+          (evt) => evt.id === prevId
+        )
+
+        // If at the last index, stop playing
+        if (currentIndex <= 0) {
+          setIsPlaying(false)
+          return prevId // Keep the same ID to prevent overflow
+        }
+
+        // Move to the next item in the reversed list
+        return eventsWithCoords[currentIndex - 1]?.id ?? prevId
+      })
+    }, playbackSpeed)
+
+    return () => clearInterval(intervalId)
+  }, [isPlaying, playbackSpeed, eventsWithCoords, setSelectedDayId])
 
   // Fallback if no coords found at all
   const fallbackCenter = useMemo(
@@ -81,12 +89,12 @@ export const Map = () => {
 
   const zoom = eventsWithCoords.length > 0 ? 5 : 4
 
-  const createPingIcon = (shouldHighlight: boolean, index: number) =>
+  const createPingIcon = (shouldHighlight: boolean, id: number) =>
     new DivIcon({
       html: renderToStaticMarkup(
         <ActivityPing
           shouldHighlight={shouldHighlight}
-          shouldAnimate={index === selectedDayIndex}
+          shouldAnimate={id === selectedDayId}
           className='!m-0'
         />
       ),
@@ -96,18 +104,17 @@ export const Map = () => {
 
   // Determine the position of the selected event
   const selectedPosition = useMemo(() => {
-    if (
-      selectedDayIndex >= 0 &&
-      selectedDayIndex < eventsWithCoords.length &&
-      eventsWithCoords[selectedDayIndex]
-    ) {
-      return [
-        eventsWithCoords[selectedDayIndex].latitude,
-        eventsWithCoords[selectedDayIndex].longitude,
-      ] as [number, number]
+    const selectedEvent = eventsWithCoords.find(
+      (evt) => evt.id === selectedDayId
+    )
+    if (selectedEvent && selectedEvent.latitude && selectedEvent.longitude) {
+      return [selectedEvent.latitude, selectedEvent.longitude] as [
+        number,
+        number,
+      ]
     }
     return firstCoords
-  }, [selectedDayIndex, eventsWithCoords, firstCoords])
+  }, [selectedDayId, eventsWithCoords, firstCoords])
 
   if (isLoading) {
     return <p>Loading map...</p>
@@ -177,8 +184,10 @@ export const Map = () => {
           className='min-w-9'
           onClick={() => {
             // If we press play and are already at the last index, reset to 0
-            if (selectedDayIndex >= filteredData.length - 1) {
-              setSelectedDayIndex(0)
+            if (selectedDayId === eventsWithCoords[0]?.id) {
+              setSelectedDayId(
+                eventsWithCoords[eventsWithCoords.length - 1]?.id
+              )
             }
             setIsPlaying(!isPlaying)
           }}
@@ -202,12 +211,22 @@ export const Map = () => {
           <Pause />
         </Button>
         <Slider
-          defaultValue={[filteredData.length - 1]}
-          value={[selectedDayIndex]}
-          max={filteredData.length - 1}
+          // Calculate the "reversed" value for the slider
+          value={[
+            eventsWithCoords.length -
+              1 -
+              eventsWithCoords.findIndex((evt) => evt.id === selectedDayId),
+          ]}
+          max={eventsWithCoords.length - 1}
           step={1}
           onValueChange={(value) => {
-            handleUserAction(value[0])
+            // Map the reversed index back to the correct event ID
+            const reversedIndex = eventsWithCoords.length - 1 - value[0]
+            const newId = eventsWithCoords[reversedIndex]?.id
+
+            if (newId != null) {
+              handleUserAction(newId)
+            }
           }}
         />
       </div>

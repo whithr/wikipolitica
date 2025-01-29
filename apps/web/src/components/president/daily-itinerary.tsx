@@ -18,17 +18,12 @@ export const DailyItinerary = () => {
     sortedEventsByDay,
     highlightDay,
     highlightTime,
-    selectedDayIndex,
+    selectedDayId,
   } = usePresidentCalendar()
-
-  console.log(filteredData)
 
   if (isLoading) return <p>Loading...</p>
   if (!filteredData || filteredData.length === 0)
     return <p>No data available.</p>
-
-  // We'll track a global index outside the map
-  let globalEventIndex = filteredData.length - 1
 
   return (
     <div className='flex flex-col gap-4 text-foreground'>
@@ -51,8 +46,6 @@ export const DailyItinerary = () => {
               <Separator />
 
               {dayEvents.map((event, index) => {
-                const localIndex = globalEventIndex
-                globalEventIndex -= 1
                 // Optionally hide certain no-info events
                 const isIgnoredEvent =
                   (!event.time_formatted &&
@@ -73,7 +66,7 @@ export const DailyItinerary = () => {
                   >
                     <ActivityPing
                       shouldHighlight={shouldHighlight}
-                      shouldAnimate={selectedDayIndex === localIndex}
+                      shouldAnimate={selectedDayId === event.id}
                     />
 
                     <div className='flex flex-col'>
