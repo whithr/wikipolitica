@@ -121,7 +121,7 @@ export const Map = () => {
   }
 
   return (
-    <div className='flex flex-col'>
+    <div className='mb-4 flex flex-col'>
       {/* <div className='h-8 bg-background'> hello</div> */}
       <div
         className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[500px]'
@@ -148,18 +148,18 @@ export const Map = () => {
           />
 
           {/* Place a Marker for each event with coords */}
-          {eventsWithCoords.map((evt, i) => {
+          {eventsWithCoords.map((evt) => {
             const eventTimeInMins = parseTimeToMinutes(evt.time)
             const shouldHighlight =
               highlightDay === evt.date && highlightTime === eventTimeInMins
 
             return (
               <Marker
-                key={i}
+                key={evt.id}
                 position={[evt.latitude!, evt.longitude!]}
-                icon={createPingIcon(shouldHighlight, i)}
+                icon={createPingIcon(shouldHighlight, evt.id)}
                 eventHandlers={{
-                  click: () => handleUserAction(i),
+                  click: () => handleUserAction(evt.id),
                 }}
               >
                 <Popup>
@@ -168,7 +168,6 @@ export const Map = () => {
                       <span className='font-semibold'>{evt.date}</span> -{' '}
                       {evt.time_formatted}
                     </div>
-                    {/* <p>Location: {evt.location}</p> */}
                     <div>{evt.details}</div>
                   </div>
                 </Popup>

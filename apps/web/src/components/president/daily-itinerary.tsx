@@ -71,30 +71,32 @@ export const DailyItinerary = () => {
 
                     <div className='flex flex-col'>
                       {event.time_formatted ? (
-                        <div className='flex items-center gap-2 text-muted-foreground'>
+                        <div className='flex flex-col gap-1 text-muted-foreground md:flex-row md:gap-2'>
                           {event.time_formatted} – {event.location}
-                          {event.video_url && (
-                            <Button asChild size='xs' variant='outline'>
-                              <Link
-                                to={event.video_url}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                              >
-                                Watch Video
-                              </Link>
-                            </Button>
-                          )}
-                          {event.url && (
-                            <Button asChild size='xs' variant='outline'>
-                              <Link
-                                to={event.url}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                              >
-                                More Info
-                              </Link>
-                            </Button>
-                          )}
+                          <div className='flex gap-2'>
+                            {event.video_url && (
+                              <Button asChild size='xs' variant='outline'>
+                                <Link
+                                  to={event.video_url}
+                                  target='_blank'
+                                  rel='noopener noreferrer'
+                                >
+                                  Watch Video
+                                </Link>
+                              </Button>
+                            )}
+                            {event.url && (
+                              <Button asChild size='xs' variant='outline'>
+                                <Link
+                                  to={event.url}
+                                  target='_blank'
+                                  rel='noopener noreferrer'
+                                >
+                                  More Info
+                                </Link>
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ) : (
                         <div className='flex gap-2 text-muted-foreground'>
