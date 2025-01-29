@@ -1,9 +1,10 @@
 import * as React from 'react'
 import {
   Gavel,
+  Home,
   MessageCircleQuestion,
   Scale,
-  Settings2,
+  // Settings2,
   UserCircle,
 } from 'lucide-react'
 
@@ -21,6 +22,8 @@ import { NavSingle } from '@/nav-single'
 export type NavItem = {
   title: string
   url: string
+  wip?: boolean
+  defaultOpen?: boolean
   items?: NavItem[] // Optional sub-items for nested navigation
 }
 
@@ -30,48 +33,58 @@ export type NavData = {
 
 export const navItems = {
   navMain: [
+    { title: 'Home', url: '/', icon: Home },
     {
       title: 'Executive Branch',
       url: '/executive',
       icon: UserCircle,
+      defaultOpen: true,
       items: [
         { title: 'President', url: '/executive/president' },
-        { title: 'Vice President', url: '/executive/vice-president' },
+        { title: 'Executive Orders', url: '/executive/orders' },
+
+        {
+          title: 'Vice President',
+          url: '/executive/vice-president',
+          wip: true,
+        },
         {
           title: 'Cabinet',
           url: '/executive/cabinet',
-          items: [
-            { title: 'Secretaries', url: '/executive/cabinet/secretaries' },
-            { title: 'Agencies', url: '/executive/cabinet/agencies' },
-          ],
+          wip: true,
         },
-        { title: 'Executive Orders', url: '/executive/orders' },
       ],
     },
     {
       title: 'Legislative Branch',
       url: '/legislative',
       icon: Gavel,
+      wip: true,
       items: [
-        { title: 'Senate', url: '/legislative/senate' },
-        { title: 'House of Representatives', url: '/legislative/house' },
-        { title: 'Bills & Legislation', url: '/legislative/bills' },
-        { title: 'Voting Records', url: '/legislative/voting' },
+        { title: 'Senate', url: '/legislative/senate', wip: true },
+        {
+          title: 'House of Representatives',
+          url: '/legislative/house',
+          wip: true,
+        },
+        { title: 'Bills & Legislation', url: '/legislative/bills', wip: true },
+        { title: 'Voting Records', url: '/legislative/voting', wip: true },
       ],
     },
     {
       title: 'Judicial Branch',
       url: '/judicial',
       icon: Scale,
+      wip: true,
       items: [
-        { title: 'Supreme Court', url: '/judicial/supreme' },
-        { title: 'Federal Courts', url: '/judicial/federal' },
-        { title: 'Legal Opinions', url: '/judicial/opinions' },
+        { title: 'Supreme Court', url: '/judicial/supreme', wip: true },
+        { title: 'Federal Courts', url: '/judicial/federal', wip: true },
+        { title: 'Legal Opinions', url: '/judicial/opinions', wip: true },
       ],
     },
   ],
   navSingle: [
-    { title: 'Settings', url: '/settings', icon: Settings2 },
+    // { title: 'Settings', url: '/settings', icon: Settings2 },
     { title: 'FAQ', url: '/faq', icon: MessageCircleQuestion },
   ],
 }

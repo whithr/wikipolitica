@@ -11,6 +11,7 @@ import { MapCenterUpdater } from './map-center-updater'
 import { parseTimeToMinutes } from '@/lib/time.utils'
 import { Button } from '../ui/button'
 import { FastForward, Pause, Play } from 'lucide-react'
+import { Separator } from '@radix-ui/react-separator'
 
 export const Map = () => {
   const { resolvedTheme } = useTheme()
@@ -125,7 +126,7 @@ export const Map = () => {
     <div className='mb-4 flex flex-col'>
       {/* <div className='h-8 bg-background'> hello</div> */}
       <div
-        className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[500px]'
+        className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[400px]'
         id='map'
       >
         <MapContainer
@@ -178,7 +179,7 @@ export const Map = () => {
           })}
         </MapContainer>
       </div>
-      <div className='z-10 mx-6 -mt-14 flex flex-row gap-2 rounded-sm bg-background/50 bg-clip-padding px-2 py-1 backdrop-blur-sm backdrop-filter'>
+      <div className='z-10 mx-6 -mt-16 flex flex-row gap-2 rounded-sm bg-background/60 bg-clip-padding px-2 py-2 shadow-lg backdrop-blur-sm backdrop-filter'>
         <Button
           size='icon'
           variant={isPlaying ? 'default' : 'outline'}
@@ -211,6 +212,10 @@ export const Map = () => {
         >
           <Pause />
         </Button>
+        <Separator
+          orientation='vertical'
+          className='mx-2 w-auto bg-sidebar-border'
+        />
         <Slider
           // Calculate the "reversed" value for the slider
           value={[

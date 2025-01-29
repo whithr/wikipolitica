@@ -41,6 +41,7 @@ export function DatePickerWithRange() {
               'w-64 justify-start text-left font-normal',
               !selectedRange && 'text-muted-foreground'
             )}
+            special='darkBang'
           >
             <CalendarIcon className='mr-2 h-4 w-4' />
             {getButtonLabel(selectedRange)}

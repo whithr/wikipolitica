@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { ChevronRight, Construction, type LucideIcon } from 'lucide-react'
 
 import {
   Collapsible,
@@ -13,8 +13,11 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
+import { cx } from 'class-variance-authority'
+import { Badge } from '@/components/ui/badge'
 
 export function NavMain({
   items,
@@ -24,46 +27,104 @@ export function NavMain({
     url: string
     icon?: LucideIcon
     isActive?: boolean
+    defaultOpen?: boolean
+    wip?: boolean
     items?: {
       title: string
       url: string
+      wip?: boolean
     }[]
   }[]
 }) {
+  const { state } = useSidebar()
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={item.isActive}
-            className='group/collapsible'
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title} className='text-nowrap'>
+        {items.map((item) =>
+          item.items ? (
+            <Collapsible
+              key={item.title}
+              asChild
+              defaultOpen={item.isActive || item.defaultOpen}
+              className='group/collapsible'
+            >
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    tooltip={
+                      item.wip ? `${item.title} (Work in Progress)` : item.title
+                    }
+                    className={cx(
+                      'text-nowrap',
+                      item.wip &&
+                        state === 'collapsed' &&
+                        'hover:cursor-not-allowed hover:!bg-transparent'
+                    )}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    {item.wip ? (
+                      <Badge
+                        variant='default'
+                        size='sm'
+                        className='ml-auto hover:bg-primary'
+                      >
+                        WIP
+                      </Badge>
+                    ) : (
+                      <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                    )}
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.items?.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton
+                          asChild
+                          className={subItem.wip ? 'hover:!bg-transparent' : ''}
+                        >
+                          <div
+                            className={cx(
+                              'flex',
+                              subItem.wip && 'hover:cursor-not-allowed'
+                            )}
+                          >
+                            {subItem.wip && (
+                              <Construction className='stroke-primary dark:stroke-primary' />
+                            )}
+                            <Link
+                              to={subItem.url}
+                              className={cx(
+                                'text-nowrap',
+                                subItem.wip && 'opacity-50'
+                              )}
+                              disabled={subItem.wip}
+                            >
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </div>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          ) : (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.wip ? `${item.title} work` : item.title}
+              >
+                <Link to={item.url} className='text-nowrap'>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                  <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <Link to={subItem.url} className='text-nowrap'>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
-          </Collapsible>
-        ))}
+          )
+        )}
       </SidebarMenu>
     </SidebarGroup>
   )

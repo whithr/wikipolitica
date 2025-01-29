@@ -26,7 +26,7 @@ export const DailyItinerary = () => {
   return (
     <div className='flex flex-col gap-4 text-foreground'>
       {/* Top controls */}
-      <div className='flex flex-wrap items-center justify-center gap-2 rounded-md bg-background p-4 text-center shadow-sm'>
+      <div className='flex flex-wrap items-center justify-center gap-2 rounded-md border border-border bg-background p-4 text-center shadow-sm'>
         <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
           Presidential Daily Schedule
         </h2>
@@ -34,7 +34,7 @@ export const DailyItinerary = () => {
       </div>
 
       {/* List of grouped & sorted events */}
-      <div className='flex flex-col gap-10 rounded-md bg-background p-2 pt-4 shadow-sm'>
+      <div className='flex flex-col gap-10 rounded-md border border-border bg-background p-2 pt-4 shadow-sm'>
         {sortedDays.map((date) => {
           const dayEvents = sortedEventsByDay[date]
 
@@ -73,7 +73,12 @@ export const DailyItinerary = () => {
                           {event.time_formatted} – {event.location}
                           <div className='flex gap-2'>
                             {event.video_url && (
-                              <Button asChild size='xs' variant='outline'>
+                              <Button
+                                asChild
+                                size='xs'
+                                variant='outline'
+                                special='darkBang'
+                              >
                                 <Link
                                   to={event.video_url}
                                   target='_blank'
@@ -84,7 +89,12 @@ export const DailyItinerary = () => {
                               </Button>
                             )}
                             {event.url && (
-                              <Button asChild size='xs' variant='outline'>
+                              <Button
+                                asChild
+                                size='xs'
+                                variant='outline'
+                                special='darkBang'
+                              >
                                 <Link
                                   to={event.url}
                                   target='_blank'

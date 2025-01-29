@@ -27,7 +27,12 @@ export const WordExplainer: React.FC<WordExplainerProps> = ({ text }) => {
         if (politicalDictionary[wordKey]) {
           return (
             <Popover key={index}>
-              <PopoverTrigger className='underline decoration-dashed underline-offset-4'>
+              <PopoverTrigger
+                className='decoration-xl underline decoration-primary decoration-solid underline-offset-4'
+                style={{
+                  textDecorationThickness: '4px',
+                }}
+              >
                 {part}
               </PopoverTrigger>
               <PopoverContent className='text-md max-w-64 bg-foreground px-4 py-2 text-background'>
