@@ -49,7 +49,7 @@ export const CurrentEventHeader = () => {
           {statusLabel}
         </div>
       )} */}
-      <div className='flex min-h-full items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm dark:border-primary/50'>
+      <div className='flex min-h-[175px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm dark:border-primary/50 md:min-h-[165px] lg:min-h-[140px] xl:min-h-[105px]'>
         <img src={potusSeal} className='h-16 w-16 rounded-full shadow-sm' />
         <div className='flex flex-col gap-2'>
           <div className='flex justify-between font-semibold'>
