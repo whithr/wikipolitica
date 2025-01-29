@@ -99,9 +99,7 @@ export function useFilteredCalendarData(
     let highlightTime: number | null = null;
 
     const localToday = formatYMD(new Date());
-    const localNowInMinutes = getLocalNowInMinutes();
-
-    console.log(localToday, localNowInMinutes);
+    const localNowInMinutes = getLocalNowInMinutes() + 180; // right now fix for PST to EST
 
     if (sortedDays.length > 0) {
       // If today's date is one of the sorted days
@@ -112,9 +110,7 @@ export function useFilteredCalendarData(
         let foundOne = false;
         for (const evt of dayEvents) {
           const evtMins = parseTimeToMinutes(evt.time);
-          console.log(localToday, evtMins, localNowInMinutes);
           if (evtMins !== null && evtMins <= localNowInMinutes) {
-            console.log("found one");
             highlightDay = localToday;
             highlightTime = evtMins;
             foundOne = true;
@@ -125,7 +121,6 @@ export function useFilteredCalendarData(
         // If no event has started yet, fallback to the last event of the previous day
         if (!foundOne) {
           const idx = sortedDays.indexOf(localToday);
-          console.log(sortedDays, localToday);
           if (idx > 0) {
             const prevDay = sortedDays[idx - 1];
             const prevEvents = sortedEventsByDay[prevDay];
@@ -150,7 +145,6 @@ export function useFilteredCalendarData(
           }
         }
       } else {
-        console.log("not in sorted days");
         // If today's date is not in sortedDays, fallback to the first day < today
         let fallbackDay: string | null = null;
         for (let i = 0; i < sortedDays.length; i++) {
@@ -168,8 +162,6 @@ export function useFilteredCalendarData(
         }
       }
     }
-
-    console.log(highlightDay, highlightTime);
 
     // TODO: bug here - some days aren't selectable if we dont have data yet, so ping should still show.
     // 5b) If the selected range does NOT include "today," clear out the highlight
