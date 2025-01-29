@@ -3,6 +3,7 @@ import { formatDate } from '@/lib/time.utils'
 import { Separator } from '@/components/ui/separator'
 import { WordExplainer } from '@/components/word-explainer'
 import potusSeal from '@/assets/potus-seal.png'
+import { removeBrackets } from '@/lib/utils'
 
 export const CurrentEventHeader = () => {
   const { isLoading, filteredData, selectedDayId, highlightDay } =
@@ -41,7 +42,7 @@ export const CurrentEventHeader = () => {
   //   }
 
   return (
-    <div className='flex flex-col gap-2 px-2 md:px-8'>
+    <div className='flex flex-col gap-2 px-0 md:px-8'>
       {/* {statusLabel && (
         <div
           className={`h-fit w-fit rounded-full px-3 py-1 text-xs text-white ${statusColor}`}
@@ -49,12 +50,12 @@ export const CurrentEventHeader = () => {
           {statusLabel}
         </div>
       )} */}
-      <div className='flex min-h-[175px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm dark:border-primary/50 md:min-h-[165px] lg:min-h-[140px] xl:min-h-[105px]'>
+      <div className='flex min-h-[185px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm transition-all dark:border-primary/50 md:min-h-[165px] lg:min-h-[140px] xl:min-h-[105px]'>
         <img src={potusSeal} className='h-16 w-16 rounded-full shadow-sm' />
         <div className='flex flex-col gap-2'>
           <div className='flex justify-between font-semibold'>
             <div className='flex flex-col gap-0'>
-              <span>{selectedEvent.location} </span>
+              <p className=''>{selectedEvent.location} </p>
               {selectedEvent.time_formatted ? (
                 <span className='text-xs font-normal'>
                   {formatDate(selectedEvent.date)} -{' '}
@@ -71,7 +72,7 @@ export const CurrentEventHeader = () => {
           <Separator />
 
           <div className='text-foreground'>
-            <WordExplainer text={selectedEvent.details} />
+            <WordExplainer text={removeBrackets(selectedEvent.details)} />
           </div>
         </div>
       </div>
