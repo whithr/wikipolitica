@@ -3,10 +3,12 @@ import { cx } from 'class-variance-authority'
 export const ActivityPing = ({
   shouldHighlight,
   shouldAnimate,
+  variant = 'default',
   className,
 }: {
   shouldHighlight: boolean
   shouldAnimate: boolean
+  variant?: 'default' | 'map'
   className?: string
 }) => {
   return (
@@ -20,14 +22,22 @@ export const ActivityPing = ({
         <span
           className={cx(
             'absolute inline-flex h-full w-full animate-ping rounded-full',
-            shouldHighlight ? 'bg-primary' : 'bg-secondary-foreground/25'
+            shouldHighlight
+              ? '!bg-primary'
+              : variant === 'map'
+                ? 'bg-neutral-500 dark:bg-foreground'
+                : 'bg-foreground/50'
           )}
         />
       )}
       <span
         className={cx(
           'relative inline-flex h-3 w-3 rounded-full',
-          shouldHighlight ? 'bg-primary' : 'bg-secondary-foreground/25'
+          shouldHighlight
+            ? '!bg-primary'
+            : variant === 'map'
+              ? 'bg-neutral-500 dark:bg-foreground'
+              : 'bg-foreground/50'
         )}
       />
     </span>

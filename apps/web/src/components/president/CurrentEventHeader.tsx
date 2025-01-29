@@ -1,6 +1,7 @@
 import { usePresidentCalendar } from '@/components/president/president-calendar-context'
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
-import { Separator } from '../ui/separator'
+import { Separator } from '@/components/ui/separator'
+import { WordExplainer } from '@/components/word-explainer'
 
 export const CurrentEventHeader = () => {
   const {
@@ -23,7 +24,7 @@ export const CurrentEventHeader = () => {
     : null
 
   let statusLabel = 'Upcoming'
-  let statusColor = 'bg-blue-500 dark:bg-blue-900'
+  let statusColor = 'bg-emerald-500 dark:bg-emerald-900'
 
   if (
     eventDate < highlightDate ||
@@ -40,7 +41,7 @@ export const CurrentEventHeader = () => {
     eventTimeInMinutes === highlightTime
   ) {
     statusLabel = 'Current'
-    statusColor = 'bg-green-500 dark:bg-green-700'
+    statusColor = 'bg-primary'
   }
 
   return (
@@ -69,7 +70,9 @@ export const CurrentEventHeader = () => {
 
       <Separator />
 
-      <div className='text-foreground'>{selectedEvent.details}</div>
+      <div className='text-foreground'>
+        <WordExplainer text={selectedEvent.details} />
+      </div>
     </div>
   )
 }

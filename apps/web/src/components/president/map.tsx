@@ -95,6 +95,7 @@ export const Map = () => {
         <ActivityPing
           shouldHighlight={shouldHighlight}
           shouldAnimate={id === selectedDayId}
+          variant='map'
           className='!m-0'
         />
       ),
@@ -134,6 +135,7 @@ export const Map = () => {
           style={{ height: '500px', width: '100%' }}
         >
           <TileLayer
+            key={`tilelayer-${resolvedTheme}`}
             url={
               resolvedTheme === 'light'
                 ? 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'

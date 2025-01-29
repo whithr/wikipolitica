@@ -1,5 +1,3 @@
-// DailyItinerary.tsx
-
 import { DatePickerWithRange } from '@/components/ui/date-range-picker'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
@@ -7,8 +5,8 @@ import { Link } from '@tanstack/react-router'
 import { ActivityPing } from '@/components/animations/activity-ping'
 
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
-
 import { usePresidentCalendar } from './president-calendar-context'
+import { WordExplainer } from '../word-explainer'
 
 export const DailyItinerary = () => {
   const {
@@ -103,7 +101,10 @@ export const DailyItinerary = () => {
                           Time TBD – {event.location}
                         </div>
                       )}
-                      <p>{event.details}</p>
+                      <p>
+                        {' '}
+                        <WordExplainer text={event.details} />
+                      </p>
                     </div>
                   </div>
                 )
