@@ -50,8 +50,6 @@ export function useFilteredCalendarData(
       };
     }
 
-    console.log(data);
-
     // 1) Filter data by the selected range if present
     let filteredData = data;
     if (selectedRange?.from && selectedRange?.to) {
