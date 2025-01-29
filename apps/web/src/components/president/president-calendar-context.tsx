@@ -11,6 +11,7 @@ import { useTrumpCalendarData } from '@/hooks/useTrumpCalendarData'
 import { useFilteredCalendarData } from '@/hooks/useFilteredTrumpCalendarData'
 import type { PoolReportSchedules } from '@/types/trumpCalendar.types'
 import type { DateRange } from 'react-day-picker'
+import { parseTimeToMinutes } from '@/lib/time.utils'
 
 // The shape of all the data we want to share
 interface PresidentCalendarContextValue {
@@ -74,8 +75,18 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
 
   useEffect(() => {
     if (filteredData.length > 0) {
-      setSelectedDayId(filteredData[0]?.id)
+      const potentialSelection = filteredData?.findIndex(
+        (d) =>
+          parseTimeToMinutes(d.time) === highlightTime &&
+          d.date === highlightDay
+      )
+      if (potentialSelection !== -1) {
+        setSelectedDayId(filteredData[potentialSelection]?.id)
+      } else {
+        setSelectedDayId(filteredData[0]?.id)
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredData])
 
   // 4) Memoize the context value
