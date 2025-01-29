@@ -49,6 +49,11 @@
     --sidebar-accent-foreground: 222.2 47.4% 11.2%;
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 222.2 84% 4.9%;
+
+    .full-bleed {
+      box-shadow: 0 0 0 2px hsl(0 0% 100%);
+      clip-path: inset(0 -2px);
+    }
   }
   .dark {
     --background: 222.2 84% 4.9%;
@@ -75,7 +80,7 @@
     --chart-3: 217.2 32.6% 17.5%;
     --chart-4: 217.2 32.6% 20.5%;
     --chart-5: 210 43% 98%;
-    --sidebar-background: 222.2 84% 4.9% --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-background: 222.2 84% 4.9%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 210 40% 98%;
     --sidebar-primary-foreground: 222.2 47.4% 11.2%;
@@ -83,6 +88,11 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217.2 32.6% 17.5%;
     --sidebar-ring: 212.7 26.8% 83.9%;
+
+    .full-bleed {
+      box-shadow: 0 0 0 2px hsl(222.2 84% 4.9%);
+      clip-path: inset(0 -2px);
+    }
   }
 }
 

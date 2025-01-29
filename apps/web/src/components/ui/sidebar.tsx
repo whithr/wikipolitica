@@ -341,7 +341,7 @@ const SidebarInput = React.forwardRef<
       ref={ref}
       data-sidebar='input'
       className={cn(
-        'h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+        'bg-sidebar-background h-8 w-full shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
         className
       )}
       {...props}
@@ -404,7 +404,7 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-sidebar='content'
       className={cn(
-        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto bg-background group-data-[collapsible=icon]:overflow-hidden',
+        'bg-sidebar-background flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
         className
       )}
       {...props}
@@ -518,7 +518,7 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
         outline:
-          'bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]',
+          'bg-sidebar-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]',
       },
       size: {
         default: 'h-8 text-sm',
