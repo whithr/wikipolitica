@@ -1,20 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@supabase/supabase-js";
-import { PoolReportSchedules } from "@/types/trumpCalendar.types";
+import { Tables } from "@/lib/database.types";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export function useTrumpCalendarData() {
-  return useQuery<PoolReportSchedules>({
-    queryKey: ["trump_calendar"],
+export const useExecutiveOrdersData = () => {
+  return useQuery<Tables<"executive_actions">[]>({
+    queryKey: ["executive_actions"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("president_schedule")
+        .from("executive_actions")
         .select("*")
-        .order("date", { ascending: false })
-        .order("time", { ascending: false });
+        .order("pub_date", { ascending: false });
 
       if (error) {
         throw new Error(error.message);
@@ -24,7 +23,7 @@ export function useTrumpCalendarData() {
         return [];
       }
 
-      return data as PoolReportSchedules;
+      return data as Tables<"executive_actions">[];
     },
   });
-}
+};

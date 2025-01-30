@@ -118,3 +118,40 @@ export const formatDate = (dateString: string): string => {
     day: "numeric",
   }).format(date);
 };
+
+export function formatDateWithSuffix(dateString: string | null): string | null {
+  if (!dateString) return dateString;
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) {
+    return dateString; // Return the original string if invalid date
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: "long",
+    year: "numeric",
+  };
+  const day = date.getDate();
+
+  // Function to get ordinal suffix
+  const getOrdinalSuffix = (n: number): string => {
+    if (n >= 11 && n <= 13) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const suffix = getOrdinalSuffix(day);
+  const formattedMonthYear = date.toLocaleDateString(undefined, options);
+
+  return `${
+    formattedMonthYear.split(" ")[0]
+  } ${day}${suffix}, ${date.getFullYear()}`;
+}

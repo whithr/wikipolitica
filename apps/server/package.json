@@ -19,7 +19,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "node-geocoder": "^4.4.1",
-    "node-schedule": "^2.1.1"
+    "node-schedule": "^2.1.1",
+    "rss-parser": "^3.13.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

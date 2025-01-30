@@ -241,9 +241,9 @@ schedule.scheduleJob("*/30 * * * *", async () => {
 });
 
 // (Optional) Run once on startup for testing
-checkAndRefresh().then(() => {
-  console.log("[Startup] Done checking/refreshing schedule.");
-});
+// checkAndRefresh().then(() => {
+//   console.log("[Startup] Done checking/refreshing schedule.");
+// });
 
 // ==========================================
 // ============ Helper Functions ============

@@ -8,173 +8,197 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
+import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const CountriesLazyImport = createFileRoute("/countries")();
-const AboutLazyImport = createFileRoute("/about")();
-const IndexLazyImport = createFileRoute("/")();
+const CountriesLazyImport = createFileRoute('/countries')()
+const AboutLazyImport = createFileRoute('/about')()
+const IndexLazyImport = createFileRoute('/')()
 const ExecutiveVicePresidentLazyImport = createFileRoute(
-  "/executive/vice-president",
-)();
-const ExecutivePresidentLazyImport = createFileRoute("/executive/president")();
+  '/executive/vice-president',
+)()
+const ExecutivePresidentLazyImport = createFileRoute('/executive/president')()
+const ExecutiveOrdersLazyImport = createFileRoute('/executive/orders')()
 
 // Create/Update Routes
 
 const CountriesLazyRoute = CountriesLazyImport.update({
-  id: "/countries",
-  path: "/countries",
+  id: '/countries',
+  path: '/countries',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/countries.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/countries.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
-  id: "/about",
-  path: "/about",
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/about.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
   {
-    id: "/executive/vice-president",
-    path: "/executive/vice-president",
+    id: '/executive/vice-president',
+    path: '/executive/vice-president',
     getParentRoute: () => rootRoute,
   } as any,
 ).lazy(() =>
-  import("./routes/executive/vice-president.lazy").then((d) => d.Route)
-);
+  import('./routes/executive/vice-president.lazy').then((d) => d.Route),
+)
 
 const ExecutivePresidentLazyRoute = ExecutivePresidentLazyImport.update({
-  id: "/executive/president",
-  path: "/executive/president",
+  id: '/executive/president',
+  path: '/executive/president',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import("./routes/executive/president.lazy").then((d) => d.Route)
-);
+  import('./routes/executive/president.lazy').then((d) => d.Route),
+)
+
+const ExecutiveOrdersLazyRoute = ExecutiveOrdersLazyImport.update({
+  id: '/executive/orders',
+  path: '/executive/orders',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/executive/orders.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/countries": {
-      id: "/countries";
-      path: "/countries";
-      fullPath: "/countries";
-      preLoaderRoute: typeof CountriesLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/executive/president": {
-      id: "/executive/president";
-      path: "/executive/president";
-      fullPath: "/executive/president";
-      preLoaderRoute: typeof ExecutivePresidentLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/executive/vice-president": {
-      id: "/executive/vice-president";
-      path: "/executive/vice-president";
-      fullPath: "/executive/vice-president";
-      preLoaderRoute: typeof ExecutiveVicePresidentLazyImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/countries': {
+      id: '/countries'
+      path: '/countries'
+      fullPath: '/countries'
+      preLoaderRoute: typeof CountriesLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/executive/orders': {
+      id: '/executive/orders'
+      path: '/executive/orders'
+      fullPath: '/executive/orders'
+      preLoaderRoute: typeof ExecutiveOrdersLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/executive/president': {
+      id: '/executive/president'
+      path: '/executive/president'
+      fullPath: '/executive/president'
+      preLoaderRoute: typeof ExecutivePresidentLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/executive/vice-president': {
+      id: '/executive/vice-president'
+      path: '/executive/vice-president'
+      fullPath: '/executive/vice-president'
+      preLoaderRoute: typeof ExecutiveVicePresidentLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexLazyRoute;
-  "/about": typeof AboutLazyRoute;
-  "/countries": typeof CountriesLazyRoute;
-  "/executive/president": typeof ExecutivePresidentLazyRoute;
-  "/executive/vice-president": typeof ExecutiveVicePresidentLazyRoute;
+  '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/countries': typeof CountriesLazyRoute
+  '/executive/orders': typeof ExecutiveOrdersLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexLazyRoute;
-  "/about": typeof AboutLazyRoute;
-  "/countries": typeof CountriesLazyRoute;
-  "/executive/president": typeof ExecutivePresidentLazyRoute;
-  "/executive/vice-president": typeof ExecutiveVicePresidentLazyRoute;
+  '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/countries': typeof CountriesLazyRoute
+  '/executive/orders': typeof ExecutiveOrdersLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexLazyRoute;
-  "/about": typeof AboutLazyRoute;
-  "/countries": typeof CountriesLazyRoute;
-  "/executive/president": typeof ExecutivePresidentLazyRoute;
-  "/executive/vice-president": typeof ExecutiveVicePresidentLazyRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexLazyRoute
+  '/about': typeof AboutLazyRoute
+  '/countries': typeof CountriesLazyRoute
+  '/executive/orders': typeof ExecutiveOrdersLazyRoute
+  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/about"
-    | "/countries"
-    | "/executive/president"
-    | "/executive/vice-president";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/orders'
+    | '/executive/president'
+    | '/executive/vice-president'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/about"
-    | "/countries"
-    | "/executive/president"
-    | "/executive/vice-president";
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/orders'
+    | '/executive/president'
+    | '/executive/vice-president'
   id:
-    | "__root__"
-    | "/"
-    | "/about"
-    | "/countries"
-    | "/executive/president"
-    | "/executive/vice-president";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/countries'
+    | '/executive/orders'
+    | '/executive/president'
+    | '/executive/vice-president'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute;
-  AboutLazyRoute: typeof AboutLazyRoute;
-  CountriesLazyRoute: typeof CountriesLazyRoute;
-  ExecutivePresidentLazyRoute: typeof ExecutivePresidentLazyRoute;
-  ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute;
+  IndexLazyRoute: typeof IndexLazyRoute
+  AboutLazyRoute: typeof AboutLazyRoute
+  CountriesLazyRoute: typeof CountriesLazyRoute
+  ExecutiveOrdersLazyRoute: typeof ExecutiveOrdersLazyRoute
+  ExecutivePresidentLazyRoute: typeof ExecutivePresidentLazyRoute
+  ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
   CountriesLazyRoute: CountriesLazyRoute,
+  ExecutiveOrdersLazyRoute: ExecutiveOrdersLazyRoute,
   ExecutivePresidentLazyRoute: ExecutivePresidentLazyRoute,
   ExecutiveVicePresidentLazyRoute: ExecutiveVicePresidentLazyRoute,
-};
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -185,6 +209,7 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/countries",
+        "/executive/orders",
         "/executive/president",
         "/executive/vice-president"
       ]
@@ -197,6 +222,9 @@ export const routeTree = rootRoute
     },
     "/countries": {
       "filePath": "countries.lazy.tsx"
+    },
+    "/executive/orders": {
+      "filePath": "executive/orders.lazy.tsx"
     },
     "/executive/president": {
       "filePath": "executive/president.lazy.tsx"
