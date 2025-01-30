@@ -52,7 +52,7 @@ const RouteComponent = () => {
           open={selectedOrderId > 0}
           onClose={() => setSelectedOrderId(-1)}
         >
-          <DrawerContent>
+          <DrawerContent className='border-none'>
             <DrawerHeader />
             <ExecutiveOrdersReader className='border-none shadow-none' />
           </DrawerContent>

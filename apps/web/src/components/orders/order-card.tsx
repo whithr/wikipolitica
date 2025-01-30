@@ -23,7 +23,7 @@ export const OrderCard = ({
         'flex w-full flex-col items-start gap-2 rounded-sm border p-2 shadow-sm transition-colors duration-300 hover:cursor-pointer hover:bg-primary/25',
         selectedOrderId === order.id
           ? 'border-primary bg-primary/50 hover:bg-primary/50'
-          : 'border-border bg-muted'
+          : 'border-border bg-muted/50'
       )}
     >
       <div className='break-words'>{order.title}</div>

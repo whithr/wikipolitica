@@ -29,7 +29,7 @@ export const ExecutiveOrdersReader = ({
   return (
     <div
       className={cn(
-        'mx-auto max-w-[800px] rounded-sm border border-border bg-background p-4 shadow-sm',
+        'mx-auto max-w-[800px] overflow-y-auto rounded-sm border border-border bg-background p-4 shadow-sm',
         className
       )}
     >
