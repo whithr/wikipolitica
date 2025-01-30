@@ -7,6 +7,8 @@ import { ActivityPing } from '@/components/animations/activity-ping'
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
 import { usePresidentCalendar } from './president-calendar-context'
 import { WordExplainer } from '../word-explainer'
+import { SourceTooltip } from '../source-tooltip'
+import { ExternalLink } from '../external-link'
 
 export const DailyItinerary = () => {
   const {
@@ -34,7 +36,21 @@ export const DailyItinerary = () => {
       </div>
 
       {/* List of grouped & sorted events */}
-      <div className='flex flex-col gap-10 rounded-md border border-border bg-background p-2 pt-4 shadow-sm'>
+      <div className='relative flex flex-col gap-10 rounded-md border border-border bg-background p-2 pt-4 shadow-sm'>
+        <SourceTooltip
+          content={
+            <div>
+              <p>
+                Schedule from{' '}
+                <ExternalLink
+                  href='https://rollcall.com/factbase/trump/calendar/'
+                  label='FactBa.se'
+                />
+              </p>
+              <p>Geocodes from Google's Maps Geocoding API.</p>
+            </div>
+          }
+        />
         {sortedDays.map((date) => {
           const dayEvents = sortedEventsByDay[date]
 

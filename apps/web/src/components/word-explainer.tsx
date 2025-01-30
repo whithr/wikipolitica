@@ -35,7 +35,7 @@ export const WordExplainer: React.FC<WordExplainerProps> = ({ text }) => {
               >
                 {part}
               </PopoverTrigger>
-              <PopoverContent className='text-md max-w-64 bg-foreground px-4 py-2 text-background'>
+              <PopoverContent className='text-md max-w-64 border-none bg-foreground px-4 py-2 text-background'>
                 {politicalDictionary[wordKey]}
               </PopoverContent>
             </Popover>
