@@ -124,8 +124,8 @@ export async function refreshRecentAndFuture(
     const totalFetched = allEvents.length;
     console.log(`[Info] Fetched ${totalFetched} total events.`);
 
-    // 1) Build sets: last 3 days + future
-    const last3Days = getLastNDays(3);
+    // 1) Build sets: last 2 days + future
+    const last3Days = getLastNDays(2);
     const futureDates = getFutureDates(allEvents);
 
     const datesToRefresh = new Set<string>([...last3Days, ...futureDates]);
@@ -291,6 +291,8 @@ function getFutureDates(data: PoolReportSchedule[]): Set<string> {
 function normalizeLocation(location: string): string {
   if (location.toLowerCase() === "south lawn") {
     return "South Lawn, The White House, Washington, DC 20500";
+  } else if (location.toLowerCase() === "east room") {
+    return "East Room, The White House, Washington, DC 20500";
   }
   return location;
 }
