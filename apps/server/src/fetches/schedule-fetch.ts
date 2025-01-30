@@ -293,6 +293,10 @@ function normalizeLocation(location: string): string {
     return "South Lawn, The White House, Washington, DC 20500";
   } else if (location.toLowerCase() === "east room") {
     return "East Room, The White House, Washington, DC 20500";
+  } else if (location.toLowerCase() === "private dining room") {
+    return "The White House, Washington, DC 20500";
+  } else if (!location) {
+    return "The White House, Washington, DC 20500";
   }
   return location;
 }
