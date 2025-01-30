@@ -33,7 +33,7 @@ export const ExecutiveOrdersReader = ({
         className
       )}
     >
-      <ScrollArea className='h-[calc(100vh-150px)]'>
+      <ScrollArea className='h-[calc(100dvh-150px)]'>
         <div
           className={cn(
             'm-2 text-foreground',
