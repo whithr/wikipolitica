@@ -43,29 +43,31 @@ export const CurrentEventHeader = () => {
 
   return (
     <div className='flex flex-col gap-2 px-0 md:px-8'>
-      {/* {statusLabel && (
-        <div
-          className={`h-fit w-fit rounded-full px-3 py-1 text-xs text-white ${statusColor}`}
-        >
-          {statusLabel}
-        </div>
-      )} */}
-      <div className='flex min-h-[185px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm transition-all dark:border-primary/50 md:min-h-[165px] lg:min-h-[140px] xl:min-h-[105px]'>
-        <img src={potusSeal} className='h-16 w-16 rounded-full shadow-sm' />
+      <div className='flex min-h-[145px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm transition-all dark:border-primary/50 md:min-h-[155px] lg:min-h-[140px] xl:min-h-[105px]'>
+        <img
+          src={potusSeal}
+          className='hidden h-16 w-16 rounded-full shadow-sm md:block'
+        />
         <div className='flex flex-col gap-2'>
           <div className='flex justify-between font-semibold'>
-            <div className='flex flex-col gap-0'>
-              <p className=''>{selectedEvent.location} </p>
-              {selectedEvent.time_formatted ? (
-                <span className='text-xs font-normal'>
-                  {formatDate(selectedEvent.date)} -{' '}
-                  {selectedEvent.time_formatted}
-                </span>
-              ) : (
-                <span className='text-xs font-normal'>
-                  {formatDate(selectedEvent.date)} - No time set
-                </span>
-              )}
+            <div className='flex gap-2'>
+              <img
+                src={potusSeal}
+                className='block h-10 w-10 rounded-full shadow-sm md:hidden'
+              />
+              <div className='flex flex-col gap-0'>
+                <p className=''>{selectedEvent.location} </p>
+                {selectedEvent.time_formatted ? (
+                  <span className='text-xs font-normal'>
+                    {formatDate(selectedEvent.date)} -{' '}
+                    {selectedEvent.time_formatted}
+                  </span>
+                ) : (
+                  <span className='text-xs font-normal'>
+                    {formatDate(selectedEvent.date)} - No time set
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
