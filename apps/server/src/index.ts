@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config.js";
 import "./fetches/schedule-fetch";
-// import "./fetches/executive-actions";
+import "./fetches/executive-actions";
 
 const app = express();
 const PORT = process.env.PORT || 3000;

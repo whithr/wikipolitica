@@ -109,9 +109,9 @@ async function fetchAndStoreExecutiveActions() {
 }
 
 // ==========================================
-// 4) Schedule job: run every 30 minutes
+// 4) Schedule job: run every 10 minutes
 // ==========================================
-schedule.scheduleJob("*/30 * * * *", async () => {
+schedule.scheduleJob("*/10 * * * *", async () => {
   console.log(
     "[Scheduled Task] Fetching White House RSS for Presidential Actions...",
   );
@@ -122,8 +122,8 @@ schedule.scheduleJob("*/30 * * * *", async () => {
 // ==========================================
 // 5) Optionally run once on startup
 // ==========================================
-(async () => {
-  console.log("[Startup] Running initial fetch of Presidential Actions...");
-  await fetchAndStoreExecutiveActions();
-  console.log("[Startup] Done initial fetch.");
-})();
+// (async () => {
+//   console.log("[Startup] Running initial fetch of Presidential Actions...");
+//   await fetchAndStoreExecutiveActions();
+//   console.log("[Startup] Done initial fetch.");
+// })();
