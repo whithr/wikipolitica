@@ -42,8 +42,8 @@ export const HeaderBreadcrumbs = () => {
     mainBreadcrumbs.length > 0
       ? mainBreadcrumbs
       : singleBreadcrumb
-      ? [singleBreadcrumb]
-      : []
+        ? [singleBreadcrumb]
+        : []
 
   return (
     <Breadcrumb>

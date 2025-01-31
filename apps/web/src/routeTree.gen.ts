@@ -13,25 +13,18 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ExecutivePresidentialScheduleImport } from './routes/executive/presidential-schedule'
+import { Route as ExecutivePresidentialActionsImport } from './routes/executive/presidential-actions'
 
 // Create Virtual Routes
 
-const CountriesLazyImport = createFileRoute('/countries')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const ExecutiveVicePresidentLazyImport = createFileRoute(
   '/executive/vice-president',
 )()
-const ExecutivePresidentLazyImport = createFileRoute('/executive/president')()
-const ExecutiveOrdersLazyImport = createFileRoute('/executive/orders')()
 
 // Create/Update Routes
-
-const CountriesLazyRoute = CountriesLazyImport.update({
-  id: '/countries',
-  path: '/countries',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/countries.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   id: '/about',
@@ -55,21 +48,19 @@ const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
   import('./routes/executive/vice-president.lazy').then((d) => d.Route),
 )
 
-const ExecutivePresidentLazyRoute = ExecutivePresidentLazyImport.update({
-  id: '/executive/president',
-  path: '/executive/president',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/executive/president.lazy').then((d) => d.Route),
-)
+const ExecutivePresidentialScheduleRoute =
+  ExecutivePresidentialScheduleImport.update({
+    id: '/executive/presidential-schedule',
+    path: '/executive/presidential-schedule',
+    getParentRoute: () => rootRoute,
+  } as any)
 
-const ExecutiveOrdersLazyRoute = ExecutiveOrdersLazyImport.update({
-  id: '/executive/orders',
-  path: '/executive/orders',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/executive/orders.lazy').then((d) => d.Route),
-)
+const ExecutivePresidentialActionsRoute =
+  ExecutivePresidentialActionsImport.update({
+    id: '/executive/presidential-actions',
+    path: '/executive/presidential-actions',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -89,25 +80,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/countries': {
-      id: '/countries'
-      path: '/countries'
-      fullPath: '/countries'
-      preLoaderRoute: typeof CountriesLazyImport
+    '/executive/presidential-actions': {
+      id: '/executive/presidential-actions'
+      path: '/executive/presidential-actions'
+      fullPath: '/executive/presidential-actions'
+      preLoaderRoute: typeof ExecutivePresidentialActionsImport
       parentRoute: typeof rootRoute
     }
-    '/executive/orders': {
-      id: '/executive/orders'
-      path: '/executive/orders'
-      fullPath: '/executive/orders'
-      preLoaderRoute: typeof ExecutiveOrdersLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/executive/president': {
-      id: '/executive/president'
-      path: '/executive/president'
-      fullPath: '/executive/president'
-      preLoaderRoute: typeof ExecutivePresidentLazyImport
+    '/executive/presidential-schedule': {
+      id: '/executive/presidential-schedule'
+      path: '/executive/presidential-schedule'
+      fullPath: '/executive/presidential-schedule'
+      preLoaderRoute: typeof ExecutivePresidentialScheduleImport
       parentRoute: typeof rootRoute
     }
     '/executive/vice-president': {
@@ -125,18 +109,16 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/countries': typeof CountriesLazyRoute
-  '/executive/orders': typeof ExecutiveOrdersLazyRoute
-  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
+  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/countries': typeof CountriesLazyRoute
-  '/executive/orders': typeof ExecutiveOrdersLazyRoute
-  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
+  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -144,9 +126,8 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/countries': typeof CountriesLazyRoute
-  '/executive/orders': typeof ExecutiveOrdersLazyRoute
-  '/executive/president': typeof ExecutivePresidentLazyRoute
+  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
+  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -155,25 +136,22 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/countries'
-    | '/executive/orders'
-    | '/executive/president'
+    | '/executive/presidential-actions'
+    | '/executive/presidential-schedule'
     | '/executive/vice-president'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/countries'
-    | '/executive/orders'
-    | '/executive/president'
+    | '/executive/presidential-actions'
+    | '/executive/presidential-schedule'
     | '/executive/vice-president'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/countries'
-    | '/executive/orders'
-    | '/executive/president'
+    | '/executive/presidential-actions'
+    | '/executive/presidential-schedule'
     | '/executive/vice-president'
   fileRoutesById: FileRoutesById
 }
@@ -181,18 +159,16 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
-  CountriesLazyRoute: typeof CountriesLazyRoute
-  ExecutiveOrdersLazyRoute: typeof ExecutiveOrdersLazyRoute
-  ExecutivePresidentLazyRoute: typeof ExecutivePresidentLazyRoute
+  ExecutivePresidentialActionsRoute: typeof ExecutivePresidentialActionsRoute
+  ExecutivePresidentialScheduleRoute: typeof ExecutivePresidentialScheduleRoute
   ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
-  CountriesLazyRoute: CountriesLazyRoute,
-  ExecutiveOrdersLazyRoute: ExecutiveOrdersLazyRoute,
-  ExecutivePresidentLazyRoute: ExecutivePresidentLazyRoute,
+  ExecutivePresidentialActionsRoute: ExecutivePresidentialActionsRoute,
+  ExecutivePresidentialScheduleRoute: ExecutivePresidentialScheduleRoute,
   ExecutiveVicePresidentLazyRoute: ExecutiveVicePresidentLazyRoute,
 }
 
@@ -208,9 +184,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/countries",
-        "/executive/orders",
-        "/executive/president",
+        "/executive/presidential-actions",
+        "/executive/presidential-schedule",
         "/executive/vice-president"
       ]
     },
@@ -220,14 +195,11 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.lazy.tsx"
     },
-    "/countries": {
-      "filePath": "countries.lazy.tsx"
+    "/executive/presidential-actions": {
+      "filePath": "executive/presidential-actions.tsx"
     },
-    "/executive/orders": {
-      "filePath": "executive/orders.lazy.tsx"
-    },
-    "/executive/president": {
-      "filePath": "executive/president.lazy.tsx"
+    "/executive/presidential-schedule": {
+      "filePath": "executive/presidential-schedule.tsx"
     },
     "/executive/vice-president": {
       "filePath": "executive/vice-president.lazy.tsx"

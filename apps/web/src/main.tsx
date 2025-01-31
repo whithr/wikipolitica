@@ -1,14 +1,108 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import {
+  ErrorComponent,
+  Link,
+  RouterProvider,
+  createRootRouteWithContext,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 
-import { routeTree } from './routeTree.gen'
+// import { routeTree } from './routeTree.gen'
 import { ThemeProvider } from './components/theme-provider'
+import { RootRoute } from './routes/__root'
+import { Executive } from './components/president/executive'
+import { PresidentialSchedule } from './routes/executive/presidential-schedule'
+import { PresidentialActions } from './routes/executive/presidential-actions'
+import { executiveActionsQueryOptions } from './hooks/useExecutiveOrdersData'
+import { executiveActionDetailsQueryOptions } from './hooks/useExecutiveOrderDetails'
+import { ExecutiveOrdersReader } from './components/orders/executive-orders-reader'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+const rootRoute = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
+  component: RootRoute,
+  notFoundComponent: () => {
+    return (
+      <div>
+        <p>This is the notFoundComponent configured on root route</p>
+        <Link to='/'>Start Over</Link>
+      </div>
+    )
+  },
+})
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: IndexRouteComponent,
+})
+
+function IndexRouteComponent() {
+  return (
+    <div className='p-2'>
+      <h3>Welcome Home!</h3>
+    </div>
+  )
+}
+
+const executiveRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'executive',
+  component: Executive,
+})
+
+const presidentialScheduleRoute = createRoute({
+  getParentRoute: () => executiveRoute,
+  path: 'president',
+  component: PresidentialSchedule,
+})
+
+const presidentialActionsRoute = createRoute({
+  getParentRoute: () => executiveRoute,
+  path: 'actions',
+  component: PresidentialActions,
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(executiveActionsQueryOptions),
+})
+
+export const presidentialActionsPostRoute = createRoute({
+  getParentRoute: () => presidentialActionsRoute,
+  path: '$id',
+  errorComponent: ErrorComponent,
+  loader: ({ context: { queryClient }, params: { id } }) =>
+    queryClient.ensureQueryData(executiveActionDetailsQueryOptions(Number(id))),
+  component: ExecutiveOrdersReader,
+})
+
+const routeTree = rootRoute.addChildren([
+  executiveRoute,
+  presidentialScheduleRoute,
+  presidentialActionsRoute.addChildren([presidentialActionsPostRoute]),
+  indexRoute,
+])
+
 const queryClient = new QueryClient()
 
-const router = createRouter({ routeTree })
+// Set up a Router instance
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  // Since we're using React Query, we don't want loader calls to ever be stale
+  // This will ensure that the loader is always called when the route is preloaded or visited
+  defaultPreloadStaleTime: 0,
+  context: {
+    queryClient,
+  },
+})
 
 declare module '@tanstack/react-router' {
   interface Register {

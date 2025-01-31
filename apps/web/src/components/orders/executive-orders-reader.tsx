@@ -7,33 +7,29 @@ import { cleanHTML } from '@/lib/html.utils'
 
 import styles from './orders.module.css'
 import { useTheme } from '../theme-provider'
-import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
 import { Skeleton } from '../ui/skeleton'
+import { useParams } from '@tanstack/react-router'
 
 export const ExecutiveOrdersReader = ({
   className,
 }: {
   className?: string
 }) => {
-  const { data, isLoading, isError, error } = useExecutiveOrdersData()
-  const selectedOrderId = useExecutiveOrdersStore(
-    (state) => state.selectedOrderId
-  )
-  const { resolvedTheme } = useTheme()
+  const { data } = useExecutiveOrdersData()
 
-  // Fetch the full_html for the selected order
+  const { resolvedTheme } = useTheme()
+  const { id } = useParams({ strict: false })
+
   const {
     data: orderDetails,
     isLoading: isDetailsLoading,
     isError: isDetailsError,
     error: detailsError,
-  } = useExecutiveOrderDetails(selectedOrderId)
+  } = useExecutiveOrderDetails(Number(id))
 
-  if (isLoading) return <p>Loading executive orders...</p>
-  if (isError) return <p>Error: {error.message}</p>
   if (!data || data.length === 0) return <p>No data found.</p>
 
-  const order = data.find((o) => o.id === selectedOrderId)
+  const order = data.find((o) => o.id === Number(id))
 
   if (!order) {
     return (
@@ -76,7 +72,7 @@ export const ExecutiveOrdersReader = ({
   return (
     <div
       className={cn(
-        'mx-auto flex w-full max-w-[800px] flex-1 flex-col overflow-y-auto rounded-sm border border-border bg-background p-4 shadow-sm transition duration-500',
+        'mx-auto flex w-full max-w-[800px] flex-1 flex-col overflow-y-auto rounded-sm bg-background p-4 transition duration-500',
         className
       )}
     >

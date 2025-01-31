@@ -6,16 +6,11 @@ import { OrderCard } from './order-card'
 import { Separator } from '../ui/separator'
 import { Skeleton } from '../ui/skeleton'
 import { formatDateWithSuffix } from '@/lib/time.utils'
-import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
+import { useParams } from '@tanstack/react-router'
 
 export const ExecutiveOrdersSelector = () => {
   const { isLoading, groupedOrders } = useExecutiveOrders()
-  const selectedOrderId = useExecutiveOrdersStore(
-    (state) => state.selectedOrderId
-  )
-  const setSelectedOrderId = useExecutiveOrdersStore(
-    (state) => state.setSelectedOrderId
-  )
+  const { id } = useParams({ strict: false })
 
   // Convert groupedOrders to an array for rendering
   const groupedOrdersArray: [string, (typeof groupedOrders)[string]][] =
@@ -56,8 +51,7 @@ export const ExecutiveOrdersSelector = () => {
               <OrderCard
                 key={order.id}
                 order={order}
-                selectedOrderId={selectedOrderId}
-                setSelectedOrderId={setSelectedOrderId}
+                selectedOrderId={Number(id)}
               />
             ))}
           </div>

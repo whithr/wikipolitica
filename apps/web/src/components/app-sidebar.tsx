@@ -41,7 +41,7 @@ export const navItems = {
       defaultOpen: true,
       items: [
         { title: 'President', url: '/executive/president' },
-        { title: 'Executive Orders', url: '/executive/orders' },
+        { title: 'Executive Actions', url: '/executive/actions' },
 
         {
           title: 'Vice President',

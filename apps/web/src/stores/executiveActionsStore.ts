@@ -6,6 +6,9 @@ interface ExecutiveActionsState {
 
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+
+  width: number;
+  setWidth: (width: number) => void;
 }
 
 export const useExecutiveOrdersStore = create<ExecutiveActionsState>((set) => ({
@@ -14,4 +17,7 @@ export const useExecutiveOrdersStore = create<ExecutiveActionsState>((set) => ({
 
   searchTerm: "",
   setSearchTerm: (term: string) => set({ searchTerm: term }),
+
+  width: 0,
+  setWidth: (width: number) => set({ width }),
 }));

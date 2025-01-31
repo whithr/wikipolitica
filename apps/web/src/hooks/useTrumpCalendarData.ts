@@ -1,10 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@supabase/supabase-js";
 import { PoolReportSchedules } from "@/types/trumpCalendar.types";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from "@/main";
 
 export function useTrumpCalendarData() {
   return useQuery<PoolReportSchedules>({

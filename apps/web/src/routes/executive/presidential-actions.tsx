@@ -1,8 +1,7 @@
 // src/components/orders/RouteComponent.tsx
 
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { ExecutiveOrdersProvider } from '@/components/orders/executive-orders-context'
-import { createLazyFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Search, X } from 'lucide-react'
 import { Label } from '@/components/ui/label'
@@ -16,21 +15,19 @@ import {
 } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ExecutiveOrdersReader } from '@/components/orders/executive-orders-reader'
 import { ExecutiveOrdersSelector } from '@/components/orders/executive-orders-selector'
 import { SourceTooltip } from '@/components/source-tooltip'
 import { ExternalLink } from '@/components/external-link'
 import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
+import { Outlet, useNavigate, useParams } from '@tanstack/react-router'
 
-const MOBILE_WIDTH = 1000
+export const MOBILE_WIDTH = 1000
 
-const RouteComponent: React.FC = () => {
-  const selectedOrderId = useExecutiveOrdersStore(
-    (state) => state.selectedOrderId
-  )
-  const setSelectedOrderId = useExecutiveOrdersStore(
-    (state) => state.setSelectedOrderId
-  )
+const RouteComponent = () => {
+  const { id } = useParams({ strict: false })
+  const navigate = useNavigate()
+
+  const setWidth = useExecutiveOrdersStore((state) => state.setWidth)
   const searchTerm = useExecutiveOrdersStore((state) => state.searchTerm)
   const setSearchTerm = useExecutiveOrdersStore((state) => state.setSearchTerm)
   const { width, ref } = useResizeDetector()
@@ -38,6 +35,10 @@ const RouteComponent: React.FC = () => {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }
+
+  useEffect(() => {
+    setWidth(width || 0)
+  }, [setWidth, width])
 
   return (
     <div className='flex flex-1 gap-12 md:gap-6' ref={ref}>
@@ -92,8 +93,8 @@ const RouteComponent: React.FC = () => {
       {/* Main content area with scrollable content */}
       {width && width < MOBILE_WIDTH ? (
         <Drawer
-          open={selectedOrderId > 0}
-          onClose={() => setSelectedOrderId(-1)}
+          open={Number(id) > 0}
+          onClose={() => navigate({ to: '/executive/actions' })}
         >
           <DrawerContent className='border-none'>
             <DrawerHeader className='flex self-end'>
@@ -103,22 +104,27 @@ const RouteComponent: React.FC = () => {
                 </Button>
               </DrawerClose>
             </DrawerHeader>
-            <ExecutiveOrdersReader className='border-none shadow-none' />
+            <Outlet />
           </DrawerContent>
         </Drawer>
       ) : (
         <div className='flex w-full flex-1 overflow-auto'>
-          <ExecutiveOrdersReader />
+          {Number(id) > 0 ? (
+            <div className='h-fit border border-border shadow-sm'>
+              <Outlet />
+            </div>
+          ) : (
+            <div className='flex w-full items-center justify-center rounded-sm border-8 border-dashed border-primary bg-primary/10 p-4 text-center text-foreground opacity-50 transition duration-500'>
+              <div className='flex-1'>Select an order to read...</div>
+            </div>
+          )}
         </div>
       )}
     </div>
   )
 }
-
-export const Route = createLazyFileRoute('/executive/orders')({
-  component: () => (
-    <ExecutiveOrdersProvider>
-      <RouteComponent />
-    </ExecutiveOrdersProvider>
-  ),
-})
+export const PresidentialActions = () => (
+  <ExecutiveOrdersProvider>
+    <RouteComponent />
+  </ExecutiveOrdersProvider>
+)
