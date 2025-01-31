@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 type OrderCardProps = {
   order: Tables<'executive_actions'>
   selectedOrderId: number
-  setSelectedOrderId: React.Dispatch<React.SetStateAction<number>>
+  setSelectedOrderId: (id: number) => void
 }
 
 export const OrderCard = ({

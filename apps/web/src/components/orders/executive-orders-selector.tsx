@@ -6,10 +6,16 @@ import { OrderCard } from './order-card'
 import { Separator } from '../ui/separator'
 import { Skeleton } from '../ui/skeleton'
 import { formatDateWithSuffix } from '@/lib/time.utils'
+import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
 
 export const ExecutiveOrdersSelector = () => {
-  const { isLoading, groupedOrders, selectedOrderId, setSelectedOrderId } =
-    useExecutiveOrders()
+  const { isLoading, groupedOrders } = useExecutiveOrders()
+  const selectedOrderId = useExecutiveOrdersStore(
+    (state) => state.selectedOrderId
+  )
+  const setSelectedOrderId = useExecutiveOrdersStore(
+    (state) => state.setSelectedOrderId
+  )
 
   // Convert groupedOrders to an array for rendering
   const groupedOrdersArray: [string, (typeof groupedOrders)[string]][] =

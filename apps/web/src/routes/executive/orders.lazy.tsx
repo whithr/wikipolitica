@@ -1,10 +1,7 @@
 // src/components/orders/RouteComponent.tsx
 
 import { ChangeEvent } from 'react'
-import {
-  ExecutiveOrdersProvider,
-  useExecutiveOrders,
-} from '@/components/orders/executive-orders-context'
+import { ExecutiveOrdersProvider } from '@/components/orders/executive-orders-context'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
@@ -23,17 +20,19 @@ import { ExecutiveOrdersReader } from '@/components/orders/executive-orders-read
 import { ExecutiveOrdersSelector } from '@/components/orders/executive-orders-selector'
 import { SourceTooltip } from '@/components/source-tooltip'
 import { ExternalLink } from '@/components/external-link'
+import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
 
 const MOBILE_WIDTH = 1000
 
 const RouteComponent: React.FC = () => {
-  const {
-    selectedOrderId,
-    setSelectedOrderId,
-
-    searchTerm,
-    setSearchTerm,
-  } = useExecutiveOrders()
+  const selectedOrderId = useExecutiveOrdersStore(
+    (state) => state.selectedOrderId
+  )
+  const setSelectedOrderId = useExecutiveOrdersStore(
+    (state) => state.setSelectedOrderId
+  )
+  const searchTerm = useExecutiveOrdersStore((state) => state.searchTerm)
+  const setSearchTerm = useExecutiveOrdersStore((state) => state.setSearchTerm)
   const { width, ref } = useResizeDetector()
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {

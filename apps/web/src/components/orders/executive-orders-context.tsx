@@ -1,30 +1,12 @@
-// src/components/orders/executive-orders-context.tsx
-
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useMemo,
-  FC,
-} from 'react'
+import { createContext, useContext, ReactNode, useMemo, FC } from 'react'
 import { useExecutiveOrdersData } from '@/hooks/useExecutiveOrdersData'
 import { Tables } from '@/lib/database.types'
-
-// Define the structure of an executive order.
-// Ensure this matches your actual data structure.
-interface ExecutiveOrder extends Tables<'executive_actions'> {
-  // Add any additional fields if necessary
-}
+import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
 
 interface ExecutiveOrdersContextValue {
   isLoading: boolean
-  data: ExecutiveOrder[] | undefined
-  selectedOrderId: number
-  setSelectedOrderId: React.Dispatch<React.SetStateAction<number>>
-  searchTerm: string
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>
-  groupedOrders: Record<string, ExecutiveOrder[]>
+  data: Tables<'executive_actions'>[] | undefined
+  groupedOrders: Record<string, Tables<'executive_actions'>[]>
 }
 
 const ExecutiveOrdersContext =
@@ -39,11 +21,10 @@ export const ExecutiveOrdersProvider: FC<ExecutiveOrdersProviderProps> = ({
 }) => {
   const { data, isLoading } = useExecutiveOrdersData()
 
-  const [selectedOrderId, setSelectedOrderId] = useState<number>(-1)
-  const [searchTerm, setSearchTerm] = useState<string>('') // Search state
+  const searchTerm = useExecutiveOrdersStore((state) => state.searchTerm)
 
   // Filter data based on search term
-  const filteredData: ExecutiveOrder[] = useMemo(() => {
+  const filteredData: Tables<'executive_actions'>[] = useMemo(() => {
     if (!data) return []
     return data.filter((order) =>
       order.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -51,41 +32,30 @@ export const ExecutiveOrdersProvider: FC<ExecutiveOrdersProviderProps> = ({
   }, [data, searchTerm])
 
   // Group filtered data by publication date
-  const groupedOrders: Record<string, ExecutiveOrder[]> = useMemo(() => {
-    return filteredData.reduce<Record<string, ExecutiveOrder[]>>(
-      (groups, order) => {
-        const date = order.pub_date
-          ? new Date(order.pub_date).toLocaleDateString()
-          : 'Unknown Date'
-        if (!groups[date]) {
-          groups[date] = []
-        }
-        groups[date].push(order)
-        return groups
-      },
-      {}
-    )
-  }, [filteredData])
+  const groupedOrders: Record<string, Tables<'executive_actions'>[]> =
+    useMemo(() => {
+      return filteredData.reduce<Record<string, Tables<'executive_actions'>[]>>(
+        (groups, order) => {
+          const date = order.pub_date
+            ? new Date(order.pub_date).toLocaleDateString()
+            : 'Unknown Date'
+          if (!groups[date]) {
+            groups[date] = []
+          }
+          groups[date].push(order)
+          return groups
+        },
+        {}
+      )
+    }, [filteredData])
 
   const value: ExecutiveOrdersContextValue = useMemo(() => {
     return {
       isLoading,
       data,
-      selectedOrderId,
-      setSelectedOrderId,
-      searchTerm,
-      setSearchTerm,
       groupedOrders,
     }
-  }, [
-    isLoading,
-    data,
-    selectedOrderId,
-    setSelectedOrderId,
-    searchTerm,
-    setSearchTerm,
-    groupedOrders,
-  ])
+  }, [isLoading, data, groupedOrders])
 
   return (
     <ExecutiveOrdersContext.Provider value={value}>

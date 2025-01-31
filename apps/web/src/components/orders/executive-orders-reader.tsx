@@ -5,13 +5,17 @@ import { cleanHTML } from '@/lib/html.utils'
 
 import styles from './orders.module.css'
 import { useTheme } from '../theme-provider'
+import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
 
 export const ExecutiveOrdersReader = ({
   className,
 }: {
   className?: string
 }) => {
-  const { data, selectedOrderId } = useExecutiveOrders()
+  const { data } = useExecutiveOrders()
+  const selectedOrderId = useExecutiveOrdersStore(
+    (state) => state.selectedOrderId
+  )
   const { resolvedTheme } = useTheme()
 
   if (!data || data.length === 0) return <p>No data found.</p>
