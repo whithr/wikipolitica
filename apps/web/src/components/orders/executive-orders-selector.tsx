@@ -16,9 +16,9 @@ export const ExecutiveOrdersSelector = () => {
     useMemo(() => Object.entries(groupedOrders), [groupedOrders])
 
   return (
-    <div className='flex h-fit min-w-[300px] max-w-[300px] flex-auto flex-col gap-4 p-4 text-foreground sm:min-w-[400px] sm:max-w-[400px]'>
+    <div className='flex h-fit w-full flex-col gap-4 p-4 text-foreground'>
       {isLoading ? (
-        <div className='flex h-full w-[400px] flex-col gap-2'>
+        <div className='flex h-full w-[300px] flex-col gap-2 sm:w-[400px]'>
           {/* Skeleton placeholders while loading */}
           <Skeleton className='h-6 w-2/12 rounded-sm' />
           <Skeleton className='h-6 w-4/12 rounded-sm' />

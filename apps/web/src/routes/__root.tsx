@@ -29,7 +29,7 @@ export const Route = createRootRoute({
           </div>
         </header>
         {/* Make the content area scrollable */}
-        <div className='min-h-[100vh] w-full min-w-fit max-w-6xl flex-1 self-center overflow-y-auto p-2 md:min-h-min md:p-4'>
+        <div className='min-h-[100dvh] w-full min-w-fit max-w-6xl flex-1 self-center overflow-y-auto p-2 md:min-h-min md:p-4'>
           <Outlet />
         </div>
       </SidebarInset>

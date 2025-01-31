@@ -39,12 +39,12 @@ const RouteComponent: React.FC = () => {
   }
 
   return (
-    <div className='flex flex-1 gap-12 overflow-hidden md:gap-6' ref={ref}>
+    <div className='flex flex-1 gap-12 md:gap-6' ref={ref}>
       {/* Sidebar with search and order list */}
       <div
         className={cn(
-          'flex h-fit min-w-max flex-col gap-2',
-          width && width < MOBILE_WIDTH && 'mx-auto'
+          'flex h-fit max-w-[450px] flex-col gap-2',
+          width && width < MOBILE_WIDTH && 'mx-auto max-w-full'
         )}
       >
         {/* Search Input */}
@@ -64,7 +64,7 @@ const RouteComponent: React.FC = () => {
         </div>
 
         {/* Filtered and Grouped Orders */}
-        <div className='flex-1 overflow-auto rounded-sm border border-border bg-background p-4 shadow-sm'>
+        <div className='overflow-auto rounded-sm border border-border bg-background p-4 shadow-sm'>
           <ScrollArea className='h-[calc(100dvh-180px)]'>
             <ExecutiveOrdersSelector />
           </ScrollArea>
