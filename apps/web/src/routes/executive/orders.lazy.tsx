@@ -10,7 +10,13 @@ import { Search } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { useResizeDetector } from 'react-resize-detector'
 import { cn } from '@/lib/utils'
-import { Drawer, DrawerContent, DrawerHeader } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+} from '@/components/ui/drawer'
+import { Button } from '@/components/ui/button'
 
 const MOBILE_WIDTH = 1000
 
@@ -53,7 +59,13 @@ const RouteComponent = () => {
           onClose={() => setSelectedOrderId(-1)}
         >
           <DrawerContent className='border-none'>
-            <DrawerHeader />
+            <DrawerHeader className='flex self-end'>
+              <DrawerClose className='flex self-end' asChild>
+                <Button variant='outline' className='self-end'>
+                  Close
+                </Button>
+              </DrawerClose>
+            </DrawerHeader>
             <ExecutiveOrdersReader className='border-none shadow-none' />
           </DrawerContent>
         </Drawer>

@@ -12,6 +12,7 @@ import { parseTimeToMinutes } from '@/lib/time.utils'
 import { Button } from '../ui/button'
 import { FastForward, Pause, Play } from 'lucide-react'
 import { Separator } from '@radix-ui/react-separator'
+import { Skeleton } from '../ui/skeleton'
 
 export const Map = () => {
   const { resolvedTheme } = useTheme()
@@ -118,67 +119,67 @@ export const Map = () => {
     return firstCoords
   }, [selectedDayId, eventsWithCoords, firstCoords])
 
-  if (isLoading) {
-    return <p>Loading map...</p>
-  }
-
   return (
     <div className='mb-4 flex flex-col'>
       {/* <div className='h-8 bg-background'> hello</div> */}
-      <div
-        className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[400px]'
-        id='map'
-      >
-        <MapContainer
-          center={firstCoords}
-          zoom={zoom}
-          scrollWheelZoom={true}
-          style={{ height: '500px', width: '100%' }}
+      {isLoading ? (
+        <Skeleton className='h-[250px] w-full rounded-sm bg-foreground/10 p-4 md:h-[400px]' />
+      ) : (
+        <div
+          className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[400px]'
+          id='map'
         >
-          <TileLayer
-            key={`tilelayer-${resolvedTheme}`}
-            url={
-              resolvedTheme === 'light'
-                ? 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
-                : 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-            }
-          />
+          <MapContainer
+            center={firstCoords}
+            zoom={zoom}
+            scrollWheelZoom={true}
+            style={{ height: '500px', width: '100%' }}
+          >
+            <TileLayer
+              key={`tilelayer-${resolvedTheme}`}
+              url={
+                resolvedTheme === 'light'
+                  ? 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
+                  : 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+              }
+            />
 
-          {/* Update the map's center when the selected index changes */}
-          <MapCenterUpdater
-            position={selectedPosition}
-            shouldClosePopup={shouldClosePopup}
-          />
+            {/* Update the map's center when the selected index changes */}
+            <MapCenterUpdater
+              position={selectedPosition}
+              shouldClosePopup={shouldClosePopup}
+            />
 
-          {/* Place a Marker for each event with coords */}
-          {eventsWithCoords.map((evt) => {
-            const eventTimeInMins = parseTimeToMinutes(evt.time)
-            const shouldHighlight =
-              highlightDay === evt.date && highlightTime === eventTimeInMins
+            {/* Place a Marker for each event with coords */}
+            {eventsWithCoords.map((evt) => {
+              const eventTimeInMins = parseTimeToMinutes(evt.time)
+              const shouldHighlight =
+                highlightDay === evt.date && highlightTime === eventTimeInMins
 
-            return (
-              <Marker
-                key={evt.id}
-                position={[evt.latitude!, evt.longitude!]}
-                icon={createPingIcon(shouldHighlight, evt.id)}
-                eventHandlers={{
-                  click: () => handleUserAction(evt.id),
-                }}
-              >
-                <Popup>
-                  <div className='flex flex-col gap-1'>
-                    <div className='font-semibold'>
-                      <span className='font-semibold'>{evt.date}</span> -{' '}
-                      {evt.time_formatted}
+              return (
+                <Marker
+                  key={evt.id}
+                  position={[evt.latitude!, evt.longitude!]}
+                  icon={createPingIcon(shouldHighlight, evt.id)}
+                  eventHandlers={{
+                    click: () => handleUserAction(evt.id),
+                  }}
+                >
+                  <Popup>
+                    <div className='flex flex-col gap-1'>
+                      <div className='font-semibold'>
+                        <span className='font-semibold'>{evt.date}</span> -{' '}
+                        {evt.time_formatted}
+                      </div>
+                      <div>{evt.details}</div>
                     </div>
-                    <div>{evt.details}</div>
-                  </div>
-                </Popup>
-              </Marker>
-            )
-          })}
-        </MapContainer>
-      </div>
+                  </Popup>
+                </Marker>
+              )
+            })}
+          </MapContainer>
+        </div>
+      )}
       <div className='z-10 mx-6 -mt-16 flex flex-row gap-2 rounded-sm bg-background/60 bg-clip-padding px-2 py-2 shadow-lg backdrop-blur-sm backdrop-filter'>
         <Button
           size='icon'

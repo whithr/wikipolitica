@@ -9,21 +9,17 @@ import { usePresidentCalendar } from './president-calendar-context'
 import { WordExplainer } from '../word-explainer'
 import { SourceTooltip } from '../source-tooltip'
 import { ExternalLink } from '../external-link'
+import { Skeleton } from '../ui/skeleton'
 
 export const DailyItinerary = () => {
   const {
     isLoading,
-    filteredData,
     sortedDays,
     sortedEventsByDay,
     highlightDay,
     highlightTime,
     selectedDayId,
   } = usePresidentCalendar()
-
-  if (isLoading) return <p>Loading...</p>
-  if (!filteredData || filteredData.length === 0)
-    return <p>No data available.</p>
 
   return (
     <div className='flex flex-col gap-2 text-foreground md:gap-4'>
@@ -51,93 +47,108 @@ export const DailyItinerary = () => {
             </div>
           }
         />
-        {sortedDays.map((date) => {
-          const dayEvents = sortedEventsByDay[date]
+        {isLoading ? (
+          <div className='flex flex-col gap-2'>
+            <Skeleton className='h-6 w-2/12 rounded-sm' />
+            <Skeleton className='h-6 w-4/12 rounded-sm' />
+            <Separator />
+            <Skeleton className='h-6 w-4/12 rounded-sm' />
+            <Skeleton className='h-6 w-7/12 rounded-sm' />
+            <Separator />
+            <Skeleton className='h-6 w-5/12 rounded-sm' />
+            <Skeleton className='h-6 w-9/12 rounded-sm' />
+          </div>
+        ) : (
+          sortedDays.map((date) => {
+            const dayEvents = sortedEventsByDay[date]
 
-          return (
-            <div key={date} className='flex flex-col gap-2'>
-              <h2 className='px-4 text-lg font-semibold'>{formatDate(date)}</h2>
-              <Separator />
+            return (
+              <div key={date} className='flex flex-col gap-2'>
+                <h2 className='px-4 text-lg font-semibold'>
+                  {formatDate(date)}
+                </h2>
+                <Separator />
 
-              {dayEvents.map((event, index) => {
-                // Optionally hide certain no-info events
-                const isIgnoredEvent =
-                  (!event.time_formatted &&
-                    !event.video_url &&
-                    !event.details) ||
-                  event.details ===
-                    'No official presidential schedule released or announced.'
-                if (isIgnoredEvent) return null
+                {dayEvents.map((event, index) => {
+                  // Optionally hide certain no-info events
+                  const isIgnoredEvent =
+                    (!event.time_formatted &&
+                      !event.video_url &&
+                      !event.details) ||
+                    event.details ===
+                      'No official presidential schedule released or announced.'
+                  if (isIgnoredEvent) return null
 
-                const eventTimeInMins = parseTimeToMinutes(event.time)
-                const shouldHighlight =
-                  highlightDay === date && highlightTime === eventTimeInMins
+                  const eventTimeInMins = parseTimeToMinutes(event.time)
+                  const shouldHighlight =
+                    highlightDay === date && highlightTime === eventTimeInMins
 
-                return (
-                  <div
-                    key={index}
-                    className='flex flex-row items-center gap-3 py-2'
-                  >
-                    <ActivityPing
-                      shouldHighlight={shouldHighlight}
-                      shouldAnimate={selectedDayId === event.id}
-                    />
+                  return (
+                    <div
+                      key={index}
+                      className='flex flex-row items-center gap-3 py-2'
+                    >
+                      <ActivityPing
+                        shouldHighlight={shouldHighlight}
+                        shouldAnimate={selectedDayId === event.id}
+                      />
 
-                    <div className='flex flex-col'>
-                      {event.time_formatted ? (
-                        <div className='flex flex-col gap-1 text-muted-foreground md:flex-row md:gap-2'>
-                          {event.time_formatted} – {event.location}
-                          <div className='flex gap-2'>
-                            {event.video_url && (
-                              <Button
-                                asChild
-                                size='xs'
-                                variant='outline'
-                                special='darkBang'
-                              >
-                                <Link
-                                  to={event.video_url}
-                                  target='_blank'
-                                  rel='noopener noreferrer'
+                      <div className='flex flex-col'>
+                        {event.time_formatted ? (
+                          <div className='flex flex-col gap-1 text-muted-foreground md:flex-row md:gap-2'>
+                            {event.time_formatted} – {event.location}
+                            <div className='flex gap-2'>
+                              {event.video_url && (
+                                <Button
+                                  asChild
+                                  size='xs'
+                                  variant='outline'
+                                  special='darkBang'
                                 >
-                                  Watch Video
-                                </Link>
-                              </Button>
-                            )}
-                            {event.url && (
-                              <Button
-                                asChild
-                                size='xs'
-                                variant='outline'
-                                special='darkBang'
-                              >
-                                <Link
-                                  to={event.url}
-                                  target='_blank'
-                                  rel='noopener noreferrer'
+                                  <Link
+                                    to={event.video_url}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                  >
+                                    Watch Video
+                                  </Link>
+                                </Button>
+                              )}
+                              {event.url && (
+                                <Button
+                                  asChild
+                                  size='xs'
+                                  variant='outline'
+                                  special='darkBang'
                                 >
-                                  More Info
-                                </Link>
-                              </Button>
-                            )}
+                                  <Link
+                                    to={event.url}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                  >
+                                    More Info
+                                  </Link>
+                                </Button>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className='flex gap-2 text-muted-foreground'>
-                          Time TBD – {event.location}
-                        </div>
-                      )}
-                      <p>
-                        {' '}
-                        <WordExplainer text={event.details} />
-                      </p>
+                        ) : (
+                          <div className='flex gap-2 text-muted-foreground'>
+                            Time TBD – {event.location}
+                          </div>
+                        )}
+                        <p>
+                          {' '}
+                          <WordExplainer text={event.details} />
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
+                  )
+                })}
+              </div>
+            )
+          })
+        )}
       </div>
     </div>
   )
