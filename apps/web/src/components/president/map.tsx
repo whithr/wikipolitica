@@ -56,6 +56,9 @@ export const Map = () => {
     if (!isPlaying) return
 
     const intervalId = setInterval(() => {
+      // Retrieve the latest selectedDayId from Zustand's state
+      const { selectedDayId } = usePresidentCalendarStore.getState()
+
       // Find the index of the current event
       const currentIndex = eventsWithCoords.findIndex(
         (evt) => evt.id === selectedDayId
@@ -74,8 +77,13 @@ export const Map = () => {
 
     // Cleanup the interval when the component unmounts or dependencies change
     return () => clearInterval(intervalId)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, eventsWithCoords, playbackSpeed, setIsPlaying])
+  }, [
+    isPlaying,
+    eventsWithCoords,
+    playbackSpeed,
+    setIsPlaying,
+    setSelectedDayId,
+  ])
 
   // Fallback if no coords found at all
   const fallbackCenter = useMemo(
