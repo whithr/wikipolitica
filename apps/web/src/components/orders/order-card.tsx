@@ -27,7 +27,6 @@ export const OrderCard = ({
       )}
     >
       <div className='break-words'>{order.title}</div>
-      {/* <div className='text-xs'>{formatDateWithSuffix(order.pub_date)}</div> */}
     </div>
   )
 }
