@@ -17,6 +17,7 @@ import {
   DrawerHeader,
 } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const MOBILE_WIDTH = 1000
 
@@ -45,7 +46,11 @@ const RouteComponent = () => {
           />
           <Search className='pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none stroke-foreground opacity-50' />
         </div>
-        <ExecutiveOrdersSelector />
+        <div className='flex-1 overflow-auto rounded-sm border border-border bg-background p-4 shadow-sm'>
+          <ScrollArea className='h-[calc(100dvh-180px)]'>
+            <ExecutiveOrdersSelector />
+          </ScrollArea>
+        </div>
       </div>
 
       {/* Main content area with scrollable content */}

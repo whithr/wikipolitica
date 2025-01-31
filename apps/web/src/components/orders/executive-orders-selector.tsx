@@ -67,7 +67,7 @@ export const ExecutiveOrdersSelector = () => {
   }, [data])
 
   return (
-    <div className='flex h-fit max-w-[400px] flex-auto flex-col gap-4 rounded-sm border border-border bg-background p-4 text-foreground shadow-sm'>
+    <div className='flex h-fit max-w-[400px] flex-auto flex-col gap-4 p-4 text-foreground'>
       {isLoading ? (
         <div className='flex h-full w-[400px] flex-col gap-2'>
           <Skeleton className='h-6 w-2/12 rounded-sm' />
