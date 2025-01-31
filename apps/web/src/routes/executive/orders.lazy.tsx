@@ -21,6 +21,8 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { ExecutiveOrdersReader } from '@/components/orders/executive-orders-reader'
 import { ExecutiveOrdersSelector } from '@/components/orders/executive-orders-selector'
+import { SourceTooltip } from '@/components/source-tooltip'
+import { ExternalLink } from '@/components/external-link'
 
 const MOBILE_WIDTH = 1000
 
@@ -48,7 +50,7 @@ const RouteComponent: React.FC = () => {
         )}
       >
         {/* Search Input */}
-        <div className='relative rounded-sm border border-border bg-background p-2 shadow-sm'>
+        <div className='relative flex rounded-sm border border-border bg-background p-2 pr-6 shadow-sm'>
           <Label htmlFor='search' className='sr-only'>
             Search
           </Label>
@@ -60,7 +62,23 @@ const RouteComponent: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+
           <Search className='pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 select-none stroke-foreground opacity-50' />
+          <div className='w-1' />
+          <SourceTooltip
+            className='top-4'
+            content={
+              <div>
+                <p>
+                  All actions from an RSS feed{' '}
+                  <ExternalLink
+                    href='https://www.whitehouse.gov/presidential-actions/'
+                    label='whitehouse.gov'
+                  />
+                </p>
+              </div>
+            }
+          />
         </div>
 
         {/* Filtered and Grouped Orders */}
