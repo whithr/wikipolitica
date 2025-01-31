@@ -21,12 +21,8 @@ import { Button } from '@/components/ui/button'
 const MOBILE_WIDTH = 1000
 
 const RouteComponent = () => {
-  const { data, selectedOrderId, setSelectedOrderId, isLoading } =
-    useExecutiveOrders()
+  const { selectedOrderId, setSelectedOrderId } = useExecutiveOrders()
   const { width, ref } = useResizeDetector()
-
-  if (isLoading) return <p>Loading...</p>
-  if (!data) return <p>No data found.</p>
 
   return (
     <div className='flex flex-1 gap-12 md:gap-6' ref={ref}>
