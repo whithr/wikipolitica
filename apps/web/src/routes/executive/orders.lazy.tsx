@@ -4,7 +4,7 @@ import { ChangeEvent } from 'react'
 import { ExecutiveOrdersProvider } from '@/components/orders/executive-orders-context'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { useResizeDetector } from 'react-resize-detector'
 import { cn } from '@/lib/utils'
@@ -69,11 +69,12 @@ const RouteComponent: React.FC = () => {
             content={
               <div>
                 <p>
-                  All actions from an RSS feed{' '}
+                  All actions from the{' '}
                   <ExternalLink
                     href='https://www.whitehouse.gov/presidential-actions/'
                     label='whitehouse.gov'
-                  />
+                  />{' '}
+                  RSS feed
                 </p>
               </div>
             }
@@ -97,8 +98,8 @@ const RouteComponent: React.FC = () => {
           <DrawerContent className='border-none'>
             <DrawerHeader className='flex self-end'>
               <DrawerClose className='flex self-end' asChild>
-                <Button variant='outline' className='self-end'>
-                  Close
+                <Button variant='outline' className='self-end' size='icon'>
+                  <X className='h-4 w-4' />
                 </Button>
               </DrawerClose>
             </DrawerHeader>
@@ -106,7 +107,7 @@ const RouteComponent: React.FC = () => {
           </DrawerContent>
         </Drawer>
       ) : (
-        <div className='flex-1 overflow-auto'>
+        <div className='flex w-full flex-1 overflow-auto'>
           <ExecutiveOrdersReader />
         </div>
       )}
