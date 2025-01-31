@@ -56,7 +56,6 @@ export const Map = () => {
     if (!isPlaying) return
 
     const intervalId = setInterval(() => {
-      // Retrieve the latest selectedDayId from Zustand's state
       const { selectedDayId } = usePresidentCalendarStore.getState()
 
       // Find the index of the current event
