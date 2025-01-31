@@ -58,7 +58,7 @@ export const PresidentCalendarProvider: FC<PresidentCalendarProviderProps> = ({
   // 2) Date-range state (with an initially undefined range or your choice)
   const [selectedRange, setSelectedRange] = useState<DateRange>({
     from: new Date(new Date().setDate(new Date().getDate() - 7)), // 7 days before today
-    to: new Date(), // Today
+    to: new Date(new Date().setDate(new Date().getDate() + 1)), // Today + 1
   })
 
   // 3) Process the data with your existing useFilteredCalendarData hook

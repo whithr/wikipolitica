@@ -96,7 +96,10 @@ export const DailyItinerary = () => {
                       <div className='flex flex-col'>
                         {event.time_formatted ? (
                           <div className='flex flex-col gap-1 text-muted-foreground md:flex-row md:gap-2'>
-                            {event.time_formatted} – {event.location}
+                            {event.time_formatted} –{' '}
+                            {event.location
+                              ? event.location
+                              : 'No location set'}
                             <div className='flex gap-2'>
                               {event.video_url && (
                                 <Button
