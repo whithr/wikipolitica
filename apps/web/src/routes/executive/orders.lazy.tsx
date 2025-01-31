@@ -43,8 +43,8 @@ const RouteComponent: React.FC = () => {
       {/* Sidebar with search and order list */}
       <div
         className={cn(
-          'flex h-fit max-w-[450px] flex-col gap-2',
-          width && width < MOBILE_WIDTH && 'mx-auto max-w-full'
+          'flex h-fit w-full max-w-[450px] flex-col gap-2',
+          width && width < MOBILE_WIDTH && 'mx-auto min-w-full max-w-full'
         )}
       >
         {/* Search Input */}

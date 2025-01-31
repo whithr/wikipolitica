@@ -57,7 +57,7 @@ export const ExecutiveOrdersSelector = () => {
           </div>
         ))
       ) : (
-        <p>No executive orders found.</p>
+        <p>No executive orders or actions found.</p>
       )}
     </div>
   )
