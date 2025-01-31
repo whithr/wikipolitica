@@ -13,17 +13,19 @@ import { Button } from '../ui/button'
 import { FastForward, Pause, Play } from 'lucide-react'
 import { Separator } from '@radix-ui/react-separator'
 import { Skeleton } from '../ui/skeleton'
+import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
 export const Map = () => {
   const { resolvedTheme } = useTheme()
-  const {
-    isLoading,
-    filteredData,
-    selectedDayId,
-    setSelectedDayId,
-    highlightDay,
-    highlightTime,
-  } = usePresidentCalendar()
+  const { isLoading, filteredData, highlightDay, highlightTime } =
+    usePresidentCalendar()
+
+  const selectedDayId = usePresidentCalendarStore(
+    (state) => state.selectedDayId
+  )
+  const setSelectedDayId = usePresidentCalendarStore(
+    (state) => state.setSelectedDayId
+  )
 
   // State to track if the popup should close
   const [shouldClosePopup, setShouldClosePopup] = useState(false)
@@ -54,25 +56,26 @@ export const Map = () => {
     if (!isPlaying) return
 
     const intervalId = setInterval(() => {
-      setSelectedDayId((prevId) => {
-        // Find the current index in the reversed order
-        const currentIndex = eventsWithCoords.findIndex(
-          (evt) => evt.id === prevId
-        )
+      // Find the index of the current event
+      const currentIndex = eventsWithCoords.findIndex(
+        (evt) => evt.id === selectedDayId
+      )
 
-        // If at the last index, stop playing
-        if (currentIndex <= 0) {
-          setIsPlaying(false)
-          return prevId // Keep the same ID to prevent overflow
-        }
+      // If at the first event, stop the playback
+      if (currentIndex <= 0) {
+        setIsPlaying(false)
+        return // Retain the current ID to prevent overflow
+      }
 
-        // Move to the next item in the reversed list
-        return eventsWithCoords[currentIndex - 1]?.id ?? prevId
-      })
+      const newId = eventsWithCoords[currentIndex - 1]?.id ?? selectedDayId
+
+      setSelectedDayId(newId)
     }, playbackSpeed)
 
+    // Cleanup the interval when the component unmounts or dependencies change
     return () => clearInterval(intervalId)
-  }, [isPlaying, playbackSpeed, eventsWithCoords, setSelectedDayId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, eventsWithCoords, playbackSpeed, setIsPlaying])
 
   // Fallback if no coords found at all
   const fallbackCenter = useMemo(
@@ -209,7 +212,7 @@ export const Map = () => {
           size='icon'
           variant={isPlaying ? 'outline' : 'default'}
           className='min-w-9'
-          onClick={() => setIsPlaying(false)} // Toggle speed
+          onClick={() => setIsPlaying(!isPlaying)} // Toggle speed
         >
           <Pause />
         </Button>

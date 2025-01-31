@@ -1,5 +1,3 @@
-'use client'
-
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { DateRange } from 'react-day-picker'
@@ -13,14 +11,17 @@ import {
 } from '@/components/ui/popover'
 
 import { usePresidentCalendar } from '@/components/president/president-calendar-context'
+import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
 export function DatePickerWithRange() {
-  // 1) Get everything from your context
-  const { selectedRange, setSelectedRange, minDate, maxDate } =
-    usePresidentCalendar()
+  const { minDate, maxDate } = usePresidentCalendar()
+  const selectedRange = usePresidentCalendarStore(
+    (state) => state.selectedRange
+  )
+  const setSelectedRange = usePresidentCalendarStore(
+    (state) => state.setSelectedRange
+  )
 
-  // 2) Display text for the button
-  // The user might not have selected any range yet, so handle undefined carefully
   const getButtonLabel = (range: DateRange) => {
     if (!range?.from) return 'Pick a range of dates'
     if (range.to) {
@@ -30,7 +31,6 @@ export function DatePickerWithRange() {
     }
   }
 
-  // 3) Render
   return (
     <div className='grid gap-2'>
       <Popover>

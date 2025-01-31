@@ -10,6 +10,7 @@ import { WordExplainer } from '../word-explainer'
 import { SourceTooltip } from '../source-tooltip'
 import { ExternalLink } from '../external-link'
 import { Skeleton } from '../ui/skeleton'
+import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
 export const DailyItinerary = () => {
   const {
@@ -18,8 +19,11 @@ export const DailyItinerary = () => {
     sortedEventsByDay,
     highlightDay,
     highlightTime,
-    selectedDayId,
   } = usePresidentCalendar()
+
+  const selectedDayId = usePresidentCalendarStore(
+    (state) => state.selectedDayId
+  )
 
   return (
     <div className='flex flex-col gap-2 text-foreground md:gap-4'>

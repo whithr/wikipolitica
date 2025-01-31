@@ -1,16 +1,40 @@
 import { usePresidentCalendar } from '@/components/president/president-calendar-context'
-import { formatDate } from '@/lib/time.utils'
+import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
 import { Separator } from '@/components/ui/separator'
 import { WordExplainer } from '@/components/word-explainer'
 import potusSeal from '@/assets/potus-seal.png'
 import { removeBrackets } from '@/lib/utils'
 import { SourceTooltip } from '../source-tooltip'
 import { Skeleton } from '../ui/skeleton'
+import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
+import { useEffect } from 'react'
 
 export const CurrentEventHeader = () => {
-  const { isLoading, filteredData, selectedDayId } = usePresidentCalendar()
+  const { isLoading, filteredData, highlightDay, highlightTime } =
+    usePresidentCalendar()
+  const selectedDayId = usePresidentCalendarStore(
+    (state) => state.selectedDayId
+  )
+  const setSelectedDayId = usePresidentCalendarStore(
+    (state) => state.setSelectedDayId
+  )
 
   const selectedEvent = filteredData.find((evt) => evt.id === selectedDayId)
+
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      const potentialSelection = filteredData.findIndex(
+        (d) =>
+          parseTimeToMinutes(d.time) === highlightTime &&
+          d.date === highlightDay
+      )
+      if (potentialSelection !== -1) {
+        setSelectedDayId(filteredData[potentialSelection]?.id)
+      } else {
+        setSelectedDayId(filteredData[0]?.id)
+      }
+    }
+  }, [filteredData, highlightTime, highlightDay, setSelectedDayId])
 
   return (
     <div className='flex flex-col gap-2 px-0 md:px-8'>

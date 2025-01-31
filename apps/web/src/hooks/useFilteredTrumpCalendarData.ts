@@ -1,3 +1,5 @@
+// src/hooks/useFilteredCalendarData.ts
+
 import { useMemo } from "react";
 import { isAfter, isBefore } from "date-fns";
 import { getLocalNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils";
@@ -162,22 +164,6 @@ export function useFilteredCalendarData(
         }
       }
     }
-
-    // TODO: bug here - some days aren't selectable if we dont have data yet, so ping should still show.
-    // 5b) If the selected range does NOT include "today," clear out the highlight
-    // if (selectedRange?.from && selectedRange?.to) {
-    //   const today = new Date();
-    //   const rangeIncludesToday = !isBefore(today, selectedRange.from) &&
-    //     !isAfter(today, selectedRange.to);
-
-    //   console.log(rangeIncludesToday);
-
-    //   // If it's entirely in the past or entirely in the future, no highlight
-    //   if (!rangeIncludesToday) {
-    //     highlightDay = null;
-    //     highlightTime = null;
-    //   }
-    // }
 
     // 6) Find min/max dates across all data (for date-picker restrictions)
     const allDates = data.map((event) => parseEventDate(event.date));
