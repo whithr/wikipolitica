@@ -60,6 +60,78 @@ export type Database = {
         };
         Relationships: [];
       };
+      executive_orders: {
+        Row: {
+          body_html_url: string | null;
+          citation: string | null;
+          created_at: string | null;
+          disposition_notes: string | null;
+          document_number: string;
+          end_page: number | null;
+          executive_order_number: string | null;
+          full_text_xml: string | null;
+          full_text_xml_url: string | null;
+          html_url: string | null;
+          id: string;
+          json_url: string | null;
+          not_received_for_publication: string | null;
+          pdf_url: string | null;
+          publication_date: string | null;
+          signing_date: string | null;
+          start_page: number | null;
+          subtype: string | null;
+          title: string | null;
+          type: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          body_html_url?: string | null;
+          citation?: string | null;
+          created_at?: string | null;
+          disposition_notes?: string | null;
+          document_number: string;
+          end_page?: number | null;
+          executive_order_number?: string | null;
+          full_text_xml?: string | null;
+          full_text_xml_url?: string | null;
+          html_url?: string | null;
+          id?: string;
+          json_url?: string | null;
+          not_received_for_publication?: string | null;
+          pdf_url?: string | null;
+          publication_date?: string | null;
+          signing_date?: string | null;
+          start_page?: number | null;
+          subtype?: string | null;
+          title?: string | null;
+          type?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          body_html_url?: string | null;
+          citation?: string | null;
+          created_at?: string | null;
+          disposition_notes?: string | null;
+          document_number?: string;
+          end_page?: number | null;
+          executive_order_number?: string | null;
+          full_text_xml?: string | null;
+          full_text_xml_url?: string | null;
+          html_url?: string | null;
+          id?: string;
+          json_url?: string | null;
+          not_received_for_publication?: string | null;
+          pdf_url?: string | null;
+          publication_date?: string | null;
+          signing_date?: string | null;
+          start_page?: number | null;
+          subtype?: string | null;
+          title?: string | null;
+          type?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       president_schedule: {
         Row: {
           coverage: string | null;

@@ -93,8 +93,8 @@ const RouteComponent = () => {
       {/* Main content area with scrollable content */}
       {width && width < MOBILE_WIDTH ? (
         <Drawer
-          open={Number(id) > 0}
-          onClose={() => navigate({ to: '/executive/actions' })}
+          open={id !== undefined}
+          onClose={() => navigate({ to: '/executive/orders' })}
         >
           <DrawerContent className='border-none'>
             <DrawerHeader className='flex self-end'>
@@ -109,7 +109,7 @@ const RouteComponent = () => {
         </Drawer>
       ) : (
         <div className='flex w-full flex-1 overflow-auto'>
-          {Number(id) > 0 ? (
+          {id ? (
             <div className='h-fit border border-border shadow-sm'>
               <Outlet />
             </div>
