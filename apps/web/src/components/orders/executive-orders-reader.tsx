@@ -1,72 +1,27 @@
 // components/ExecutiveOrdersReader.tsx
-import { cn } from '@/lib/utils'
-import { useExecutiveOrdersData } from '@/hooks/useExecutiveOrdersData'
-import { useExecutiveOrderDetails } from '@/hooks/useExecutiveOrderDetails'
+import { cn, stripExecutiveOrder } from '@/lib/utils'
+
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cleanHTML } from '@/lib/html.utils'
 
 import styles from './orders.module.css'
 import { useTheme } from '../theme-provider'
-import { Skeleton } from '../ui/skeleton'
-import { useParams } from '@tanstack/react-router'
+
+import { useLoaderData } from '@tanstack/react-router'
 
 export const ExecutiveOrdersReader = ({
   className,
 }: {
   className?: string
 }) => {
-  const { data } = useExecutiveOrdersData()
+  const data = useLoaderData({ from: '/executive/orders/$id' })
 
   const { resolvedTheme } = useTheme()
-  const { id } = useParams({ strict: false })
 
-  const {
-    data: orderDetails,
-    isLoading: isDetailsLoading,
-    isError: isDetailsError,
-    error: detailsError,
-  } = useExecutiveOrderDetails(Number(id))
+  if (!data) return <p>No data found.</p>
 
-  if (!data || data.length === 0) return <p>No data found.</p>
-
-  const order = data.find((o) => o.id === Number(id))
-
-  if (!order) {
-    return (
-      <div className='flex w-full items-center justify-center rounded-sm border-8 border-dashed border-primary bg-primary/10 p-4 text-center text-foreground opacity-50 transition duration-500'>
-        <div className='flex-1'>Select an order to read...</div>
-      </div>
-    )
-  }
-
-  if (isDetailsLoading) {
-    return (
-      <div className='flex w-full flex-col items-center gap-5 rounded-sm border-8 border-dashed border-primary bg-primary/10 p-4 pt-12 text-center text-foreground opacity-50 transition duration-500'>
-        {/* Title Skeleton */}
-        <Skeleton className='h-6 w-2/12 rounded-md' />
-
-        {Array.from({ length: 3 }).map((_, index) => (
-          <div key={index} className='flex w-full flex-col items-center gap-2'>
-            <Skeleton className='h-4 w-10/12 rounded-md' />
-            <Skeleton className='h-4 w-11/12 rounded-md' />
-            <Skeleton className='h-4 w-9/12 rounded-md' />
-            <Skeleton className='h-4 w-8/12 rounded-md' />
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  if (isDetailsError) {
-    return (
-      <div className='flex w-full items-center justify-center rounded-sm border-8 border-dashed border-primary bg-primary/10 p-4 text-center text-foreground opacity-50 transition duration-500'>
-        Error loading order details: {detailsError.message}
-      </div>
-    )
-  }
-
-  const cleanedHTML = orderDetails?.full_html
-    ? cleanHTML(orderDetails.full_html)
+  const cleanedHTML = data.presidency_project_html
+    ? cleanHTML(data.presidency_project_html)
     : ''
 
   return (
@@ -76,17 +31,22 @@ export const ExecutiveOrdersReader = ({
         className
       )}
     >
-      <ScrollArea className='h-[calc(100dvh-150px)]'>
+      <div className='text-foreground'>
+        <h1 className='px-4 pt-4 text-center text-xl font-bold'>
+          {stripExecutiveOrder(data.presidency_project_title || '')}
+        </h1>
+        <p className='p-2 pb-4 text-center text-sm'>
+          {data.presidency_project_date}
+        </p>
+      </div>
+      <ScrollArea className='flex h-[calc(100dvh-300px)] flex-col gap-2'>
         <div
+          dangerouslySetInnerHTML={{ __html: cleanedHTML }}
           className={cn(
-            'm-2 text-foreground',
-            resolvedTheme === 'dark'
-              ? styles.orderCardDark
-              : styles.orderCardLight
+            resolvedTheme === 'light'
+              ? styles.orderCardLight
+              : styles.orderCardDark
           )}
-          dangerouslySetInnerHTML={{
-            __html: cleanedHTML,
-          }}
         />
       </ScrollArea>
     </div>

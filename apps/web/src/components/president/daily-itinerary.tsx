@@ -141,7 +141,10 @@ export const DailyItinerary = () => {
                           </div>
                         ) : (
                           <div className='flex gap-2 text-muted-foreground'>
-                            Time TBD – {event.location}
+                            Time not provided –{' '}
+                            {event.location
+                              ? event.location
+                              : 'Location not provided'}
                           </div>
                         )}
                         <p>

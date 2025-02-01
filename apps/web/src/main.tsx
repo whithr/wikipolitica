@@ -11,16 +11,17 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 
-// import { routeTree } from './routeTree.gen'
 import { ThemeProvider } from './components/theme-provider'
 import { RootRoute } from './routes/__root'
 import { Executive } from './components/president/executive'
 import { PresidentialSchedule } from './routes/executive/presidential-schedule'
 import { PresidentialActions } from './routes/executive/presidential-actions'
-import { executiveActionsQueryOptions } from './hooks/useExecutiveOrdersData'
-import { executiveActionDetailsQueryOptions } from './hooks/useExecutiveOrderDetails'
 import { ExecutiveOrdersReader } from './components/orders/executive-orders-reader'
 import { createClient } from '@supabase/supabase-js'
+import {
+  executiveOrderMarkdownQueryOptions,
+  executiveOrdersQueryOptions,
+} from './hooks/executive-orders'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -66,27 +67,27 @@ const presidentialScheduleRoute = createRoute({
   component: PresidentialSchedule,
 })
 
-const presidentialActionsRoute = createRoute({
+const presidentialOrdersRoute = createRoute({
   getParentRoute: () => executiveRoute,
-  path: 'actions',
+  path: 'orders',
   component: PresidentialActions,
   loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(executiveActionsQueryOptions),
+    queryClient.ensureQueryData(executiveOrdersQueryOptions),
 })
 
-export const presidentialActionsPostRoute = createRoute({
-  getParentRoute: () => presidentialActionsRoute,
+export const presidentialOrderReaderRoute = createRoute({
+  getParentRoute: () => presidentialOrdersRoute,
   path: '$id',
   errorComponent: ErrorComponent,
   loader: ({ context: { queryClient }, params: { id } }) =>
-    queryClient.ensureQueryData(executiveActionDetailsQueryOptions(Number(id))),
+    queryClient.ensureQueryData(executiveOrderMarkdownQueryOptions(id)),
   component: ExecutiveOrdersReader,
 })
 
 const routeTree = rootRoute.addChildren([
   executiveRoute,
   presidentialScheduleRoute,
-  presidentialActionsRoute.addChildren([presidentialActionsPostRoute]),
+  presidentialOrdersRoute.addChildren([presidentialOrderReaderRoute]),
   indexRoute,
 ])
 

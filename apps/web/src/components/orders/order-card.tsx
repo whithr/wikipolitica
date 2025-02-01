@@ -1,16 +1,16 @@
-import { Tables } from '@/lib/database.types'
-import { cn } from '@/lib/utils'
+import { ExecutiveOrderType } from '@/hooks/executive-orders'
+import { cn, stripExecutiveOrder } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 
 type OrderCardProps = {
-  order: Tables<'executive_actions'>
-  selectedOrderId: number
+  order: ExecutiveOrderType
+  selectedOrderId?: string
 }
 
 export const OrderCard = ({ order, selectedOrderId }: OrderCardProps) => {
   return (
     <Link
-      to='/executive/actions/$id' // Reference the dynamic route
+      to='/executive/orders/$id' // Reference the dynamic route
       params={{ id: String(order.id) }} // Pass the dynamic parameter
       className={cn(
         'flex w-full flex-col items-start gap-2 rounded-sm border p-2 shadow-sm transition-colors duration-300 hover:cursor-pointer hover:bg-primary/25',
@@ -19,7 +19,7 @@ export const OrderCard = ({ order, selectedOrderId }: OrderCardProps) => {
           : 'border-border bg-muted/50'
       )}
     >
-      <div className='break-words'>{order.title}</div>
+      <div className='break-words'>{stripExecutiveOrder(order.title)}</div>
     </Link>
   )
 }

@@ -1,69 +1,17 @@
 .orderCardLight {
-  a[href] {
-    color: blue;
-    &::before {
-      content: ' ';
-      display: inline; /* Ensure the space is rendered */
-    }
-
-    /* Add space after the link */
-    &::after {
-      content: ' ';
-      display: inline; /* Ensure the space is rendered */
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    word-break: auto-phrase;
-    text-align: center;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-  }
-
+  color: hsl(222.2 84% 4.9%);
   p {
-    padding-top: 8px;
+    padding-top: 16px;
     word-break: auto-phrase;
     line-height: 1.75rem;
-  }
-
-  br {
-    content: 'A' !important;
-    display: block !important;
-    margin-bottom: 0.75em !important;
-  }
-
-  span {
-    font-weight: bold;
-    width: 100%;
-    /* creates newline */
-    display: block;
-    padding-bottom: 16px;
   }
 }
 
 .orderCardDark {
-  a[href] {
-    color: hsl(45.88 100% 50%);
-    &::before {
-      content: ' ';
-      display: inline; /* Ensure the space is rendered */
-    }
+  color: hsl(210 40% 98%);
 
-    /* Add space after the link */
-    &::after {
-      content: ' ';
-      display: inline; /* Ensure the space is rendered */
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
+  img {
+    filter: invert(100%);
   }
 
   h1 {
