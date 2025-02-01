@@ -12,27 +12,19 @@ export type ExecutiveOrderType = Pick<
   | "publication_date"
   | "title"
   | "executive_order_number"
+  | "presidency_project_title"
+  | "presidency_project_date"
 >;
 
 export const executiveOrdersQueryOptions = queryOptions<
-  Pick<
-    Tables<"executive_orders">,
-    | "id"
-    | "citation"
-    | "document_number"
-    | "pdf_url"
-    | "signing_date"
-    | "publication_date"
-    | "title"
-    | "executive_order_number"
-  >[]
+  ExecutiveOrderType[]
 >({
   queryKey: ["executive_orders"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("executive_orders")
       .select(
-        "id, citation, document_number, pdf_url, signing_date, publication_date, title, executive_order_number",
+        "id, citation, document_number, pdf_url, signing_date, publication_date, title, executive_order_number, presidency_project_title, presidency_project_date",
       )
       .order("publication_date", { ascending: false });
 
@@ -47,7 +39,9 @@ export const executiveOrdersQueryOptions = queryOptions<
 
 export type ExecutiveOrderMarkdown = Pick<
   Tables<"executive_orders">,
-  "full_text_markdown"
+  | "presidency_project_html"
+  | "presidency_project_title"
+  | "presidency_project_date"
 >;
 
 export const executiveOrderMarkdownQueryOptions = (id?: string) =>
@@ -59,7 +53,9 @@ export const executiveOrderMarkdownQueryOptions = (id?: string) =>
 
       const { data, error } = await supabase
         .from("executive_orders")
-        .select("full_text_markdown")
+        .select(
+          "presidency_project_html, presidency_project_title, presidency_project_date",
+        )
         .eq("id", id)
         .single();
 

@@ -7,12 +7,7 @@ import { Search, X } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { useResizeDetector } from 'react-resize-detector'
 import { cn } from '@/lib/utils'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-} from '@/components/ui/drawer'
+import { Drawer, DrawerClose, DrawerContent } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { ExecutiveOrdersSelector } from '@/components/orders/executive-orders-selector'
@@ -56,7 +51,7 @@ const RouteComponent = () => {
           </Label>
           <Input
             id='search'
-            placeholder='Search Executive Orders and Actions...'
+            placeholder='Search Executive Orders...'
             className='pl-8 text-foreground'
             autoComplete='off'
             value={searchTerm}
@@ -69,13 +64,17 @@ const RouteComponent = () => {
             className='top-4'
             content={
               <div>
-                <p>
-                  All actions from the{' '}
+                <p className='max-w-[300px]'>
+                  All orders from the{' '}
                   <ExternalLink
-                    href='https://www.whitehouse.gov/presidential-actions/'
-                    label='whitehouse.gov'
-                  />{' '}
-                  RSS feed
+                    href='https://www.archives.gov/'
+                    label='National Archives'
+                  />
+                  ,<br />
+                  <ExternalLink
+                    href='https://www.presidency.ucsb.edu/'
+                    label='The American Presidency Project'
+                  />
                 </p>
               </div>
             }
@@ -97,13 +96,15 @@ const RouteComponent = () => {
           onClose={() => navigate({ to: '/executive/orders' })}
         >
           <DrawerContent className='border-none'>
-            <DrawerHeader className='flex self-end'>
-              <DrawerClose className='flex self-end' asChild>
-                <Button variant='outline' className='self-end' size='icon'>
-                  <X className='h-4 w-4' />
-                </Button>
-              </DrawerClose>
-            </DrawerHeader>
+            <DrawerClose className='flex h-min self-end' asChild>
+              <Button
+                variant='outline'
+                className='absolute right-4 top-4 h-8 w-8'
+                size='icon'
+              >
+                <X className='h-8 w-8' />
+              </Button>
+            </DrawerClose>
             <Outlet />
           </DrawerContent>
         </Drawer>

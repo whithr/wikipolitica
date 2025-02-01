@@ -66,7 +66,7 @@ export type Database = {
           citation: string | null
           created_at: string | null
           disposition_notes: string | null
-          document_number: string
+          document_number: string | null
           end_page: number | null
           executive_order_number: string | null
           full_text_markdown: string | null
@@ -77,6 +77,10 @@ export type Database = {
           json_url: string | null
           not_received_for_publication: string | null
           pdf_url: string | null
+          presidency_project_date: string | null
+          presidency_project_html: string | null
+          presidency_project_title: string | null
+          presidency_project_url: string | null
           publication_date: string | null
           signing_date: string | null
           start_page: number | null
@@ -90,7 +94,7 @@ export type Database = {
           citation?: string | null
           created_at?: string | null
           disposition_notes?: string | null
-          document_number: string
+          document_number?: string | null
           end_page?: number | null
           executive_order_number?: string | null
           full_text_markdown?: string | null
@@ -101,6 +105,10 @@ export type Database = {
           json_url?: string | null
           not_received_for_publication?: string | null
           pdf_url?: string | null
+          presidency_project_date?: string | null
+          presidency_project_html?: string | null
+          presidency_project_title?: string | null
+          presidency_project_url?: string | null
           publication_date?: string | null
           signing_date?: string | null
           start_page?: number | null
@@ -114,7 +122,7 @@ export type Database = {
           citation?: string | null
           created_at?: string | null
           disposition_notes?: string | null
-          document_number?: string
+          document_number?: string | null
           end_page?: number | null
           executive_order_number?: string | null
           full_text_markdown?: string | null
@@ -125,6 +133,10 @@ export type Database = {
           json_url?: string | null
           not_received_for_publication?: string | null
           pdf_url?: string | null
+          presidency_project_date?: string | null
+          presidency_project_html?: string | null
+          presidency_project_title?: string | null
+          presidency_project_url?: string | null
           publication_date?: string | null
           signing_date?: string | null
           start_page?: number | null

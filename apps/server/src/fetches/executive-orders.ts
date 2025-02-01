@@ -2,6 +2,8 @@ import "dotenv/config.js";
 import schedule from "node-schedule";
 import { createClient } from "@supabase/supabase-js";
 import { convertXmlToMarkdown } from "../lib/xml-to-markdown.utils";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 // ==========================================
 // 1) ENV variables for Supabase
@@ -13,12 +15,115 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 // ==========================================
-// 2) Type definitions (optional)
+// 2) Type definitions
 // ==========================================
-// (Interfaces omitted for brevity if you're not using TypeScript)
+interface DocumentData {
+  date: string;
+  title: string;
+  url: string;
+}
+
+interface ExecutiveOrder {
+  // Existing Federal Register fields...
+  citation?: string;
+  document_number?: string;
+  end_page?: number;
+  html_url?: string;
+  pdf_url?: string;
+  type?: string;
+  subtype?: string;
+  publication_date?: string;
+  signing_date?: string;
+  start_page?: number;
+  title?: string;
+  disposition_notes?: string;
+  executive_order_number?: string;
+  not_received_for_publication?: string;
+  full_text_xml_url?: string;
+  body_html_url?: string;
+  json_url?: string;
+  full_text_xml?: string;
+  full_text_markdown?: string;
+
+  // New fields for Presidency Project data:
+  presidency_project_title?: string;
+  presidency_project_date?: string;
+  presidency_project_url?: string;
+  presidency_project_html?: string;
+}
 
 // ==========================================
-// 3) Main function: fetch & store Executive Orders with Pagination
+// 3) Utility: Extract “core” title from scraped title
+// ==========================================
+function extractCoreTitle(title: string): string {
+  // Assumes titles from the Presidency Project are formatted like:
+  // "Executive Order 14182—Enforcing the Hyde Amendment"
+  const parts = title.split("—");
+  if (parts.length > 1) {
+    return parts.slice(1).join("—").trim();
+  }
+  return title.trim();
+}
+
+// ==========================================
+// 4) Upsert Presidency Project records
+// ==========================================
+async function upsertPresidencyProjectRecords(records: DocumentData[]) {
+  for (const record of records) {
+    const coreTitle = extractCoreTitle(record.title);
+
+    // Query for an existing executive order whose title contains the core title.
+    const { data: existingRecords, error: queryError } = await supabase
+      .from("executive_orders")
+      .select("id, title")
+      .ilike("title", `%${coreTitle}%`);
+
+    if (queryError) {
+      console.error("Error querying Supabase:", queryError);
+      continue;
+    }
+
+    if (existingRecords && existingRecords.length > 0) {
+      // Update the matched record with Presidency Project–specific fields.
+      const existingId = existingRecords[0].id;
+      const { error: updateError } = await supabase
+        .from("executive_orders")
+        .update({
+          presidency_project_title: record.title,
+          presidency_project_date: record.date, // Adjust format as needed.
+          presidency_project_url: record.url,
+        })
+        .eq("id", existingId);
+      if (updateError) {
+        console.error(
+          `Error updating record with id ${existingId}:`,
+          updateError,
+        );
+      } else {
+        console.log(
+          `Updated record with id ${existingId} using title: ${record.title}`,
+        );
+      }
+    } else {
+      // No matching record found: insert a new row with the Presidency Project data.
+      const { error: insertError } = await supabase
+        .from("executive_orders")
+        .insert({
+          presidency_project_title: record.title,
+          presidency_project_date: record.date,
+          presidency_project_url: record.url,
+        });
+      if (insertError) {
+        console.error("Error inserting new record:", insertError);
+      } else {
+        console.log(`Inserted new record with title: ${record.title}`);
+      }
+    }
+  }
+}
+
+// ==========================================
+// 5) Fetch & store Federal Register executive orders (existing code)
 // ==========================================
 async function fetchAndStoreExecutiveOrders() {
   try {
@@ -26,13 +131,11 @@ async function fetchAndStoreExecutiveOrders() {
       "[Info] Fetching executive orders from Federal Register API...",
     );
 
-    //@ts-expect-error any
-    let allResults = [];
+    let allResults: any[] = [];
     let page = 1;
-    const perPage = 100; // Use a value allowed by the API (the API default might be 20)
+    const perPage = 100;
     let morePages = true;
 
-    // Loop through pages until no more records are returned.
     while (morePages) {
       const FEDERAL_REGISTER_API_URL =
         `https://www.federalregister.gov/api/v1/documents?` +
@@ -82,10 +185,7 @@ async function fetchAndStoreExecutiveOrders() {
       if (jsonData.results.length === 0) {
         morePages = false;
       } else {
-        //@ts-expect-error any
         allResults = allResults.concat(jsonData.results);
-        // If the number of results is less than our perPage value,
-        // we have reached the last page.
         if (jsonData.results.length < perPage) {
           morePages = false;
         } else {
@@ -95,11 +195,9 @@ async function fetchAndStoreExecutiveOrders() {
     }
 
     console.log(
-      `[Info] Fetched a total of ${allResults.length} executive orders.`,
+      `[Info] Fetched a total of ${allResults.length} executive orders from Federal Register.`,
     );
 
-    // Optional: Query Supabase to get already stored document numbers so you
-    // don't re-fetch and process records you already have.
     const { data: existingOrders, error: existingError } = await supabase
       .from("executive_orders")
       .select("document_number");
@@ -107,16 +205,13 @@ async function fetchAndStoreExecutiveOrders() {
       console.error("[Error] Fetching existing orders:", existingError);
     }
     const existingDocNumbers = new Set(
-      existingOrders ? existingOrders.map((o) => o.document_number) : [],
+      existingOrders ? existingOrders.map((o: any) => o.document_number) : [],
     );
 
-    // Process each executive order:
     const records = await Promise.all(
-      allResults.map(async (item) => {
-        // If you want to skip processing of existing records, do so here:
-        // (Comment out the following two lines if you want to reprocess every record.)
+      allResults.map(async (item: any) => {
         if (existingDocNumbers.has(item.document_number)) {
-          return null; // Skip this record
+          return null; // Skip this record if already stored.
         }
 
         let xmlContent = "";
@@ -159,30 +254,32 @@ async function fetchAndStoreExecutiveOrders() {
           body_html_url: item.body_html_url,
           json_url: item.json_url,
           full_text_xml: xmlContent,
-          full_text_markdown: markdownContent, // New field with the Markdown conversion
+          full_text_markdown: markdownContent,
         };
       }),
     );
 
-    // Filter out any records that were skipped (returned as null)
     const newRecords = records.filter((record) => record !== null);
 
     if (newRecords.length === 0) {
-      console.log("[Info] No new executive orders to upsert.");
+      console.log(
+        "[Info] No new executive orders to upsert from Federal Register.",
+      );
     } else {
       console.log(
-        `[Info] Upserting ${newRecords.length} new executive orders into Supabase...`,
+        `[Info] Upserting ${newRecords.length} new executive orders from Federal Register into Supabase...`,
       );
-      // Upsert the records into Supabase.
-      // The onConflict field here is set to "document_number"
       const { error } = await supabase
         .from("executive_orders")
         .upsert(newRecords, { onConflict: "document_number" });
       if (error) {
-        console.error("[Error] Upserting executive orders:", error);
+        console.error(
+          "[Error] Upserting executive orders from Federal Register:",
+          error,
+        );
       } else {
         console.log(
-          `[Info] Successfully upserted ${newRecords.length} new executive orders.`,
+          `[Info] Successfully upserted ${newRecords.length} new executive orders from Federal Register.`,
         );
       }
     }
@@ -192,22 +289,176 @@ async function fetchAndStoreExecutiveOrders() {
 }
 
 // ==========================================
-// 4) Schedule job: run every 10 minutes
+// 6) Fetch & store Presidency Project executive orders
 // ==========================================
-schedule.scheduleJob("*/10 * * * *", async () => {
+async function fetchAndStorePresidencyProjectOrders() {
+  try {
+    const url =
+      "https://www.presidency.ucsb.edu/advanced-search?field-keywords=&field-keywords2=&field-keywords3=&from%5Bdate%5D=&to%5Bdate%5D=&person2=375125&category2%5B0%5D=58&items_per_page=50&order=field_docs_start_date_time_value&sort=desc";
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(
+        "[Error] Failed to fetch Presidency Project page:",
+        response.statusText,
+      );
+      return;
+    }
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    const records: DocumentData[] = [];
+
+    $("tbody tr").each((index, element) => {
+      const date = $(element)
+        .find("td.views-field-field-docs-start-date-time-value")
+        .text()
+        .trim();
+      const titleAnchor = $(element).find("td.views-field-title a");
+      const title = titleAnchor.text().trim();
+      let docUrl = titleAnchor.attr("href") || "";
+      if (docUrl && !docUrl.startsWith("http")) {
+        docUrl = `https://www.presidency.ucsb.edu${docUrl}`;
+      }
+      if (date && title && docUrl) {
+        records.push({ date, title, url: docUrl });
+      }
+    });
+
+    console.log(
+      `[Info] Fetched ${records.length} records from Presidency Project.`,
+    );
+    await upsertPresidencyProjectRecords(records);
+  } catch (error) {
+    console.error("[Error] fetchAndStorePresidencyProjectOrders:", error);
+  }
+}
+
+// ==========================================
+// 7) Scrape missing presidency_project_html for records that have a URL but no HTML
+// ==========================================
+async function scrapeMissingPresidencyProjectHtml() {
+  try {
+    // Query for rows where a presidency_project_url exists but presidency_project_html is null.
+    const { data: missingRecords, error } = await supabase
+      .from("executive_orders")
+      .select("id, presidency_project_url")
+      .not("presidency_project_url", "is", null)
+      .is("presidency_project_html", null);
+
+    if (error) {
+      console.error(
+        "Error querying records missing presidency_project_html:",
+        error,
+      );
+      return;
+    }
+
+    if (!missingRecords || missingRecords.length === 0) {
+      console.log("No records missing presidency_project_html found.");
+      return;
+    }
+
+    console.log(
+      `Found ${missingRecords.length} record(s) missing presidency_project_html.`,
+    );
+
+    // Process each record sequentially.
+    for (const record of missingRecords) {
+      if (!record.presidency_project_url) continue;
+
+      console.log(
+        `Scraping HTML for record ID ${record.id} from ${record.presidency_project_url}`,
+      );
+      try {
+        const htmlResponse = await axios.get(record.presidency_project_url);
+        if (htmlResponse.status === 200) {
+          const pageHtml = htmlResponse.data;
+          const $ = cheerio.load(pageHtml);
+          // Extract the entire HTML of the div under class "field-docs-content"
+          const contentHtml = $("div.field-docs-content").html() || null;
+          if (contentHtml) {
+            const wrappedContentHtml =
+              `<div class="presidency-project-wrapper">${contentHtml}</div>`;
+
+            const { error: updateError } = await supabase
+              .from("executive_orders")
+              .update({ presidency_project_html: wrappedContentHtml })
+              .eq("id", record.id);
+            if (updateError) {
+              console.error(`Error updating record ${record.id}:`, updateError);
+            } else {
+              console.log(
+                `Successfully updated record ${record.id} with scraped HTML.`,
+              );
+            }
+          } else {
+            console.warn(
+              `No content found for record ${record.id} at ${record.presidency_project_url}`,
+            );
+          }
+        } else {
+          console.error(
+            `Failed to fetch ${record.presidency_project_url}: status ${htmlResponse.status}`,
+          );
+        }
+      } catch (fetchError) {
+        console.error(
+          `Error fetching ${record.presidency_project_url}:`,
+          fetchError,
+        );
+      }
+
+      // Wait 10 seconds before processing the next record.
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+    }
+  } catch (err) {
+    console.error("Error in scrapeMissingPresidencyProjectHtml:", err);
+  }
+}
+
+// ==========================================
+// 8) Schedule jobs: run every 30 minutes for Federal Register & Presidency Project orders,
+//     and schedule the HTML scraper to run (for missing HTML) separately.
+// ==========================================
+schedule.scheduleJob("*/30 * * * *", async () => {
   console.log(
     "[Scheduled Task] Fetching executive orders from Federal Register API...",
   );
   await fetchAndStoreExecutiveOrders();
-  console.log("[Scheduled Task] Done fetching executive orders.");
+  console.log(
+    "[Scheduled Task] Done fetching executive orders from Federal Register.",
+  );
+
+  console.log(
+    "[Scheduled Task] Fetching executive orders from Presidency Project...",
+  );
+  await fetchAndStorePresidencyProjectOrders();
+  console.log(
+    "[Scheduled Task] Done fetching executive orders from Presidency Project.",
+  );
+});
+
+// Schedule the HTML scraper separately.
+// (It will process one record every 10 seconds; adjust the schedule frequency as needed.)
+schedule.scheduleJob("*/30 * * * *", async () => {
+  console.log("[Scheduled Task] Scraping missing presidency_project_html...");
+  await scrapeMissingPresidencyProjectHtml();
+  console.log(
+    "[Scheduled Task] Done scraping missing presidency_project_html.",
+  );
 });
 
 // ==========================================
-// 5) (Optional) Run once on startup
-//    Remove or comment out the following block if you want the job to run only on schedule.
+// 9) Run once on startup
 // ==========================================
-(async () => {
-  console.log("[Startup] Running initial fetch of executive orders...");
-  await fetchAndStoreExecutiveOrders();
-  console.log("[Startup] Done initial fetch.");
-})();
+// (async () => {
+//   console.log("[Startup] Running initial fetch of executive orders...");
+//   await fetchAndStoreExecutiveOrders();
+//   await fetchAndStorePresidencyProjectOrders();
+//   console.log("[Startup] Done initial fetch.");
+
+//   console.log(
+//     "[Startup] Running initial scrape for missing presidency_project_html...",
+//   );
+//   await scrapeMissingPresidencyProjectHtml();
+//   console.log("[Startup] Done initial HTML scrape.");
+// })();

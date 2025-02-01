@@ -1,5 +1,5 @@
 import { ExecutiveOrderType } from '@/hooks/executive-orders'
-import { cn } from '@/lib/utils'
+import { cn, stripExecutiveOrder } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 
 type OrderCardProps = {
@@ -19,7 +19,7 @@ export const OrderCard = ({ order, selectedOrderId }: OrderCardProps) => {
           : 'border-border bg-muted/50'
       )}
     >
-      <div className='break-words'>{order.title}</div>
+      <div className='break-words'>{stripExecutiveOrder(order.title)}</div>
     </Link>
   )
 }

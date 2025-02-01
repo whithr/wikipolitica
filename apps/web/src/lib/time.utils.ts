@@ -121,7 +121,20 @@ export const formatDate = (dateString: string): string => {
 
 export function formatDateWithSuffix(dateString: string | null): string | null {
   if (!dateString) return dateString;
-  const date = new Date(dateString);
+
+  // Check if the date string matches the YYYY-MM-DD format
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  let date: Date;
+
+  if (dateRegex.test(dateString)) {
+    const [yearStr, monthStr, dayStr] = dateString.split("-");
+    const year = parseInt(yearStr, 10);
+    const month = parseInt(monthStr, 10) - 1; // JavaScript months are 0-indexed
+    const day = parseInt(dayStr, 10);
+    date = new Date(year, month, day);
+  } else {
+    date = new Date(dateString);
+  }
 
   if (isNaN(date.getTime())) {
     return dateString; // Return the original string if invalid date

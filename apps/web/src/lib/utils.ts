@@ -13,3 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 export function removeBrackets(text: string): string {
   return text.replace(/\[.*?\]/g, "").trim();
 }
+
+export function stripExecutiveOrder(title: string | null): string | undefined {
+  return title?.replace(/^Executive Order(?: \d+)?—/, "").trim();
+}

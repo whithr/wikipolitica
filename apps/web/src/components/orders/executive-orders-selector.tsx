@@ -26,13 +26,20 @@ export const ExecutiveOrdersSelector = () => {
     )
   }, [data, searchTerm])
 
-  // Group the filtered orders by signing date.
+  // Function to safely parse presidency_project_date
+  const parseDate = (dateString?: string): Date | null => {
+    if (!dateString) return null
+    const parsedDate = new Date(Date.parse(dateString))
+    return isNaN(parsedDate.getTime()) ? null : parsedDate
+  }
+
+  // Group the filtered orders by presidency_project_date.
   const groupedOrders = useMemo((): Record<string, ExecutiveOrderType[]> => {
     return filteredData.reduce(
       (groups, order) => {
-        // Use an ISO date string (YYYY-MM-DD) for grouping.
-        const dateKey = order.signing_date
-          ? new Date(order.signing_date).toISOString().split('T')[0]
+        const parsedDate = parseDate(order.presidency_project_date || '')
+        const dateKey = parsedDate
+          ? parsedDate.toISOString().split('T')[0] // Ensures YYYY-MM-DD format
           : 'Unknown Date'
 
         if (!groups[dateKey]) {
@@ -42,18 +49,15 @@ export const ExecutiveOrdersSelector = () => {
         return groups
       },
       {} as Record<string, ExecutiveOrderType[]>
-    ) // Explicitly type the initial value.
+    )
   }, [filteredData])
 
-  console.log(data)
-  // Convert the grouped orders object into an array of entries and sort them by date (most recent first).
+  // Convert grouped orders into a sorted array (most recent dates first)
   const groupedOrdersArray = useMemo((): [string, ExecutiveOrderType[]][] => {
     return Object.entries(groupedOrders).sort(([dateA], [dateB]) => {
-      // Push "Unknown Date" to the bottom.
       if (dateA === 'Unknown Date') return 1
       if (dateB === 'Unknown Date') return -1
 
-      // Sort descending: most recent dates first.
       return new Date(dateB).getTime() - new Date(dateA).getTime()
     })
   }, [groupedOrders])

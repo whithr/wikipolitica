@@ -11,14 +11,11 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 
-// import { routeTree } from './routeTree.gen'
 import { ThemeProvider } from './components/theme-provider'
 import { RootRoute } from './routes/__root'
 import { Executive } from './components/president/executive'
 import { PresidentialSchedule } from './routes/executive/presidential-schedule'
 import { PresidentialActions } from './routes/executive/presidential-actions'
-import { executiveActionsQueryOptions } from './hooks/useExecutiveOrdersData'
-import { executiveActionDetailsQueryOptions } from './hooks/useExecutiveOrderDetails'
 import { ExecutiveOrdersReader } from './components/orders/executive-orders-reader'
 import { createClient } from '@supabase/supabase-js'
 import {
