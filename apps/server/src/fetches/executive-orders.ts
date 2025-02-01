@@ -99,8 +99,10 @@ async function upsertPresidencyProjectRecords(records: DocumentData[]) {
     });
 
     const matchWithItself = localList.find((eo) => {
-      const normalizedDbTitle = normalize(eo.presidency_project_title || "");
-      return normalizedDbTitle.includes(record.title);
+      const normalizedDbTitle = normalize(eo.presidency_project_title);
+      return normalizedDbTitle.includes(
+        normalize(record.presidency_project_title),
+      );
     });
 
     if (matchWithItself) {

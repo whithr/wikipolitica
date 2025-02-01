@@ -34,14 +34,18 @@ export const ExecutiveOrdersReader = ({
       )}
     >
       <div className='text-foreground'>
-        <h1 className='px-4 pt-4 text-center text-xl font-bold'>
+        <h1 className='px-4 pt-4 text-center text-lg font-bold md:text-xl'>
           {stripExecutiveOrder(data.presidency_project_title || '')}
         </h1>
         <p className='p-2 pb-4 text-center text-sm'>
           {data.presidency_project_date}
         </p>
       </div>
-      <ScrollArea className='flex h-[calc(100dvh-300px)] flex-col gap-2 p-0 md:px-2 lg:px-4'>
+      <ScrollArea
+        className={cn(
+          'flex h-[calc(100dvh-300px)] flex-col gap-2 p-0 md:h-[calc(100dvh-300px)] md:px-2 lg:px-4'
+        )}
+      >
         <div
           dangerouslySetInnerHTML={{ __html: cleanedHTML }}
           className={cn(

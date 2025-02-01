@@ -45,14 +45,14 @@ const RouteComponent = () => {
         )}
       >
         {/* Search Input */}
-        <div className='relative flex rounded-sm border border-border bg-background p-2 pr-6 shadow-sm'>
+        <div className='relative flex rounded-sm border border-border bg-background p-2 pr-6 shadow-sm focus-within:border-primary'>
           <Label htmlFor='search' className='sr-only'>
             Search
           </Label>
           <Input
             id='search'
             placeholder='Search Executive Orders...'
-            className='pl-8 text-foreground'
+            className='border-none pl-8 text-foreground shadow-none outline-none outline-transparent ring-transparent focus:!outline-none focus:!ring-0'
             autoComplete='off'
             value={searchTerm}
             onChange={handleSearchChange}
@@ -111,7 +111,7 @@ const RouteComponent = () => {
       ) : (
         <div className='flex w-full flex-1 overflow-auto'>
           {id ? (
-            <div className='h-fit border border-border shadow-sm'>
+            <div className='h-fit rounded-sm border border-border shadow-sm'>
               <Outlet />
             </div>
           ) : (
