@@ -377,7 +377,12 @@ async function fetchAndStorePresidencyProjectOrders() {
         docUrl = `https://www.presidency.ucsb.edu${docUrl}`;
       }
       if (date && title && docUrl) {
-        records.push({ date, title, url: docUrl });
+        records.push({
+          date,
+          title,
+          url: docUrl,
+          presidency_project_title: title,
+        });
       }
     });
 
