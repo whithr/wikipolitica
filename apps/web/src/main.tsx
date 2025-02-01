@@ -22,6 +22,7 @@ import {
   executiveOrderMarkdownQueryOptions,
   executiveOrdersQueryOptions,
 } from './hooks/executive-orders'
+import { ItineraryOrderReader } from './components/president/itinerary-order-reader'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -67,6 +68,14 @@ const presidentialScheduleRoute = createRoute({
   component: PresidentialSchedule,
 })
 
+const presidentialScheduleOrderRoute = createRoute({
+  getParentRoute: () => presidentialScheduleRoute,
+  path: '$id',
+  component: ItineraryOrderReader,
+  loader: ({ context: { queryClient }, params: { id } }) =>
+    queryClient.ensureQueryData(executiveOrderMarkdownQueryOptions(id)),
+})
+
 const presidentialOrdersRoute = createRoute({
   getParentRoute: () => executiveRoute,
   path: 'orders',
@@ -81,12 +90,14 @@ export const presidentialOrderReaderRoute = createRoute({
   errorComponent: ErrorComponent,
   loader: ({ context: { queryClient }, params: { id } }) =>
     queryClient.ensureQueryData(executiveOrderMarkdownQueryOptions(id)),
-  component: ExecutiveOrdersReader,
+  component: () => (
+    <ExecutiveOrdersReader loaderDataPath={'/executive/orders/$id'} />
+  ),
 })
 
 const routeTree = rootRoute.addChildren([
   executiveRoute,
-  presidentialScheduleRoute,
+  presidentialScheduleRoute.addChildren([presidentialScheduleOrderRoute]),
   presidentialOrdersRoute.addChildren([presidentialOrderReaderRoute]),
   indexRoute,
 ])

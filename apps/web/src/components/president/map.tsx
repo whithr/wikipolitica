@@ -14,6 +14,7 @@ import { FastForward, Pause, Play } from 'lucide-react'
 import { Separator } from '@radix-ui/react-separator'
 import { Skeleton } from '../ui/skeleton'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
+import { cn } from '@/lib/utils'
 
 export const Map = () => {
   const { resolvedTheme } = useTheme()
@@ -108,10 +109,10 @@ export const Map = () => {
           shouldHighlight={shouldHighlight}
           shouldAnimate={id === selectedDayId}
           variant='map'
-          className='!m-0'
+          className={cn('!m-0', shouldHighlight && 'z-100')}
         />
       ),
-      className: 'custom-icon', // Optional: custom wrapper styles
+      className: id === selectedDayId ? 'highlight-map-marker' : 'custom-icon', // Optional: custom wrapper styles
       iconAnchor: [8, 0], // Center the icon
     })
 

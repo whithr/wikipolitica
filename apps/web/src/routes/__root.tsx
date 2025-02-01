@@ -3,6 +3,7 @@
 import { AppSidebar } from '@/components/app-sidebar'
 import { HeaderBreadcrumbs } from '@/components/header-breadcrumbs'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 import {
   SidebarInset,
@@ -28,9 +29,13 @@ export const RootRoute = () => (
         </div>
       </header>
 
-      <div className='h-[100dvh] w-full min-w-fit max-w-6xl flex-1 self-center overflow-y-auto p-2 md:p-4'>
-        <Outlet />
-      </div>
+      {/* <div className='w-full min-w-fit flex-1 self-center'> */}
+      <ScrollArea className='flex-1 overflow-y-auto p-0'>
+        <div className='STYLEOVERRIDE flex h-[calc(100dvh-64px)] w-full min-w-fit max-w-6xl flex-1 justify-self-center'>
+          <Outlet />
+        </div>
+      </ScrollArea>
+      {/* </div> */}
     </SidebarInset>
     {import.meta.env.MODE === 'development' && (
       <TanStackRouterDevtools position='bottom-right' />

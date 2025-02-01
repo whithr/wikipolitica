@@ -12,11 +12,16 @@ import { ExternalLink } from '../external-link'
 import { Skeleton } from '../ui/skeleton'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
+import { toWords } from 'number-to-words'
+import { OrderItineraryItem } from '../orders/order-itinerary-item'
+
 export const DailyItinerary = () => {
   const {
     isLoading,
+    isOrdersLoading,
     sortedDays,
     sortedEventsByDay,
+    sortedOrdersByDay,
     highlightDay,
     highlightTime,
   } = usePresidentCalendar()
@@ -51,7 +56,7 @@ export const DailyItinerary = () => {
             </div>
           }
         />
-        {isLoading ? (
+        {isLoading || isOrdersLoading ? (
           <div className='flex flex-col gap-2'>
             <Skeleton className='h-6 w-2/12 rounded-sm' />
             <Skeleton className='h-6 w-4/12 rounded-sm' />
@@ -65,11 +70,25 @@ export const DailyItinerary = () => {
         ) : (
           sortedDays.map((date) => {
             const dayEvents = sortedEventsByDay[date]
+            const dayOrders = sortedOrdersByDay[date]
+            const numberOfOrders = dayOrders ? dayOrders.length : 0
 
             return (
               <div key={date} className='flex flex-col gap-2'>
-                <h2 className='px-4 text-lg font-semibold'>
+                <h2 className='w-full justify-between px-4 text-lg font-semibold'>
                   {formatDate(date)}
+                  <span className='text-xs font-normal'>
+                    {numberOfOrders > 0 && (
+                      <div className='text-xs font-normal'>
+                        <span className='capitalize'>
+                          {toWords(numberOfOrders)}
+                        </span>{' '}
+                        Executive{' '}
+                        {numberOfOrders > 1 ? 'Orders were' : 'Order was'}{' '}
+                        signed today
+                      </div>
+                    )}
+                  </span>
                 </h2>
                 <Separator />
 
@@ -155,6 +174,13 @@ export const DailyItinerary = () => {
                     </div>
                   )
                 })}
+                {numberOfOrders > 0 && (
+                  <div className='flex flex-col gap-3'>
+                    {dayOrders?.map((order) => (
+                      <OrderItineraryItem order={order} key={order.id} />
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })

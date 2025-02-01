@@ -10,11 +10,13 @@ import { useTheme } from '../theme-provider'
 import { useLoaderData } from '@tanstack/react-router'
 
 export const ExecutiveOrdersReader = ({
+  loaderDataPath,
   className,
 }: {
+  loaderDataPath: '/executive/orders/$id' | '/executive/president/$id'
   className?: string
 }) => {
-  const data = useLoaderData({ from: '/executive/orders/$id' })
+  const data = useLoaderData({ from: loaderDataPath })
 
   const { resolvedTheme } = useTheme()
 

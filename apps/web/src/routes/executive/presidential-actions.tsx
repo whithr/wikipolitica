@@ -36,7 +36,7 @@ const RouteComponent = () => {
   }, [setWidth, width])
 
   return (
-    <div className='flex flex-1 gap-12 md:gap-6' ref={ref}>
+    <div className='flex flex-1 gap-12 p-2 md:gap-6 md:p-4' ref={ref}>
       {/* Sidebar with search and order list */}
       <div
         className={cn(
@@ -83,7 +83,7 @@ const RouteComponent = () => {
 
         {/* Filtered and Grouped Orders */}
         <div className='overflow-auto rounded-sm border border-border bg-background p-4 shadow-sm'>
-          <ScrollArea className='h-[calc(100dvh-180px)]'>
+          <ScrollArea className='h-[calc(100dvh-195px)]'>
             <ExecutiveOrdersSelector />
           </ScrollArea>
         </div>

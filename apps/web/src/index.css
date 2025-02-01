@@ -15,6 +15,20 @@
 }
 
 @layer base {
+  .highlight-map-marker {
+    z-index: 1000 !important;
+  }
+
+  body {
+    overflow-y: hidden;
+  }
+
+  .STYLEOVERRIDE {
+    & > div:first-child {
+      flex: 1;
+    }
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
