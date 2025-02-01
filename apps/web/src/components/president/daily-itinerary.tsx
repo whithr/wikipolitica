@@ -130,7 +130,7 @@ export const DailyItinerary = () => {
 
                       <div className='flex flex-col'>
                         {event.time_formatted ? (
-                          <div className='flex flex-col gap-1 text-muted-foreground md:flex-row md:gap-2'>
+                          <div className='flex flex-col gap-1 text-balance text-muted-foreground md:flex-row md:gap-2'>
                             {event.time_formatted} –{' '}
                             {event.location
                               ? event.location
@@ -178,8 +178,7 @@ export const DailyItinerary = () => {
                               : 'Location not provided'}
                           </div>
                         )}
-                        <p>
-                          {' '}
+                        <p className='text-balance'>
                           <WordExplainer text={event.details} />
                         </p>
                       </div>

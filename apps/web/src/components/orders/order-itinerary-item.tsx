@@ -14,7 +14,7 @@ export const OrderItineraryItem = ({
       </span>
       <Link
         to={'/executive/president/' + order.id}
-        className='pl-2 font-medium'
+        className='text-balance pl-2 font-medium'
       >
         {stripExecutiveOrder(order.presidency_project_title)} &rarr;
       </Link>

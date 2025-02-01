@@ -72,7 +72,7 @@ export const CurrentEventHeader = () => {
                 </div>
               ) : (
                 selectedEvent && (
-                  <div className='flex flex-col gap-0'>
+                  <div className='flex flex-col gap-0 text-balance'>
                     <p className=''>{selectedEvent.location} </p>
                     {selectedEvent.time_formatted ? (
                       <span className='text-xs font-normal'>
@@ -96,7 +96,7 @@ export const CurrentEventHeader = () => {
             <Skeleton className='h-8 w-[400px] rounded-full' />
           ) : (
             selectedEvent && (
-              <div className='text-foreground'>
+              <div className='text-balance text-foreground'>
                 <WordExplainer text={removeBrackets(selectedEvent.details)} />
               </div>
             )
