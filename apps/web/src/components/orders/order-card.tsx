@@ -19,7 +19,9 @@ export const OrderCard = ({ order, selectedOrderId }: OrderCardProps) => {
           : 'border-border bg-muted/50'
       )}
     >
-      <div className='break-words'>{stripExecutiveOrder(order.title)}</div>
+      <div className='break-words'>
+        {stripExecutiveOrder(order.presidency_project_title)}
+      </div>
     </Link>
   )
 }

@@ -21,8 +21,10 @@ export const ExecutiveOrdersSelector = () => {
     if (!data) return []
     return data.filter(
       (order) =>
-        order.title &&
-        order.title.toLowerCase().includes(searchTerm.toLowerCase())
+        order.presidency_project_title &&
+        order.presidency_project_title
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
     )
   }, [data, searchTerm])
 
@@ -72,9 +74,11 @@ export const ExecutiveOrdersSelector = () => {
             </h2>
             <Separator />
             {/* Render each order as an OrderCard */}
-            {orders.map((order) => (
-              <OrderCard key={order.id} order={order} selectedOrderId={id} />
-            ))}
+            <div className='flex flex-col gap-4'>
+              {orders.map((order) => (
+                <OrderCard key={order.id} order={order} selectedOrderId={id} />
+              ))}
+            </div>
           </div>
         ))
       ) : (
