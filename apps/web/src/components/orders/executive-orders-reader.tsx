@@ -41,7 +41,7 @@ export const ExecutiveOrdersReader = ({
           {data.presidency_project_date}
         </p>
       </div>
-      <ScrollArea className='flex h-[calc(100dvh-300px)] flex-col gap-2'>
+      <ScrollArea className='flex h-[calc(100dvh-300px)] flex-col gap-2 p-0 md:px-2 lg:px-4'>
         <div
           dangerouslySetInnerHTML={{ __html: cleanedHTML }}
           className={cn(

@@ -56,56 +56,67 @@ interface ExecutiveOrder {
 // 3) Utility: Extract “core” title from scraped title
 // ==========================================
 function extractCoreTitle(title: string): string {
-  // Assumes titles from the Presidency Project are formatted like:
-  // "Executive Order 14182—Enforcing the Hyde Amendment"
-  const parts = title.split("—");
-  if (parts.length > 1) {
-    return parts.slice(1).join("—").trim();
-  }
-  return title.trim();
+  // Strip leading "Executive Order" + optional digits and dash
+  let stripped = title.replace(/^executive orders?\s*\d*\s*(—|-|–)?\s*/i, "");
+  return stripped.trim();
+}
+
+// Helper to remove spaces and force lowercase
+function normalize(str: string): string {
+  return str.toLowerCase().replace(/\s+/g, "");
 }
 
 // ==========================================
 // 4) Upsert Presidency Project records
 // ==========================================
+
 async function upsertPresidencyProjectRecords(records: DocumentData[]) {
+  // 1) Fetch all rows (or at least the columns you need: "id", "title")
+  const { data: allExecOrders, error: fetchError } = await supabase
+    .from("executive_orders")
+    .select("id, title");
+
+  if (fetchError) {
+    console.error("Error fetching executive_orders:", fetchError);
+    return;
+  }
+
+  // 2) Build an array or map of normalized titles -> record
+  //    For large DBs, you may want a more efficient structure,
+  //    but for smaller sets, this is fine.
+  const localList = allExecOrders || [];
+
   for (const record of records) {
     const coreTitle = extractCoreTitle(record.title);
+    const normalizedCore = normalize(coreTitle);
 
-    // Query for an existing executive order whose title contains the core title.
-    const { data: existingRecords, error: queryError } = await supabase
-      .from("executive_orders")
-      .select("id, title")
-      .ilike("title", `%${coreTitle}%`);
+    // 3) Try to find an existing row whose normalized DB title “contains” or “equals” that core
+    //    (Choose whichever logic suits you best: `.includes()` or exact `===`)
+    const match = localList.find((eo) => {
+      const normalizedDbTitle = normalize(eo.title || "");
+      return normalizedDbTitle.includes(normalizedCore);
+    });
 
-    if (queryError) {
-      console.error("Error querying Supabase:", queryError);
-      continue;
-    }
-
-    if (existingRecords && existingRecords.length > 0) {
-      // Update the matched record with Presidency Project–specific fields.
-      const existingId = existingRecords[0].id;
+    if (match) {
+      // 4) We have a match → update this row
       const { error: updateError } = await supabase
         .from("executive_orders")
         .update({
           presidency_project_title: record.title,
-          presidency_project_date: record.date, // Adjust format as needed.
+          presidency_project_date: record.date,
           presidency_project_url: record.url,
         })
-        .eq("id", existingId);
+        .eq("id", match.id);
+
       if (updateError) {
-        console.error(
-          `Error updating record with id ${existingId}:`,
-          updateError,
-        );
+        console.error(`Error updating record #${match.id}`, updateError);
       } else {
         console.log(
-          `Updated record with id ${existingId} using title: ${record.title}`,
+          `Updated record #${match.id} with PP title: ${record.title}`,
         );
       }
     } else {
-      // No matching record found: insert a new row with the Presidency Project data.
+      // 5) No match → insert new row
       const { error: insertError } = await supabase
         .from("executive_orders")
         .insert({
@@ -114,9 +125,12 @@ async function upsertPresidencyProjectRecords(records: DocumentData[]) {
           presidency_project_url: record.url,
         });
       if (insertError) {
-        console.error("Error inserting new record:", insertError);
+        console.error(
+          `Error inserting new record for: ${record.title}`,
+          insertError,
+        );
       } else {
-        console.log(`Inserted new record with title: ${record.title}`);
+        console.log(`Inserted new record with PP title: ${record.title}`);
       }
     }
   }
@@ -198,91 +212,125 @@ async function fetchAndStoreExecutiveOrders() {
       `[Info] Fetched a total of ${allResults.length} executive orders from Federal Register.`,
     );
 
+    // 1) Fetch all existing orders with all columns we care about, not just document_number:
     const { data: existingOrders, error: existingError } = await supabase
       .from("executive_orders")
-      .select("document_number");
+      .select("*"); // or select("id, document_number, presidency_project_html, ...")
     if (existingError) {
       console.error("[Error] Fetching existing orders:", existingError);
+      return;
     }
-    const existingDocNumbers = new Set(
-      existingOrders ? existingOrders.map((o: any) => o.document_number) : [],
-    );
 
-    const records = await Promise.all(
-      allResults.map(async (item: any) => {
-        if (existingDocNumbers.has(item.document_number)) {
-          return null; // Skip this record if already stored.
-        }
+    // Build a Map keyed by document_number for quick lookup:
+    const existingMap = new Map<string, any>();
+    if (existingOrders) {
+      existingOrders.forEach((eo: any) => {
+        existingMap.set(eo.document_number, eo);
+      });
+    }
 
-        let xmlContent = "";
-        try {
-          const xmlResponse = await fetch(item.full_text_xml_url);
-          if (xmlResponse.ok) {
-            xmlContent = await xmlResponse.text();
-          } else {
-            console.error(
-              `[Error] Failed to fetch XML for document ${item.document_number}: ${xmlResponse.statusText}`,
-            );
-          }
-        } catch (xmlError) {
+    // We'll keep track of newly inserted records (just for logging)
+    let insertCount = 0;
+    let updateCount = 0;
+
+    for (const item of allResults) {
+      // 2) Fetch the full_text_xml and convert to markdown (same as before).
+      let xmlContent = "";
+      try {
+        const xmlResponse = await fetch(item.full_text_xml_url);
+        if (xmlResponse.ok) {
+          xmlContent = await xmlResponse.text();
+        } else {
           console.error(
-            `[Error] Exception while fetching XML for document ${item.document_number}:`,
-            xmlError,
+            `[Error] Failed to fetch XML for document ${item.document_number}: ${xmlResponse.statusText}`,
           );
         }
-
-        const markdownContent = xmlContent
-          ? convertXmlToMarkdown(xmlContent)
-          : "";
-
-        return {
-          citation: item.citation,
-          document_number: item.document_number,
-          end_page: item.end_page,
-          html_url: item.html_url,
-          pdf_url: item.pdf_url,
-          type: item.type,
-          subtype: item.subtype,
-          publication_date: item.publication_date,
-          signing_date: item.signing_date,
-          start_page: item.start_page,
-          title: item.title,
-          disposition_notes: item.disposition_notes,
-          executive_order_number: item.executive_order_number,
-          not_received_for_publication: item.not_received_for_publication,
-          full_text_xml_url: item.full_text_xml_url,
-          body_html_url: item.body_html_url,
-          json_url: item.json_url,
-          full_text_xml: xmlContent,
-          full_text_markdown: markdownContent,
-        };
-      }),
-    );
-
-    const newRecords = records.filter((record) => record !== null);
-
-    if (newRecords.length === 0) {
-      console.log(
-        "[Info] No new executive orders to upsert from Federal Register.",
-      );
-    } else {
-      console.log(
-        `[Info] Upserting ${newRecords.length} new executive orders from Federal Register into Supabase...`,
-      );
-      const { error } = await supabase
-        .from("executive_orders")
-        .upsert(newRecords, { onConflict: "document_number" });
-      if (error) {
+      } catch (xmlError) {
         console.error(
-          "[Error] Upserting executive orders from Federal Register:",
-          error,
-        );
-      } else {
-        console.log(
-          `[Info] Successfully upserted ${newRecords.length} new executive orders from Federal Register.`,
+          `[Error] Exception while fetching XML for document ${item.document_number}:`,
+          xmlError,
         );
       }
+
+      const markdownContent = xmlContent
+        ? convertXmlToMarkdown(xmlContent)
+        : "";
+
+      // This is the new data from Federal Register
+      const newData: ExecutiveOrder = {
+        citation: item.citation,
+        document_number: item.document_number,
+        end_page: item.end_page,
+        html_url: item.html_url,
+        pdf_url: item.pdf_url,
+        type: item.type,
+        subtype: item.subtype,
+        publication_date: item.publication_date,
+        signing_date: item.signing_date,
+        start_page: item.start_page,
+        title: item.title,
+        disposition_notes: item.disposition_notes,
+        executive_order_number: item.executive_order_number,
+        not_received_for_publication: item.not_received_for_publication,
+        full_text_xml_url: item.full_text_xml_url,
+        body_html_url: item.body_html_url,
+        json_url: item.json_url,
+        full_text_xml: xmlContent,
+        full_text_markdown: markdownContent,
+      };
+
+      // 3) Check if we already have a row with this document_number:
+      const existingRow = existingMap.get(item.document_number);
+
+      if (!existingRow) {
+        // No existing row, so do an INSERT
+        const { error: insertError } = await supabase
+          .from("executive_orders")
+          .insert(newData);
+
+        if (insertError) {
+          console.error(
+            `[Error] Inserting new record for doc #${item.document_number}:`,
+            insertError,
+          );
+        } else {
+          insertCount++;
+        }
+      } else {
+        // We have an existing row. Let's do a PARTIAL UPDATE to avoid overwriting non-null fields with null.
+        // Make an object to update only non-null fields in newData:
+        const updatePayload: any = {};
+        for (const key of Object.keys(newData)) {
+          const value = (newData as any)[key];
+          // Only update if the new value is NOT null/undefined
+          // That way we won't overwrite existing data with null.
+          if (value !== null && value !== undefined) {
+            updatePayload[key] = value;
+          }
+        }
+
+        // If updatePayload is empty, there's nothing to update.
+        if (Object.keys(updatePayload).length > 0) {
+          const { error: updateError } = await supabase
+            .from("executive_orders")
+            .update(updatePayload)
+            .eq("id", existingRow.id); // match on primary key or doc_number
+
+          if (updateError) {
+            console.error(
+              `[Error] Updating record for doc #${item.document_number}:`,
+              updateError,
+            );
+          } else {
+            updateCount++;
+          }
+        }
+      }
     }
+
+    console.log(
+      `[Info] Done processing Federal Register EOs: ${insertCount} inserted, ${updateCount} updated.`,
+    );
   } catch (err) {
     console.error("[Error] fetchAndStoreExecutiveOrders:", err);
   }
@@ -439,7 +487,7 @@ schedule.scheduleJob("*/30 * * * *", async () => {
 
 // Schedule the HTML scraper separately.
 // (It will process one record every 10 seconds; adjust the schedule frequency as needed.)
-schedule.scheduleJob("*/30 * * * *", async () => {
+schedule.scheduleJob("5/30 * * * *", async () => {
   console.log("[Scheduled Task] Scraping missing presidency_project_html...");
   await scrapeMissingPresidencyProjectHtml();
   console.log(

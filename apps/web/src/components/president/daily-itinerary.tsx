@@ -53,6 +53,18 @@ export const DailyItinerary = () => {
                 />
               </p>
               <p>Geocodes from Google's Maps Geocoding API.</p>
+              <p>
+                Orders from{' '}
+                <ExternalLink
+                  href='https://www.archives.gov/'
+                  label='National Archives'
+                />{' '}
+                &{' '}
+                <ExternalLink
+                  href='https://www.presidency.ucsb.edu/'
+                  label='The American Presidency Project'
+                />
+              </p>
             </div>
           }
         />
@@ -83,8 +95,8 @@ export const DailyItinerary = () => {
                         <span className='capitalize'>
                           {toWords(numberOfOrders)}
                         </span>{' '}
-                        Executive{' '}
-                        {numberOfOrders > 1 ? 'Orders were' : 'Order was'}{' '}
+                        executive{' '}
+                        {numberOfOrders > 1 ? 'orders were' : 'order was'}{' '}
                         signed today
                       </div>
                     )}
