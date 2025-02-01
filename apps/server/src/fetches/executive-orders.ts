@@ -20,6 +20,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 interface DocumentData {
   date: string;
   title: string;
+  presidency_project_title: string;
   url: string;
 }
 
@@ -74,7 +75,7 @@ async function upsertPresidencyProjectRecords(records: DocumentData[]) {
   // 1) Fetch all rows (or at least the columns you need: "id", "title")
   const { data: allExecOrders, error: fetchError } = await supabase
     .from("executive_orders")
-    .select("id, title");
+    .select("id, title, presidency_project_title");
 
   if (fetchError) {
     console.error("Error fetching executive_orders:", fetchError);
@@ -96,6 +97,15 @@ async function upsertPresidencyProjectRecords(records: DocumentData[]) {
       const normalizedDbTitle = normalize(eo.title || "");
       return normalizedDbTitle.includes(normalizedCore);
     });
+
+    const matchWithItself = localList.find((eo) => {
+      const normalizedDbTitle = normalize(eo.presidency_project_title || "");
+      return normalizedDbTitle.includes(record.title);
+    });
+
+    if (matchWithItself) {
+      continue;
+    }
 
     if (match) {
       // 4) We have a match → update this row

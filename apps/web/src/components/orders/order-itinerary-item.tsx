@@ -1,7 +1,6 @@
 import { ExecutiveOrderType } from '@/hooks/executive-orders'
 import { cn, stripExecutiveOrder } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
-import { BookOpenText } from 'lucide-react'
 
 export const OrderItineraryItem = ({
   order,
@@ -9,15 +8,15 @@ export const OrderItineraryItem = ({
   order: ExecutiveOrderType
 }) => {
   return (
-    <div className='flex items-center gap-3 py-3'>
-      <BookOpenText
-        className={cn('mx-2.5 h-6 w-6 stroke-foreground/60 stroke-2')}
-      />
+    <div className='flex items-center py-2'>
+      <span className='mx-3 flex items-center justify-center'>
+        <span className={cn('relative inline-flex h-4 w-4 bg-primary/70')} />
+      </span>
       <Link
         to={'/executive/president/' + order.id}
-        className='font-medium underline decoration-primary/70 decoration-dashed decoration-2 underline-offset-8'
+        className='pl-2 font-medium'
       >
-        {stripExecutiveOrder(order.presidency_project_title)}
+        {stripExecutiveOrder(order.presidency_project_title)} &rarr;
       </Link>
     </div>
   )

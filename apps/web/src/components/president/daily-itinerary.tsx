@@ -187,7 +187,7 @@ export const DailyItinerary = () => {
                   )
                 })}
                 {numberOfOrders > 0 && (
-                  <div className='flex flex-col gap-3'>
+                  <div className='flex flex-col gap-6'>
                     {dayOrders?.map((order) => (
                       <OrderItineraryItem order={order} key={order.id} />
                     ))}
