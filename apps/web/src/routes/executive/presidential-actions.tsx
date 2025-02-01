@@ -14,13 +14,19 @@ import { ExecutiveOrdersSelector } from '@/components/orders/executive-orders-se
 import { SourceTooltip } from '@/components/source-tooltip'
 import { ExternalLink } from '@/components/external-link'
 import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
-import { Outlet, useNavigate, useParams } from '@tanstack/react-router'
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router'
 
 export const MOBILE_WIDTH = 1000
 
 const RouteComponent = () => {
   const { id } = useParams({ strict: false })
   const navigate = useNavigate()
+  const data = useLoaderData({ from: '/executive/orders' })
 
   const setWidth = useExecutiveOrdersStore((state) => state.setWidth)
   const searchTerm = useExecutiveOrdersStore((state) => state.searchTerm)
@@ -51,7 +57,7 @@ const RouteComponent = () => {
           </Label>
           <Input
             id='search'
-            placeholder='Search Executive Orders...'
+            placeholder={`Search through ${data.length} executive orders...`}
             className='border-none pl-8 text-foreground shadow-none outline-none outline-transparent ring-transparent focus:!outline-none focus:!ring-0'
             autoComplete='off'
             value={searchTerm}
@@ -115,7 +121,7 @@ const RouteComponent = () => {
               <Outlet />
             </div>
           ) : (
-            <div className='flex w-full items-center justify-center rounded-sm border-8 border-dashed border-primary bg-primary/10 p-4 text-center text-foreground opacity-50 transition duration-500'>
+            <div className='flex w-full items-center justify-center rounded-sm border-4 border-dashed border-primary bg-primary/10 p-4 text-center text-foreground opacity-50 transition duration-500'>
               <div className='flex-1'>Select an order to read...</div>
             </div>
           )}
