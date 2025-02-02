@@ -5,8 +5,12 @@ import { Separator } from '../ui/separator'
 import { formatDateWithSuffix } from '@/lib/time.utils'
 import { useMemo } from 'react'
 
-export const LatestExecutiveOrder = () => {
-  const data = useLoaderData({ from: '/' })
+export const LatestExecutiveOrder = ({
+  loaderRoute,
+}: {
+  loaderRoute: '/executive' | '/'
+}) => {
+  const data = useLoaderData({ from: loaderRoute })
 
   const latestOrder = useMemo(
     () =>

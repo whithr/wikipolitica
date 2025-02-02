@@ -109,7 +109,7 @@ export const Overview = () => {
             className='hover:scale-[1.02] hover:cursor-pointer'
             onClick={() => navigate({ to: '/executive/orders' })}
           >
-            <LatestExecutiveOrder />
+            <LatestExecutiveOrder loaderRoute='/' />
           </div>
         </div>
       </div>

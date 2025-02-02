@@ -31,7 +31,7 @@ export const DailyItinerary = () => {
   )
 
   return (
-    <div className='flex flex-col gap-2 text-foreground md:gap-4'>
+    <div className='flex flex-col gap-2 pb-8 text-foreground md:gap-4'>
       {/* Top controls */}
       <div className='flex flex-wrap items-center justify-center gap-2 rounded-md border border-border bg-background p-4 text-center shadow-sm'>
         <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>

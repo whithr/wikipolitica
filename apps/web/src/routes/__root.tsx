@@ -38,6 +38,7 @@ export const RootRoute = () => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
+  // We need to reset the scroll position because we are using
   useEffect(() => {
     if (prevCategoryRef.current !== currentCategory) {
       scrollRef.current?.scrollTo?.({ top: 0, behavior: 'auto' })

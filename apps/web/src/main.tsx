@@ -58,6 +58,8 @@ const executiveRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'executive',
   component: Executive,
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(executiveOrdersQueryOptions),
 })
 
 const roadmapRoute = createRoute({
@@ -79,8 +81,8 @@ const statusRoute = createRoute({
 })
 
 const presidentialScheduleRoute = createRoute({
-  getParentRoute: () => executiveRoute,
-  path: 'president',
+  getParentRoute: () => rootRoute,
+  path: '/executive/president',
   component: PresidentialSchedule,
 })
 
@@ -93,8 +95,8 @@ const presidentialScheduleOrderRoute = createRoute({
 })
 
 const presidentialOrdersRoute = createRoute({
-  getParentRoute: () => executiveRoute,
-  path: 'orders',
+  getParentRoute: () => rootRoute,
+  path: '/executive/orders',
   component: PresidentialActions,
   loader: ({ context: { queryClient } }) =>
     queryClient.ensureQueryData(executiveOrdersQueryOptions),
