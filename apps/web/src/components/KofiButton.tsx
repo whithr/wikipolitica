@@ -26,7 +26,11 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
             </Button>
           ) : (
             <Button variant='outline' size='icon'>
-              <img src={kofiimg} className='h-5 hover:scale-105' alt='Ko-fi' />
+              <img
+                src={kofiimg}
+                className='h-5 w-5 hover:scale-105'
+                alt='Ko-fi'
+              />
             </Button>
           )}
         </DialogTrigger>
@@ -49,7 +53,11 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
           </Button>
         ) : (
           <Button variant='outline' size='icon'>
-            <img src={kofiimg} className='h-5 hover:scale-105' alt='Ko-fi' />
+            <img
+              src={kofiimg}
+              className='h-5 w-5 hover:scale-105'
+              alt='Ko-fi'
+            />
           </Button>
         )}
       </DrawerTrigger>
