@@ -1,6 +1,6 @@
 import { stripExecutiveOrder } from '@/lib/utils'
 import { useLoaderData } from '@tanstack/react-router'
-import potusSeal from '@/assets/potus-seal.png'
+import potusSeal from '@/assets/potus-seal.webp'
 import { Separator } from '../ui/separator'
 import { formatDateWithSuffix } from '@/lib/time.utils'
 import { useMemo } from 'react'

@@ -3,7 +3,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import logo from '../assets/logo-32.webp'
+import logo from '../assets/large-logo-transparent.webp'
 import { Link } from '@tanstack/react-router'
 
 export function NavHeader() {

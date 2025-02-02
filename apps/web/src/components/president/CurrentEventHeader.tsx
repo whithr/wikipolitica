@@ -2,7 +2,7 @@ import { usePresidentCalendar } from '@/components/president/president-calendar-
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
 import { Separator } from '@/components/ui/separator'
 import { WordExplainer } from '@/components/word-explainer'
-import potusSeal from '@/assets/potus-seal.png'
+import potusSeal from '@/assets/potus-seal.webp'
 import { cn, removeBrackets } from '@/lib/utils'
 import { SourceTooltip } from '../source-tooltip'
 import { Skeleton } from '../ui/skeleton'

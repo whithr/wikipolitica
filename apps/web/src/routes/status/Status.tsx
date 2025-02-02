@@ -1,4 +1,4 @@
-import logo from '@/assets/logo-128.webp'
+import logo from '@/assets/large-logo-transparent.webp'
 import { StatusPing } from '@/components/animations/StatusPing'
 import { useLoaderData } from '@tanstack/react-router'
 import { formatDistanceToNow } from 'date-fns'
