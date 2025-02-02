@@ -158,7 +158,6 @@ export const Map = () => {
 
   return (
     <div className='mb-4 flex flex-col'>
-      {/* <div className='h-8 bg-background'> hello</div> */}
       {isLoading ? (
         <Skeleton className='h-[250px] w-full rounded-sm bg-foreground/10 p-4 md:h-[400px]' />
       ) : (
@@ -201,6 +200,7 @@ export const Map = () => {
                   eventHandlers={{
                     click: () => handleUserAction(evt.id),
                   }}
+                  aria-label={`${evt.date} ${evt.time_formatted}`}
                 >
                   <Popup>
                     <div className='flex flex-col gap-1'>
@@ -253,6 +253,7 @@ export const Map = () => {
             }
             setIsPlaying(!isPlaying)
           }}
+          area-label='Play/Pause'
         >
           <Play />
         </Button>
@@ -261,6 +262,7 @@ export const Map = () => {
           variant={playbackSpeed === 1500 ? 'default' : 'outline'}
           className='min-w-9'
           onClick={() => setPlaybackSpeed(playbackSpeed === 3000 ? 1500 : 3000)} // Toggle speed
+          area-label='Fast Forward'
         >
           <FastForward />
         </Button>
@@ -268,7 +270,8 @@ export const Map = () => {
           size='icon'
           variant={isPlaying ? 'outline' : 'default'}
           className='min-w-9'
-          onClick={() => setIsPlaying(!isPlaying)} // Toggle speed
+          onClick={() => setIsPlaying(!isPlaying)}
+          area-label='Play/Pause'
         >
           <Pause />
         </Button>

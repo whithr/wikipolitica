@@ -17,6 +17,7 @@ export const SourceTooltip = ({
     <Popover>
       <PopoverTrigger
         className={cn('absolute right-2 top-2 rounded-full', className)}
+        aria-label='Used sources'
       >
         <FileQuestion className='h-4 w-4 stroke-secondary/50 hover:stroke-secondary dark:stroke-primary/50 hover:dark:stroke-primary' />
       </PopoverTrigger>

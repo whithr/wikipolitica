@@ -72,6 +72,7 @@ export const CurrentEventHeader = ({
               <img
                 src={potusSeal}
                 className='block h-10 w-10 rounded-full shadow-sm md:hidden'
+                alt='Potus Seal'
               />
               {isLoading ? (
                 <div className='flex flex-col gap-2'>

@@ -37,6 +37,7 @@ export const LatestExecutiveOrder = ({
               <img
                 src={potusSeal}
                 className='block h-10 w-10 rounded-full shadow-sm md:hidden'
+                alt='Potus Seal'
               />
 
               <div className='flex flex-col gap-0 text-balance'>
