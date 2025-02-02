@@ -33,11 +33,18 @@ export const DailyItinerary = () => {
   return (
     <div className='flex flex-col gap-2 pb-8 text-foreground md:gap-4'>
       {/* Top controls */}
-      <div className='flex flex-wrap items-center justify-center gap-2 rounded-md border border-border bg-background p-4 text-center shadow-sm'>
-        <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
-          Presidential Daily Schedule
-        </h2>
-        <DatePickerWithRange />
+      <div className='flex flex-col items-center justify-center gap-2 rounded-md border border-border bg-background p-4 text-center shadow-sm'>
+        <div className='flex flex-wrap items-center justify-center gap-2'>
+          <h2 className='mx-2 whitespace-nowrap text-xl font-semibold'>
+            Presidential Daily Schedule
+          </h2>
+          <DatePickerWithRange />
+        </div>
+
+        <span className='text-xs font-semibold'>
+          {' '}
+          Times displayed in Eastern Time (EST)
+        </span>
       </div>
 
       {/* List of grouped & sorted events */}

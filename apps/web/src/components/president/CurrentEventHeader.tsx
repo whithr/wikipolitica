@@ -89,7 +89,8 @@ export const CurrentEventHeader = ({
                     {selectedEvent.time_formatted ? (
                       <span className='text-xs font-normal'>
                         {formatDate(selectedEvent.date)} -{' '}
-                        {selectedEvent.time_formatted}
+                        {selectedEvent.time_formatted}{' '}
+                        <span className='text-xs'>EST</span>
                       </span>
                     ) : (
                       <span className='text-xs font-normal'>
