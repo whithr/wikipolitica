@@ -2,11 +2,11 @@
 
 import { useMemo } from 'react'
 import { useLoaderData, useParams } from '@tanstack/react-router'
-import { OrderCard } from './order-card'
+import { OrderCard } from './OrderCard'
 import { Separator } from '../ui/separator'
 import { formatDateWithSuffix } from '@/lib/time.utils'
 import { useExecutiveOrdersStore } from '@/stores/executiveActionsStore'
-import { ExecutiveOrderType } from '@/hooks/executive-orders'
+import { ExecutiveOrderType } from '@/hooks/executiveOrdersQueryOptions'
 
 export const ExecutiveOrdersSelector = () => {
   // Retrieve loader data using your router

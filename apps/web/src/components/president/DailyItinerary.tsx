@@ -2,18 +2,18 @@ import { DatePickerWithRange } from '@/components/ui/date-range-picker'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
-import { ActivityPing } from '@/components/animations/activity-ping'
+import { ActivityPing } from '@/components/animations/ActivityPing'
 
 import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
-import { usePresidentCalendar } from './president-calendar-context'
-import { WordExplainer } from '../word-explainer'
-import { SourceTooltip } from '../source-tooltip'
-import { ExternalLink } from '../external-link'
+import { usePresidentCalendar } from './PresidentCalanderContext'
+import { WordExplainer } from '../WordExplainer'
+import { SourceTooltip } from '../SourceTooltip'
+import { ExternalLink } from '../ExternalLink'
 import { Skeleton } from '../ui/skeleton'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
 import { toWords } from 'number-to-words'
-import { OrderItineraryItem } from '../orders/order-itinerary-item'
+import { OrderItineraryItem } from '../orders/OrderItineraryItem'
 
 export const DailyItinerary = () => {
   const {

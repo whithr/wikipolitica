@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { cleanHTML } from '@/lib/html.utils'
 
 import styles from './orders.module.css'
-import { useTheme } from '../theme-provider'
+import { useTheme } from '../ThemeProvider'
 
 import { useLoaderData } from '@tanstack/react-router'
 

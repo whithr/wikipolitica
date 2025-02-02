@@ -1,4 +1,4 @@
-import { ExecutiveOrderType } from '@/hooks/executive-orders'
+import { ExecutiveOrderType } from '@/hooks/executiveOrdersQueryOptions'
 import { cn, stripExecutiveOrder } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 

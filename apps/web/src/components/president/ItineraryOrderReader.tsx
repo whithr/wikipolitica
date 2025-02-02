@@ -1,9 +1,9 @@
-import { useMediaQuery } from '@/hooks/use-media-query'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Drawer, DrawerClose, DrawerContent } from '@/components/ui/drawer'
 
-import { ExecutiveOrdersReader } from '../orders/executive-orders-reader'
+import { ExecutiveOrdersReader } from '../orders/ExecutiveOrderReader'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 

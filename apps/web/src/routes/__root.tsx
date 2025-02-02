@@ -1,10 +1,10 @@
 // Route.tsx
 
-import { AppSidebar } from '@/components/app-sidebar'
-import { HeaderBreadcrumbs } from '@/components/header-breadcrumbs'
+import { AppSidebar } from '@/components/AppSidebar'
+import { HeaderBreadcrumbs } from '@/components/HeaderBreadcrumbs'
 import { KofiButton } from '@/components/KofiButton'
-import { PresidentCalendarProvider } from '@/components/president/president-calendar-context'
-import { ThemeModeToggle } from '@/components/theme-mode-toggle'
+import { PresidentCalendarProvider } from '@/components/president/PresidentCalanderContext'
+import { ThemeModeToggle } from '@/components/ThemeModeToggle'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import {

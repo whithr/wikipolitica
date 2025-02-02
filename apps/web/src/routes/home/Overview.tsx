@@ -1,10 +1,10 @@
 import logo from '@/assets/large-logo-transparent.webp'
-import { ExternalLink } from '@/components/external-link'
+import { ExternalLink } from '@/components/ExternalLink'
 import { KofiButton } from '@/components/KofiButton'
 import { LatestExecutiveOrder } from '@/components/orders/LatestExecutiveOrder'
 import { CurrentEventHeader } from '@/components/president/CurrentEventHeader'
 import { Separator } from '@/components/ui/separator'
-import { SingleWordExplainer } from '@/components/word-explainer'
+import { SingleWordExplainer } from '@/components/WordExplainer'
 import { Link, useNavigate } from '@tanstack/react-router'
 
 export const Overview = () => {

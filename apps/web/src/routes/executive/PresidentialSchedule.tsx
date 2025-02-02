@@ -1,8 +1,7 @@
 import { CurrentEventHeader } from '@/components/president/CurrentEventHeader'
-import { DailyItinerary } from '@/components/president/daily-itinerary'
-import { Map } from '@/components/president/map'
+import { DailyItinerary } from '@/components/president/DailyItinerary'
+import { Map } from '@/components/president/Map'
 import { Outlet } from '@tanstack/react-router'
-
 export const PresidentialSchedule = () => {
   // Then pass relevant props to each child
   return (

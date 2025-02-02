@@ -1,5 +1,5 @@
 import logo from '@/assets/large-logo-transparent.webp'
-import { ExternalLink } from '@/components/external-link'
+import { ExternalLink } from '@/components/ExternalLink'
 import {
   Accordion,
   AccordionContent,

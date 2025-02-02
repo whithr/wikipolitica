@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
-import { ExternalLink } from './components/external-link'
+import { ExternalLink } from './ExternalLink'
 
 export function NavSingle({
   items,

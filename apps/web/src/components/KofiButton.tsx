@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMediaQuery } from '@/hooks/use-media-query'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import {
   Drawer,
@@ -28,7 +28,7 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
             <Button variant='outline' size='icon'>
               <img
                 src={kofiimg}
-                className='h-5 w-5 hover:scale-105'
+                className='h-5 min-h-5 min-w-5 hover:scale-105'
                 alt='Ko-fi'
               />
             </Button>
@@ -55,7 +55,7 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
           <Button variant='outline' size='icon'>
             <img
               src={kofiimg}
-              className='h-5 w-5 hover:scale-105'
+              className='h-5 min-h-5 min-w-5 hover:scale-105'
               alt='Ko-fi'
             />
           </Button>
@@ -71,6 +71,7 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
         style={{
           maxHeight: '700px',
           overflowY: 'auto',
+          border: 'none',
         }}
       >
         <DrawerClose className='flex h-min self-end' asChild>

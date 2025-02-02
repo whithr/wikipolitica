@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import { usePresidentCalendar } from '@/components/president/president-calendar-context'
+import { usePresidentCalendar } from '@/components/president/PresidentCalanderContext'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 
 export function DatePickerWithRange() {

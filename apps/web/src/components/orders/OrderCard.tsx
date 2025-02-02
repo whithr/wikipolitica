@@ -1,10 +1,10 @@
-import { ExecutiveOrderType } from '@/hooks/executive-orders'
+import { ExecutiveOrderType } from '@/hooks/executiveOrdersQueryOptions'
 import { cn, stripExecutiveOrder } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { Button } from '../ui/button'
 import { FileText } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import { ExternalLink } from '../external-link'
+import { ExternalLink } from '../ExternalLink'
 
 type OrderCardProps = {
   order: ExecutiveOrderType

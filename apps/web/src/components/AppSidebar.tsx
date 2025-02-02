@@ -7,11 +7,10 @@ import {
   RadioTower,
   Scale,
   TrafficCone,
-  // Settings2,
   UserCircle,
 } from 'lucide-react'
 
-import { NavMain } from '@/components/nav-main'
+import { NavMain } from '@/components/NavMain'
 
 import {
   Sidebar,
@@ -19,8 +18,8 @@ import {
   SidebarHeader,
   SidebarSeparator,
 } from '@/components/ui/sidebar'
-import { NavHeader } from './nav-header'
-import { NavSingle } from '@/nav-single'
+import { NavHeader } from './NavHeader'
+import { NavSingle } from './NavSingle'
 
 export type NavItem = {
   title: string

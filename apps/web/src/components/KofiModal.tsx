@@ -1,3 +1,5 @@
+import styles from './kofi.module.css'
+
 export const KofiModal = ({ isMobile = false }) => {
   return (
     <iframe
@@ -13,7 +15,9 @@ export const KofiModal = ({ isMobile = false }) => {
         boxShadow: 'none',
         borderRadius: '0',
         paddingTop: '8px',
+        backgroundColor: 'red !important',
       }}
+      className={styles.kofi}
       title='haleywhitman'
     />
   )

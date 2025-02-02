@@ -17,16 +17,14 @@ import { Route as StatusStatusImport } from './routes/status/Status'
 import { Route as RoadmapRoadmapImport } from './routes/roadmap/Roadmap'
 import { Route as HomeOverviewImport } from './routes/home/Overview'
 import { Route as FaqFAQImport } from './routes/faq/FAQ'
-import { Route as ExecutivePresidentialScheduleImport } from './routes/executive/presidential-schedule'
-import { Route as ExecutivePresidentialActionsImport } from './routes/executive/presidential-actions'
+import { Route as ExecutiveVicePresidentImport } from './routes/executive/VicePresident'
+import { Route as ExecutivePresidentialScheduleImport } from './routes/executive/PresidentialSchedule'
+import { Route as ExecutivePresidentialActionsImport } from './routes/executive/PresidentialActions'
 
 // Create Virtual Routes
 
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
-const ExecutiveVicePresidentLazyImport = createFileRoute(
-  '/executive/vice-president',
-)()
 
 // Create/Update Routes
 
@@ -41,16 +39,6 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-
-const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
-  {
-    id: '/executive/vice-president',
-    path: '/executive/vice-president',
-    getParentRoute: () => rootRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/executive/vice-president.lazy').then((d) => d.Route),
-)
 
 const StatusStatusRoute = StatusStatusImport.update({
   id: '/status/Status',
@@ -76,17 +64,23 @@ const FaqFAQRoute = FaqFAQImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ExecutiveVicePresidentRoute = ExecutiveVicePresidentImport.update({
+  id: '/executive/VicePresident',
+  path: '/executive/VicePresident',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ExecutivePresidentialScheduleRoute =
   ExecutivePresidentialScheduleImport.update({
-    id: '/executive/presidential-schedule',
-    path: '/executive/presidential-schedule',
+    id: '/executive/PresidentialSchedule',
+    path: '/executive/PresidentialSchedule',
     getParentRoute: () => rootRoute,
   } as any)
 
 const ExecutivePresidentialActionsRoute =
   ExecutivePresidentialActionsImport.update({
-    id: '/executive/presidential-actions',
-    path: '/executive/presidential-actions',
+    id: '/executive/PresidentialActions',
+    path: '/executive/PresidentialActions',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -108,18 +102,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/executive/presidential-actions': {
-      id: '/executive/presidential-actions'
-      path: '/executive/presidential-actions'
-      fullPath: '/executive/presidential-actions'
+    '/executive/PresidentialActions': {
+      id: '/executive/PresidentialActions'
+      path: '/executive/PresidentialActions'
+      fullPath: '/executive/PresidentialActions'
       preLoaderRoute: typeof ExecutivePresidentialActionsImport
       parentRoute: typeof rootRoute
     }
-    '/executive/presidential-schedule': {
-      id: '/executive/presidential-schedule'
-      path: '/executive/presidential-schedule'
-      fullPath: '/executive/presidential-schedule'
+    '/executive/PresidentialSchedule': {
+      id: '/executive/PresidentialSchedule'
+      path: '/executive/PresidentialSchedule'
+      fullPath: '/executive/PresidentialSchedule'
       preLoaderRoute: typeof ExecutivePresidentialScheduleImport
+      parentRoute: typeof rootRoute
+    }
+    '/executive/VicePresident': {
+      id: '/executive/VicePresident'
+      path: '/executive/VicePresident'
+      fullPath: '/executive/VicePresident'
+      preLoaderRoute: typeof ExecutiveVicePresidentImport
       parentRoute: typeof rootRoute
     }
     '/faq/FAQ': {
@@ -150,13 +151,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusStatusImport
       parentRoute: typeof rootRoute
     }
-    '/executive/vice-president': {
-      id: '/executive/vice-president'
-      path: '/executive/vice-president'
-      fullPath: '/executive/vice-president'
-      preLoaderRoute: typeof ExecutiveVicePresidentLazyImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -165,38 +159,38 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
-  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/PresidentialActions': typeof ExecutivePresidentialActionsRoute
+  '/executive/PresidentialSchedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/VicePresident': typeof ExecutiveVicePresidentRoute
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
   '/status/Status': typeof StatusStatusRoute
-  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
-  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/PresidentialActions': typeof ExecutivePresidentialActionsRoute
+  '/executive/PresidentialSchedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/VicePresident': typeof ExecutiveVicePresidentRoute
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
   '/status/Status': typeof StatusStatusRoute
-  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
-  '/executive/presidential-actions': typeof ExecutivePresidentialActionsRoute
-  '/executive/presidential-schedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/PresidentialActions': typeof ExecutivePresidentialActionsRoute
+  '/executive/PresidentialSchedule': typeof ExecutivePresidentialScheduleRoute
+  '/executive/VicePresident': typeof ExecutiveVicePresidentRoute
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
   '/status/Status': typeof StatusStatusRoute
-  '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -204,35 +198,35 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/executive/presidential-actions'
-    | '/executive/presidential-schedule'
+    | '/executive/PresidentialActions'
+    | '/executive/PresidentialSchedule'
+    | '/executive/VicePresident'
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
     | '/status/Status'
-    | '/executive/vice-president'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/executive/presidential-actions'
-    | '/executive/presidential-schedule'
+    | '/executive/PresidentialActions'
+    | '/executive/PresidentialSchedule'
+    | '/executive/VicePresident'
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
     | '/status/Status'
-    | '/executive/vice-president'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/executive/presidential-actions'
-    | '/executive/presidential-schedule'
+    | '/executive/PresidentialActions'
+    | '/executive/PresidentialSchedule'
+    | '/executive/VicePresident'
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
     | '/status/Status'
-    | '/executive/vice-president'
   fileRoutesById: FileRoutesById
 }
 
@@ -241,11 +235,11 @@ export interface RootRouteChildren {
   AboutLazyRoute: typeof AboutLazyRoute
   ExecutivePresidentialActionsRoute: typeof ExecutivePresidentialActionsRoute
   ExecutivePresidentialScheduleRoute: typeof ExecutivePresidentialScheduleRoute
+  ExecutiveVicePresidentRoute: typeof ExecutiveVicePresidentRoute
   FaqFAQRoute: typeof FaqFAQRoute
   HomeOverviewRoute: typeof HomeOverviewRoute
   RoadmapRoadmapRoute: typeof RoadmapRoadmapRoute
   StatusStatusRoute: typeof StatusStatusRoute
-  ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -253,11 +247,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutLazyRoute: AboutLazyRoute,
   ExecutivePresidentialActionsRoute: ExecutivePresidentialActionsRoute,
   ExecutivePresidentialScheduleRoute: ExecutivePresidentialScheduleRoute,
+  ExecutiveVicePresidentRoute: ExecutiveVicePresidentRoute,
   FaqFAQRoute: FaqFAQRoute,
   HomeOverviewRoute: HomeOverviewRoute,
   RoadmapRoadmapRoute: RoadmapRoadmapRoute,
   StatusStatusRoute: StatusStatusRoute,
-  ExecutiveVicePresidentLazyRoute: ExecutiveVicePresidentLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -272,13 +266,13 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/executive/presidential-actions",
-        "/executive/presidential-schedule",
+        "/executive/PresidentialActions",
+        "/executive/PresidentialSchedule",
+        "/executive/VicePresident",
         "/faq/FAQ",
         "/home/Overview",
         "/roadmap/Roadmap",
-        "/status/Status",
-        "/executive/vice-president"
+        "/status/Status"
       ]
     },
     "/": {
@@ -287,11 +281,14 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.lazy.tsx"
     },
-    "/executive/presidential-actions": {
-      "filePath": "executive/presidential-actions.tsx"
+    "/executive/PresidentialActions": {
+      "filePath": "executive/PresidentialActions.tsx"
     },
-    "/executive/presidential-schedule": {
-      "filePath": "executive/presidential-schedule.tsx"
+    "/executive/PresidentialSchedule": {
+      "filePath": "executive/PresidentialSchedule.tsx"
+    },
+    "/executive/VicePresident": {
+      "filePath": "executive/VicePresident.tsx"
     },
     "/faq/FAQ": {
       "filePath": "faq/FAQ.tsx"
@@ -304,9 +301,6 @@ export const routeTree = rootRoute
     },
     "/status/Status": {
       "filePath": "status/Status.tsx"
-    },
-    "/executive/vice-president": {
-      "filePath": "executive/vice-president.lazy.tsx"
     }
   }
 }

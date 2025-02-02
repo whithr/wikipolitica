@@ -6,7 +6,7 @@ import {
   PoolReportSchedule,
   PoolReportSchedules,
 } from "@/types/trumpCalendar.types";
-import { ExecutiveOrderType } from "./executive-orders";
+import { ExecutiveOrderType } from "./executiveOrdersQueryOptions";
 
 /** Utility to format "YYYY-MM-DD" -> Date. */
 function parseEventDate(dateString: string) {

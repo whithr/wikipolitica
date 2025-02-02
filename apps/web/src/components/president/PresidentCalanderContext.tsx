@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   executiveOrdersQueryOptions,
   ExecutiveOrderType,
-} from '@/hooks/executive-orders'
+} from '@/hooks/executiveOrdersQueryOptions'
 
 // The shape of all the data we want to share
 interface PresidentCalendarContextValue {
