@@ -66,7 +66,6 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
           overflowY: 'auto',
         }}
       >
-        <DrawerHeader className='my-2' />
         <DrawerClose className='flex h-min self-end' asChild>
           <Button
             variant='outline'

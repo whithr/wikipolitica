@@ -47,8 +47,34 @@ export const Map = () => {
 
   // Extract only the events that have lat/long
   const eventsWithCoords = useMemo(() => {
-    return filteredData.filter((evt) => {
-      return evt.latitude != null && evt.longitude != null
+    // First, ensure we have only valid objects.
+    const events = filteredData.filter((evt) => evt != null)
+
+    return events.map((evt, i) => {
+      let { latitude, longitude } = evt
+
+      if (latitude == null || longitude == null) {
+        // Look ahead in the array for the next event with valid coordinates.
+        for (let j = i + 1; j < events.length; j++) {
+          const nextEvt = events[j]
+          if (nextEvt.latitude != null && nextEvt.longitude != null) {
+            latitude = nextEvt.latitude
+            longitude = nextEvt.longitude
+            break
+          }
+        }
+        // If no valid coordinates were found, use a fallback.
+        if (latitude == null || longitude == null) {
+          latitude = 39.8283
+          longitude = -98.5795
+        }
+      }
+
+      return {
+        ...evt,
+        latitude,
+        longitude,
+      }
     })
   }, [filteredData])
 
