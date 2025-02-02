@@ -2,6 +2,7 @@ import "dotenv/config.js";
 import RSSParser from "rss-parser";
 import schedule from "node-schedule";
 import { createClient } from "@supabase/supabase-js";
+import { updateJobStatus } from "../lib/status.utils";
 
 // ==========================================
 // 1) ENV variables for Supabase
@@ -43,7 +44,7 @@ interface ExecutiveActionRecord {
 // ==========================================
 // 3) Main function: fetch & store Exec Actions
 // ==========================================
-async function fetchAndStoreExecutiveActions() {
+async function fetchAndStoreExecutiveActions(): Promise<number> {
   try {
     const parser = new RSSParser({
       // You can also set parser options here if needed
@@ -56,7 +57,7 @@ async function fetchAndStoreExecutiveActions() {
 
     if (!rssFeed.items || rssFeed.items.length === 0) {
       console.log("[Info] No RSS items found. Exiting.");
-      return;
+      return 0;
     }
 
     // 3b) Filter only "Presidential Actions" category
@@ -68,7 +69,7 @@ async function fetchAndStoreExecutiveActions() {
 
     if (presidentialActions.length === 0) {
       console.log("[Info] No 'Presidential Actions' found in feed. Exiting.");
-      return;
+      return 0;
     }
 
     // 3c) Map each item to your DB structure
@@ -96,15 +97,19 @@ async function fetchAndStoreExecutiveActions() {
     // 3d) Insert or upsert the data into Supabase
     const { data, error } = await supabase
       .from("executive_actions") // <-- your actual table name
-      .upsert(records, { onConflict: "guid" });
+      .upsert(records, { onConflict: "guid" }).select();
 
     if (error) {
       console.error("[Error] Upserting executive actions:", error);
+      return 0;
     } else {
-      console.log(`[Info] Successfully upserted ${records.length} records.`);
+      const count = data ? data.length : 0;
+      console.log(`[Info] Successfully upserted ${count} records.`);
+      return count;
     }
   } catch (err) {
     console.error("[Error] fetchAndStoreExecutiveActions:", err);
+    return 0;
   }
 }
 
@@ -112,11 +117,22 @@ async function fetchAndStoreExecutiveActions() {
 // 4) Schedule job: run every 10 minutes
 // ==========================================
 schedule.scheduleJob("*/10 * * * *", async () => {
-  console.log(
-    "[Scheduled Task] Fetching White House RSS for Presidential Actions...",
-  );
-  await fetchAndStoreExecutiveActions();
-  console.log("[Scheduled Task] Done.");
+  const jobName = "WhiteHouse_RSS_Fetch";
+  try {
+    console.log(
+      "[Scheduled Task] Fetching White House RSS for Presidential Actions...",
+    );
+    const affectedCount = await fetchAndStoreExecutiveActions();
+    console.log("[Scheduled Task] Done.");
+    const rowChanged = affectedCount > 0;
+
+    await updateJobStatus(jobName, { rowChanged }, supabase);
+  } catch (err) {
+    console.error(`[Scheduled Task] ${jobName} error:`, err);
+    await updateJobStatus(jobName, {
+      errorMsg: "error fetching executive actions",
+    }, supabase);
+  }
 });
 
 // ==========================================

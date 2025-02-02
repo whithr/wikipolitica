@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import schedule from "node-schedule";
 import nodeGeocoder from "node-geocoder";
 import "dotenv/config.js";
+import { updateJobStatus } from "../lib/status.utils";
 
 // ==========================================
 // 1) ENV variables for Supabase & Google
@@ -119,7 +120,9 @@ async function insertScheduleEvent(evt: PoolReportSchedule): Promise<void> {
 // ==========================================
 export async function refreshRecentAndFuture(
   allEvents: PoolReportSchedule[],
-): Promise<void> {
+): Promise<number> {
+  let insertedCount = 0;
+
   try {
     const totalFetched = allEvents.length;
     console.log(`[Info] Fetched ${totalFetched} total events.`);
@@ -149,7 +152,6 @@ export async function refreshRecentAndFuture(
     );
 
     // 4) (Optional) geocode & insert
-    let insertedCount = 0;
     for (const evt of eventsToReinsert) {
       const [lat, lng] = await geocodeLocation(evt.location);
       if (lat && lng) {
@@ -166,6 +168,7 @@ export async function refreshRecentAndFuture(
   } catch (err) {
     console.error("[Error] refreshRecentAndFuture:", err);
   }
+  return insertedCount;
 }
 
 // ==========================================
@@ -174,7 +177,9 @@ export async function refreshRecentAndFuture(
 //    - only refreshes if there's a newer
 //      date+time in remote than what's in DB
 // ==========================================
-async function checkAndRefresh(): Promise<void> {
+async function checkAndRefresh(): Promise<number> {
+  let insertedCount = 0;
+
   try {
     // 1) Fetch remote schedule data
     const allEvents = await fetchTrumpCalendar();
@@ -183,7 +188,7 @@ async function checkAndRefresh(): Promise<void> {
     const remoteMaxDateTime = findMaxDateTime(allEvents);
     if (!remoteMaxDateTime) {
       console.log("[Info] No events found in remote data. Skipping refresh.");
-      return;
+      return insertedCount;
     }
 
     // 3) Find the max date+time from DB
@@ -201,15 +206,15 @@ async function checkAndRefresh(): Promise<void> {
       console.warn(
         "[Warning] Could not fetch max date+time from DB. Refreshing...",
       );
-      await refreshRecentAndFuture(allEvents);
-      return;
+      insertedCount = await refreshRecentAndFuture(allEvents);
+      return insertedCount;
     }
 
     if (!maxRow) {
       // If DB is empty, definitely refresh
       console.log("[Info] DB is empty. Refreshing everything...");
-      await refreshRecentAndFuture(allEvents);
-      return;
+      insertedCount = await refreshRecentAndFuture(allEvents);
+      return insertedCount;
     }
 
     // Combine DB date + time into a single ISO string, or fallback if time is null
@@ -220,7 +225,7 @@ async function checkAndRefresh(): Promise<void> {
       console.log(
         `[Info] Found newer data (remote max: ${remoteMaxDateTime}, DB max: ${dbMaxDateTime}). Refreshing...`,
       );
-      await refreshRecentAndFuture(allEvents);
+      insertedCount = await refreshRecentAndFuture(allEvents);
     } else {
       console.log(
         `[Info] No new data detected (remote max: ${remoteMaxDateTime}, DB max: ${dbMaxDateTime}). Skipping refresh.`,
@@ -229,6 +234,7 @@ async function checkAndRefresh(): Promise<void> {
   } catch (err) {
     console.error("[Error] checkAndRefresh:", err);
   }
+  return insertedCount;
 }
 
 // ==========================================
@@ -236,8 +242,21 @@ async function checkAndRefresh(): Promise<void> {
 //    e.g. "*/30 * * * *" => run at minute 0,30
 // ==========================================
 schedule.scheduleJob("*/30 * * * *", async () => {
-  console.log("[Scheduled Task] Checking for new events...");
-  await checkAndRefresh();
+  const jobName = "president_schedule_fetcher";
+  try {
+    console.log("[Scheduled Task] Checking for new events...");
+    const insertedCount = await checkAndRefresh();
+    console.log("[Scheduled Task] Done checking/refreshing schedule.");
+
+    // Only update last_success_at if at least one row changed.
+    const rowChanged = insertedCount > 0;
+    await updateJobStatus(jobName, { rowChanged }, supabase);
+  } catch (err) {
+    console.error(`[Scheduled Task] ${jobName} error:`, err);
+    await updateJobStatus(jobName, {
+      errorMsg: "error checking/refreshing schedule",
+    }, supabase);
+  }
 });
 
 // (Optional) Run once on startup for testing

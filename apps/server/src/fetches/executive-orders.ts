@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { convertXmlToMarkdown } from "../lib/xml-to-markdown.utils";
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { updateJobStatus } from "../lib/status.utils";
 
 // ==========================================
 // 1) ENV variables for Supabase
@@ -485,31 +486,53 @@ async function scrapeMissingPresidencyProjectHtml() {
 //     and schedule the HTML scraper to run (for missing HTML) separately.
 // ==========================================
 schedule.scheduleJob("*/30 * * * *", async () => {
-  console.log(
-    "[Scheduled Task] Fetching executive orders from Federal Register API...",
-  );
-  await fetchAndStoreExecutiveOrders();
-  console.log(
-    "[Scheduled Task] Done fetching executive orders from Federal Register.",
-  );
+  const jobName = "executive_orders_metadata_fetcher";
+  try {
+    console.log(
+      `[Scheduled Task: ${jobName}] Fetching executive orders from Federal Register API...`,
+    );
+    await fetchAndStoreExecutiveOrders();
+    console.log(`[Scheduled Task: ${jobName}] Done fetching executive orders.`);
 
-  console.log(
-    "[Scheduled Task] Fetching executive orders from Presidency Project...",
-  );
-  await fetchAndStorePresidencyProjectOrders();
-  console.log(
-    "[Scheduled Task] Done fetching executive orders from Presidency Project.",
-  );
+    console.log(
+      `[Scheduled Task: ${jobName}] Fetching Presidency Project orders...`,
+    );
+    await fetchAndStorePresidencyProjectOrders();
+    console.log(
+      `[Scheduled Task: ${jobName}] Done fetching Presidency Project orders.`,
+    );
+
+    await updateJobStatus(jobName, { rowChanged: true }, supabase);
+  } catch (err) {
+    console.error(`[Scheduled Task: ${jobName}] Error:`, err);
+    await updateJobStatus(
+      jobName,
+      { rowChanged: false, errorMsg: "error fetching executive orders" },
+      supabase,
+    );
+  }
 });
 
 // Schedule the HTML scraper separately.
 // (It will process one record every 10 seconds; adjust the schedule frequency as needed.)
 schedule.scheduleJob("5/30 * * * *", async () => {
-  console.log("[Scheduled Task] Scraping missing presidency_project_html...");
-  await scrapeMissingPresidencyProjectHtml();
-  console.log(
-    "[Scheduled Task] Done scraping missing presidency_project_html.",
-  );
+  const jobName = "executive_orders_document_fetcher";
+  try {
+    console.log(
+      `[Scheduled Task: ${jobName}] Scraping missing presidency_project_html...`,
+    );
+    await scrapeMissingPresidencyProjectHtml();
+    console.log(
+      `[Scheduled Task: ${jobName}] Done scraping missing presidency_project_html.`,
+    );
+    await updateJobStatus(jobName, { rowChanged: true }, supabase);
+  } catch (err) {
+    console.error(`[Scheduled Task: ${jobName}] Error:`, err);
+    await updateJobStatus(jobName, {
+      rowChanged: false,
+      errorMsg: "error scraping executive orders",
+    }, supabase);
+  }
 });
 
 // ==========================================

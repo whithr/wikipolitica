@@ -36,9 +36,11 @@ export const KofiButton = ({ label }: { label?: string }) => {
     <Drawer open={open} onOpenChange={setOpen} defaultOpen={open}>
       <DrawerTrigger asChild>
         {label ? (
-          label
+          <Button variant='primary' size='xs'>
+            {label}
+          </Button>
         ) : (
-          <Button variant='secondary' size='icon'>
+          <Button variant='outline' size='icon'>
             <img src={kofiimg} className='h-5 hover:scale-105' />
           </Button>
         )}

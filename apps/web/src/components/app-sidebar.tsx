@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {
   Gavel,
+  Github,
   Home,
   MessageCircleQuestion,
   RadioTower,
@@ -86,7 +87,6 @@ export const navItems = {
     },
   ],
   navSingle: [
-    // { title: 'Settings', url: '/settings', icon: Settings2 },
     {
       title: 'FAQ',
       url: '/frequently-asked-questions',
@@ -94,6 +94,13 @@ export const navItems = {
     },
     { title: 'Roadmap', url: '/roadmap', icon: TrafficCone },
     { title: 'Status', url: '/status', icon: RadioTower },
+  ],
+  navBottom: [
+    {
+      title: 'Source Code',
+      url: 'https://github.com/whithr/wikipolitica',
+      icon: Github,
+    },
   ],
 }
 
@@ -108,6 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarSeparator />
         <NavSingle items={navItems.navSingle} />
         <SidebarSeparator />
+        <NavSingle items={navItems.navBottom} className='mt-auto' />
       </SidebarContent>
     </Sidebar>
   )
