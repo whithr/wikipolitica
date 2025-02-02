@@ -120,9 +120,10 @@ export const Overview = () => {
         <p className='text-balance text-center'>
           If you'd like to support the project consider{' '}
           <KofiButton label='donating' /> or reviewing our{' '}
-          <Link to='/' className='text-blue-600 dark:text-blue-300'>
-            budget
-          </Link>{' '}
+          <ExternalLink
+            href='https://docs.google.com/spreadsheets/d/1wMLK2dMWhwDDpl9jCCwUCIRep31XpTmgCHfRA7GOORQ/edit?usp=sharing'
+            label='budget'
+          />{' '}
           to understand operating costs.
         </p>
       </div>

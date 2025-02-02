@@ -27,6 +27,7 @@ import { Overview } from './routes/home/Overview'
 import { FAQ } from './routes/faq/FAQ'
 import { Roadmap } from './routes/roadmap/Roadmap'
 import { Status } from './routes/status/Status'
+import { jobStatusQueryOptions } from './hooks/JobStatusQueryOptions'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -78,6 +79,8 @@ const statusRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'status',
   component: Status,
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(jobStatusQueryOptions),
 })
 
 const presidentialScheduleRoute = createRoute({
@@ -96,7 +99,7 @@ const presidentialScheduleOrderRoute = createRoute({
 
 const presidentialOrdersRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/executive/orders',
+  path: 'orders',
   component: PresidentialActions,
   loader: ({ context: { queryClient } }) =>
     queryClient.ensureQueryData(executiveOrdersQueryOptions),

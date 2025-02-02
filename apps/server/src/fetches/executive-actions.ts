@@ -117,7 +117,7 @@ async function fetchAndStoreExecutiveActions(): Promise<number> {
 // 4) Schedule job: run every 10 minutes
 // ==========================================
 schedule.scheduleJob("*/10 * * * *", async () => {
-  const jobName = "WhiteHouse_RSS_Fetch";
+  const jobName = "whitehouse_rss_fetcher";
   try {
     console.log(
       "[Scheduled Task] Fetching White House RSS for Presidential Actions...",

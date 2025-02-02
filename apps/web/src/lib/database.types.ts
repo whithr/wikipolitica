@@ -147,6 +147,39 @@ export type Database = {
         }
         Relationships: []
       }
+      job_status: {
+        Row: {
+          created_at: string | null
+          id: string
+          job_name: string
+          last_error: string | null
+          last_run_at: string | null
+          last_success_at: string | null
+          run_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          job_name: string
+          last_error?: string | null
+          last_run_at?: string | null
+          last_success_at?: string | null
+          run_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          job_name?: string
+          last_error?: string | null
+          last_run_at?: string | null
+          last_success_at?: string | null
+          run_count?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       president_schedule: {
         Row: {
           coverage: string | null

@@ -1,8 +1,13 @@
 // import { Link } from '@tanstack/react-router'
 // import { KofiButton } from '@/components/KofiButton'
 import logo from '@/assets/large-logo-transparent.png'
+import { StatusPing } from '@/components/animations/StatusPing'
+import { useLoaderData } from '@tanstack/react-router'
+import { formatDistanceToNow } from 'date-fns'
 
 export const Status = () => {
+  const data = useLoaderData({ from: '/status' })
+  console.log(data)
   return (
     <div className='pb-10'>
       <div className='flex max-w-6xl flex-col items-center gap-4 p-2 text-foreground/80 dark:text-foreground md:p-4'>
@@ -14,12 +19,29 @@ export const Status = () => {
           wikipolitica relies on a few services to collect data at regular
           intervals, and their status can be checked here.
         </p>
-        <div className='flex w-full max-w-2xl flex-col items-center gap-8 rounded-sm border border-border bg-background px-2 py-4 shadow-sm md:px-4'>
-          <span className='flex flex-col gap-2'>
-            wikipolitica relies on a few services to collect data at regular
-            intervals. This tracks the status of each of these jobs, when they
-            last ran, and also when they last successfully collected data.
-          </span>
+        <div className='flex flex-wrap justify-center gap-2'>
+          {data.map((job) => (
+            <div
+              key={job.id}
+              className='flex w-full max-w-sm items-center gap-2 rounded-sm border border-border bg-background px-2 py-4 shadow-sm md:px-4'
+            >
+              <StatusPing isHealthy={job.last_error === null} />
+              <div className='flex-col'>
+                <span className='flex flex-col gap-2'>{job.job_name}</span>
+                <span className='text-xs text-foreground/50'>
+                  {job.last_run_at
+                    ? formatDistanceToNow(job.last_run_at, {
+                        addSuffix: true,
+                      })
+                    : 'Never run'}
+                </span>
+                <br />
+                <span className='text-xs text-foreground/50'>
+                  Lifetime runs: {job.run_count}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

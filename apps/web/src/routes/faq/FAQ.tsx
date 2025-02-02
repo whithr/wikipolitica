@@ -62,18 +62,18 @@ export const FAQ = () => {
                 href='https://haleywhitman.com/'
                 label='Haley Whitman'
               />
-              . I'm a software engineer and have a history in working in
-              government, and I take a special interest in understanding USA's
-              political landscape. I've been inspired by a few sites that I
-              think deliver good information, and I believe that it's valuable
-              to have as many ways to consume and deliver information as is
-              useful.{' '}
+              . I'm a software engineer and have a history of working within the
+              government. I take a special interest in understanding USA's
+              political landscape and have been inspired by a few sites that I
+              think deliver good information. It's invaluable to have as many
+              ways to consume and deliver information.{' '}
             </p>
             <p>
-              I think there's a lot of ways to present non-biased information
-              together in an interactive way that lends itelf to the reader to
-              figure out their opinions for themselves - and I am very excited
-              to get this initial work out to continue expanding on it.
+              I believe that by presenting non-biased information in an
+              interactive way, it lends itself to the reader to figure out their
+              opinions for themselves and come to their own conclusions. I am
+              very excited to get this initial work out to continue expanding on
+              it.
               <Separator className='my-2' />
               Some other great sites include:
               <ul className='list-disc pl-4 text-foreground/80 dark:text-foreground/50'>
@@ -99,12 +99,17 @@ export const FAQ = () => {
             </p>
             <p className='pt-4 text-center'>
               If you like what you see, please consider{' '}
-              <KofiButton label='donating' />, checking out the GitHub
-              repository, or examining our{' '}
-              <Link to='/' className='text-blue-600 dark:text-blue-300'>
-                operating costs
-              </Link>
-              .{' '}
+              <KofiButton label='donating' />, checking out the{' '}
+              <ExternalLink
+                href='https://github.com/whithr/wikipolitica'
+                label='GitHub repository'
+              />
+              , or examining our{' '}
+              <ExternalLink
+                href='https://docs.google.com/spreadsheets/d/1wMLK2dMWhwDDpl9jCCwUCIRep31XpTmgCHfRA7GOORQ/edit?usp=sharing'
+                label='operating costs'
+              />
+              .
             </p>
           </span>
           <Accordion type='multiple' className='w-full'>
