@@ -1,4 +1,4 @@
-import logo from '@/assets/large-logo-transparent.png'
+import logo from '@/assets/logo-128.webp'
 import { ExternalLink } from '@/components/external-link'
 import {
   Accordion,
