@@ -4,6 +4,7 @@ import {
   Home,
   MessageCircleQuestion,
   Scale,
+  TrafficCone,
   // Settings2,
   UserCircle,
 } from 'lucide-react'
@@ -85,7 +86,12 @@ export const navItems = {
   ],
   navSingle: [
     // { title: 'Settings', url: '/settings', icon: Settings2 },
-    { title: 'FAQ', url: '/faq', icon: MessageCircleQuestion },
+    {
+      title: 'FAQ',
+      url: '/frequently-asked-questions',
+      icon: MessageCircleQuestion,
+    },
+    { title: 'Roadmap', url: '/roadmap', icon: TrafficCone },
   ],
 }
 
@@ -100,7 +106,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarSeparator />
         <NavSingle items={navItems.navSingle} />
       </SidebarContent>
-      {/* <SidebarRail /> */}
     </Sidebar>
   )
 }

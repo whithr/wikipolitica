@@ -24,6 +24,8 @@ import {
 } from './hooks/executive-orders'
 import { ItineraryOrderReader } from './components/president/itinerary-order-reader'
 import { Overview } from './routes/home/Overview'
+import { FAQ } from './routes/faq/FAQ'
+import { Roadmap } from './routes/roadmap/Roadmap'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -47,12 +49,26 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Overview,
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(executiveOrdersQueryOptions),
 })
 
 const executiveRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'executive',
   component: Executive,
+})
+
+const roadmapRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'roadmap',
+  component: Roadmap,
+})
+
+const faqRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'frequently-asked-questions',
+  component: FAQ,
 })
 
 const presidentialScheduleRoute = createRoute({
@@ -92,6 +108,8 @@ const routeTree = rootRoute.addChildren([
   executiveRoute,
   presidentialScheduleRoute.addChildren([presidentialScheduleOrderRoute]),
   presidentialOrdersRoute.addChildren([presidentialOrderReaderRoute]),
+  roadmapRoute,
+  faqRoute,
   indexRoute,
 ])
 

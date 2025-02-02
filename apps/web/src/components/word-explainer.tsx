@@ -5,6 +5,7 @@ import {
 } from '@/components/ui/popover'
 import React from 'react'
 import { politicalDictionary } from '@/lib/dictonary'
+import { cn } from '@/lib/utils'
 
 interface WordExplainerProps {
   text: string
@@ -44,5 +45,41 @@ export const WordExplainer: React.FC<WordExplainerProps> = ({ text }) => {
         return part
       })}
     </>
+  )
+}
+
+export const SingleWordExplainer = ({
+  description,
+  word,
+  className,
+}: {
+  description: string
+  word: string
+  className?: string
+}) => {
+  if (!description || !word) return null
+
+  return (
+    <Popover>
+      <PopoverTrigger
+        className={cn(
+          'mx-0.5 underline decoration-primary decoration-solid underline-offset-4 dark:decoration-primary/50',
+          className
+        )}
+        style={{
+          textDecorationThickness: '4px',
+        }}
+      >
+        {word}
+      </PopoverTrigger>
+      <PopoverContent
+        className={cn(
+          'text-md w-fit max-w-64 border-none bg-foreground px-4 py-2 text-background',
+          className
+        )}
+      >
+        {description}
+      </PopoverContent>
+    </Popover>
   )
 }

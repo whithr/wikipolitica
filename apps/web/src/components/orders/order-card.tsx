@@ -32,7 +32,7 @@ export const OrderCard = ({ order, selectedOrderId }: OrderCardProps) => {
       {order.pdf_url && (
         <Tooltip>
           <TooltipTrigger>
-            <Button variant='ghost' size='icon'>
+            <Button variant='ghost' size='icon' asChild>
               <ExternalLink
                 href={order.pdf_url}
                 label={<FileText className='h-4 w-4 stroke-foreground/60' />}

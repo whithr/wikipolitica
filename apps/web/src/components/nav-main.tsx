@@ -36,14 +36,14 @@ export function NavMain({
     }[]
   }[]
 }) {
-  const { state } = useSidebar()
+  const { state, isMobile } = useSidebar()
   return (
     <SidebarGroup>
       <SidebarMenu>
         {items.map((item) =>
           item.items ? (
             <SidebarMenuItem key={item.title}>
-              {state !== 'expanded' ? (
+              {state !== 'expanded' && !isMobile ? (
                 // If collapsed, make the button a direct Link
                 <SidebarMenuButton
                   asChild
@@ -94,7 +94,7 @@ export function NavMain({
                           <Badge
                             variant='default'
                             size='sm'
-                            className='ml-auto hover:bg-primary'
+                            className='ml-auto bg-primary/50 hover:bg-primary/50'
                           >
                             WIP
                           </Badge>

@@ -3,13 +3,19 @@ import { formatDate, parseTimeToMinutes } from '@/lib/time.utils'
 import { Separator } from '@/components/ui/separator'
 import { WordExplainer } from '@/components/word-explainer'
 import potusSeal from '@/assets/potus-seal.png'
-import { removeBrackets } from '@/lib/utils'
+import { cn, removeBrackets } from '@/lib/utils'
 import { SourceTooltip } from '../source-tooltip'
 import { Skeleton } from '../ui/skeleton'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 import { useEffect } from 'react'
 
-export const CurrentEventHeader = () => {
+export const CurrentEventHeader = ({
+  className,
+  blockSourceTooltip,
+}: {
+  className?: string
+  blockSourceTooltip?: boolean
+}) => {
   const { isLoading, filteredData, highlightDay, highlightTime } =
     usePresidentCalendar()
   const selectedDayId = usePresidentCalendarStore(
@@ -37,23 +43,25 @@ export const CurrentEventHeader = () => {
   }, [filteredData, highlightTime, highlightDay, setSelectedDayId])
 
   return (
-    <div className='flex flex-col gap-2 px-0 md:px-8'>
+    <div className={cn('flex flex-col gap-2 px-0 md:px-8', className)}>
       <div className='relative flex min-h-[145px] items-center gap-4 rounded-md border border-border bg-background p-4 text-foreground shadow-sm transition-all dark:border-primary/50 md:min-h-[155px] lg:min-h-[140px] xl:min-h-[105px]'>
-        <SourceTooltip
-          content={
-            <div>
-              Schedule from{' '}
-              <a
-                href='https://rollcall.com/factbase/trump/calendar/'
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-blue-600 hover:underline'
-              >
-                FactBa.se
-              </a>
-            </div>
-          }
-        />
+        {!blockSourceTooltip && (
+          <SourceTooltip
+            content={
+              <div>
+                Schedule from{' '}
+                <a
+                  href='https://rollcall.com/factbase/trump/calendar/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-blue-600 hover:underline'
+                >
+                  FactBa.se
+                </a>
+              </div>
+            }
+          />
+        )}
         <img
           src={potusSeal}
           className='hidden h-16 w-16 rounded-full shadow-sm md:block'
