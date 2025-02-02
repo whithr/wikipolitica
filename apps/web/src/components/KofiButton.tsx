@@ -54,15 +54,7 @@ export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
           </Button>
         )}
       </DrawerTrigger>
-      <DrawerClose className='flex h-min self-end' asChild>
-        <Button
-          variant='outline'
-          className='absolute right-4 top-4 h-8 w-8'
-          size='icon'
-        >
-          <X className='h-8 w-8' />
-        </Button>
-      </DrawerClose>
+
       {/* 
         Instead of forcing a full height with "height", we use "maxHeight"
         so the container grows as needed up to the available viewport height.
