@@ -1,5 +1,6 @@
 import logo from '@/assets/large-logo-transparent.png'
 import { ExternalLink } from '@/components/external-link'
+import { KofiButton } from '@/components/KofiButton'
 import { LatestExecutiveOrder } from '@/components/orders/LatestExecutiveOrder'
 import { CurrentEventHeader } from '@/components/president/CurrentEventHeader'
 import { Separator } from '@/components/ui/separator'
@@ -16,7 +17,7 @@ export const Overview = () => {
         wikipolitica
       </h1>
       <p className='text-balance text-center font-medium italic leading-8 text-foreground/50 dark:text-foreground/80'>
-        the free{' '}
+        a free{' '}
         <SingleWordExplainer
           description='Free from party affiliation, bias, or designation'
           word='non-partisan'
@@ -35,7 +36,7 @@ export const Overview = () => {
 
       <div className='flex max-w-[948px] flex-col gap-4 p-2 text-foreground'>
         <p>
-          Wikipolitica is built to serve the public by providing accurate,
+          wikipolitica is built to serve the public by providing accurate,
           real-time, and unfiltered political data. It aggregates information
           from{' '}
           <SingleWordExplainer
@@ -63,7 +64,7 @@ export const Overview = () => {
         </p>
 
         <p className='rounded-lg bg-primary/30 px-2 py-4 text-center dark:bg-primary/20'>
-          <strong>wikipolitica is still under development.</strong> <br />
+          <strong>wikipolitica is still under development</strong> <br />
           See our{' '}
           <Link to='/roadmap' className='text-blue-600 dark:text-blue-300'>
             roadmap
@@ -117,8 +118,8 @@ export const Overview = () => {
 
       <div className='flex max-w-[948px] flex-col gap-4 p-2 pb-8 text-foreground'>
         <p className='text-balance text-center'>
-          If you'd like to support the project consider donating or reviewing
-          our{' '}
+          If you'd like to support the project consider{' '}
+          <KofiButton label='donating' /> or reviewing our{' '}
           <Link to='/' className='text-blue-600 dark:text-blue-300'>
             budget
           </Link>{' '}

@@ -11,7 +11,7 @@ export const Executive = () => {
         <p className='text-balance text-center'>
           <strong className='text-xl'>
             wikipolitica is still under active development - and this page is
-            not yet complete.
+            not yet complete
           </strong>{' '}
         </p>
         <Separator className='my-2 w-1/2 self-center md:my-4' />

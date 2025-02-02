@@ -2,6 +2,7 @@
 
 import { AppSidebar } from '@/components/app-sidebar'
 import { HeaderBreadcrumbs } from '@/components/header-breadcrumbs'
+import { KofiButton } from '@/components/KofiButton'
 import { PresidentCalendarProvider } from '@/components/president/president-calendar-context'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -57,6 +58,7 @@ export const RootRoute = () => {
             <Separator orientation='vertical' className='mr-2 h-4' />
             <HeaderBreadcrumbs />
             <div className='flex-1' />
+            <KofiButton />
             <ThemeModeToggle />
           </div>
         </header>

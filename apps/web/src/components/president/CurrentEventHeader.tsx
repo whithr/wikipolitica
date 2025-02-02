@@ -81,7 +81,11 @@ export const CurrentEventHeader = ({
               ) : (
                 selectedEvent && (
                   <div className='flex flex-col gap-0 text-balance'>
-                    <p className=''>{selectedEvent.location} </p>
+                    <p className=''>
+                      {selectedEvent.location
+                        ? selectedEvent.location
+                        : 'No location provided'}{' '}
+                    </p>
                     {selectedEvent.time_formatted ? (
                       <span className='text-xs font-normal'>
                         {formatDate(selectedEvent.date)} -{' '}
