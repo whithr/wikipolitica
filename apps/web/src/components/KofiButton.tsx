@@ -11,14 +11,9 @@ import {
 import { Button } from './ui/button'
 import { KofiModal } from './KofiModal'
 import kofiimg from '@/assets/Ko-fi Symbol.png'
-import { useSetVh } from '@/hooks/useSetVh' // Our hook to update --vh
 import { X } from 'lucide-react'
 
-export const KofiButton = ({ label }) => {
-  // Always update the --vh variable (it won’t hurt desktop,
-  // since we only use it in our mobile styles below)
-  useSetVh()
-
+export const KofiButton = ({ label }: { label?: string | React.ReactNode }) => {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
