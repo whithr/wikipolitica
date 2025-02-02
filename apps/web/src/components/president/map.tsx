@@ -16,7 +16,7 @@ import { Skeleton } from '../ui/skeleton'
 import { usePresidentCalendarStore } from '@/stores/presidentCalendarStore'
 import { cn } from '@/lib/utils'
 
-export const Map = () => {
+export const LeafletMap = () => {
   const { resolvedTheme } = useTheme()
   const { isLoading, filteredData, highlightDay, highlightTime } =
     usePresidentCalendar()

@@ -13,7 +13,6 @@ import './index.css'
 
 import { ThemeProvider } from './components/ThemeProvider'
 import { RootRoute } from './routes/__root'
-import { Executive } from './components/president/Executive'
 import { PresidentialSchedule } from './routes/executive/PresidentialSchedule'
 import { PresidentialActions } from './routes/executive/PresidentialActions'
 import { ExecutiveOrdersReader } from './components/orders/ExecutiveOrderReader'
