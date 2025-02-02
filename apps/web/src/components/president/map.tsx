@@ -137,7 +137,7 @@ export const Map = () => {
         <Skeleton className='h-[250px] w-full rounded-sm bg-foreground/10 p-4 md:h-[400px]' />
       ) : (
         <div
-          className='z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[400px]'
+          className='relative z-10 flex h-[250px] flex-col gap-4 rounded-md bg-background shadow-md md:h-[400px]'
           id='map'
         >
           <MapContainer
@@ -189,6 +189,28 @@ export const Map = () => {
               )
             })}
           </MapContainer>
+          <div
+            className='absolute left-0 top-0 h-full'
+            style={{
+              width: '100px',
+              zIndex: 1000,
+              background: 'transparent',
+              pointerEvents: 'auto',
+              touchAction: 'pan-y', // Allow vertical scrolling
+            }}
+          />
+
+          {/* Right overlay div */}
+          <div
+            className='absolute right-0 top-0 h-full'
+            style={{
+              width: '100px',
+              zIndex: 1000,
+              background: 'transparent',
+              pointerEvents: 'auto',
+              touchAction: 'pan-y',
+            }}
+          />
         </div>
       )}
       <div className='z-10 mx-6 -mt-16 flex flex-row gap-2 rounded-sm bg-background/60 bg-clip-padding px-2 py-2 shadow-lg backdrop-blur-sm backdrop-filter'>
