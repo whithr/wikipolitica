@@ -502,6 +502,7 @@ schedule.scheduleJob("*/30 * * * *", async () => {
       `[Scheduled Task: ${jobName}] Done fetching Presidency Project orders.`,
     );
 
+    // This job is always overwritting, so we need to figure out a better way here.
     await updateJobStatus(jobName, { rowChanged: true }, supabase);
   } catch (err) {
     console.error(`[Scheduled Task: ${jobName}] Error:`, err);
@@ -525,6 +526,7 @@ schedule.scheduleJob("5/30 * * * *", async () => {
     console.log(
       `[Scheduled Task: ${jobName}] Done scraping missing presidency_project_html.`,
     );
+    // This job is always overwritting, so we need to figure out a better way here.
     await updateJobStatus(jobName, { rowChanged: true }, supabase);
   } catch (err) {
     console.error(`[Scheduled Task: ${jobName}] Error:`, err);

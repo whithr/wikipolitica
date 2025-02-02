@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
-import { KofiButton } from '@/components/KofiButton'
+// import { Link } from '@tanstack/react-router'
+// import { KofiButton } from '@/components/KofiButton'
 import logo from '@/assets/large-logo-transparent.png'
 
 export const Status = () => {
