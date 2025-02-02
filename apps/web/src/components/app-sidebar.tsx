@@ -33,7 +33,7 @@ export type NavData = {
 
 export const navItems = {
   navMain: [
-    { title: 'Home', url: '/', icon: Home },
+    { title: 'Overview', url: '/', icon: Home },
     {
       title: 'Executive Branch',
       url: '/executive',

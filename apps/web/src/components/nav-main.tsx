@@ -42,75 +42,106 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) =>
           item.items ? (
-            <Collapsible
-              key={item.title}
-              asChild
-              defaultOpen={item.isActive || item.defaultOpen}
-              className='group/collapsible'
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    tooltip={
-                      item.wip ? `${item.title} (Work in Progress)` : item.title
-                    }
-                    className={cx(
-                      'text-nowrap',
-                      item.wip &&
-                        state === 'collapsed' &&
-                        'hover:cursor-not-allowed hover:!bg-transparent'
-                    )}
+            <SidebarMenuItem key={item.title}>
+              {state !== 'expanded' ? (
+                // If collapsed, make the button a direct Link
+                <SidebarMenuButton
+                  asChild
+                  tooltip={
+                    item.wip ? `${item.title} (Work in Progress)` : item.title
+                  }
+                  className={cx(
+                    'text-nowrap',
+                    item.wip &&
+                      state === 'collapsed' &&
+                      'hover:cursor-not-allowed hover:!bg-transparent'
+                  )}
+                >
+                  <Link
+                    to={item.url}
+                    className='text-nowrap'
+                    disabled={item.wip}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                    {item.wip ? (
-                      <Badge
-                        variant='default'
-                        size='sm'
-                        className='ml-auto hover:bg-primary'
+                  </Link>
+                </SidebarMenuButton>
+              ) : (
+                // If expanded, allow collapsing behavior
+                <Collapsible
+                  asChild
+                  defaultOpen={item.isActive || item.defaultOpen}
+                  className='group/collapsible'
+                >
+                  <div>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton
+                        tooltip={
+                          item.wip
+                            ? `${item.title} (Work in Progress)`
+                            : item.title
+                        }
+                        className={cx(
+                          'text-nowrap',
+                          item.wip &&
+                            state === 'expanded' &&
+                            'hover:cursor-not-allowed hover:!bg-transparent'
+                        )}
                       >
-                        WIP
-                      </Badge>
-                    ) : (
-                      <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                    )}
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          className={subItem.wip ? 'hover:!bg-transparent' : ''}
-                        >
-                          <div
-                            className={cx(
-                              'flex',
-                              subItem.wip && 'hover:cursor-not-allowed'
-                            )}
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                        {item.wip ? (
+                          <Badge
+                            variant='default'
+                            size='sm'
+                            className='ml-auto hover:bg-primary'
                           >
-                            {subItem.wip && (
-                              <Construction className='stroke-primary dark:stroke-primary' />
-                            )}
-                            <Link
-                              to={subItem.url}
-                              className={cx(
-                                'text-nowrap',
-                                subItem.wip && 'opacity-50'
-                              )}
-                              disabled={subItem.wip}
+                            WIP
+                          </Badge>
+                        ) : (
+                          <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                        )}
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={
+                                subItem.wip ? 'hover:!bg-transparent' : ''
+                              }
                             >
-                              <span>{subItem.title}</span>
-                            </Link>
-                          </div>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
+                              <div
+                                className={cx(
+                                  'flex',
+                                  subItem.wip && 'hover:cursor-not-allowed'
+                                )}
+                              >
+                                {subItem.wip && (
+                                  <Construction className='stroke-primary dark:stroke-primary' />
+                                )}
+                                <Link
+                                  to={subItem.url}
+                                  className={cx(
+                                    'text-nowrap',
+                                    subItem.wip && 'opacity-50'
+                                  )}
+                                  disabled={subItem.wip}
+                                >
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </div>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </div>
+                </Collapsible>
+              )}
+            </SidebarMenuItem>
           ) : (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton

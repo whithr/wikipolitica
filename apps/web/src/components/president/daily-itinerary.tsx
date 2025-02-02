@@ -59,7 +59,7 @@ export const DailyItinerary = () => {
                   href='https://www.archives.gov/'
                   label='National Archives'
                 />{' '}
-                &{' '}
+                &<br />{' '}
                 <ExternalLink
                   href='https://www.presidency.ucsb.edu/'
                   label='The American Presidency Project'
@@ -170,13 +170,12 @@ export const DailyItinerary = () => {
                               )}
                             </div>
                           </div>
-                        ) : (
+                        ) : event.location ? (
                           <div className='flex gap-2 text-muted-foreground'>
-                            Time not provided –{' '}
-                            {event.location
-                              ? event.location
-                              : 'Location not provided'}
+                            Time not provided – {event.location}
                           </div>
+                        ) : (
+                          <></>
                         )}
                         <p className='text-balance'>
                           <WordExplainer text={event.details} />

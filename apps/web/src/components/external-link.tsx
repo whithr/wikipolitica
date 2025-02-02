@@ -1,9 +1,11 @@
+import React from 'react'
+
 export const ExternalLink = ({
   href,
   label,
 }: {
   href: string
-  label: string
+  label: string | React.ReactNode
 }) => {
   return (
     <a

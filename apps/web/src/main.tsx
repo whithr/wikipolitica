@@ -23,6 +23,7 @@ import {
   executiveOrdersQueryOptions,
 } from './hooks/executive-orders'
 import { ItineraryOrderReader } from './components/president/itinerary-order-reader'
+import { Overview } from './routes/home/Overview'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -45,16 +46,8 @@ const rootRoute = createRootRouteWithContext<{
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: IndexRouteComponent,
+  component: Overview,
 })
-
-function IndexRouteComponent() {
-  return (
-    <div className='p-2'>
-      <h3>Welcome Home!</h3>
-    </div>
-  )
-}
 
 const executiveRoute = createRoute({
   getParentRoute: () => rootRoute,
