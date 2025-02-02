@@ -27,6 +27,7 @@ import { FAQ } from './routes/faq/FAQ'
 import { Roadmap } from './routes/roadmap/Roadmap'
 import { Status } from './routes/status/Status'
 import { jobStatusQueryOptions } from './hooks/JobStatusQueryOptions'
+import { Executive } from './components/president/executive'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
