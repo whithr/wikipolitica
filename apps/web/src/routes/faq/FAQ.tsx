@@ -7,9 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Separator } from '@/components/ui/separator'
-
 import { KofiButton } from '@/components/KofiButton'
-import { Link } from '@tanstack/react-router'
 
 const faqItems = [
   {

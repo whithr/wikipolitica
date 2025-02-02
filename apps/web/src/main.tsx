@@ -99,7 +99,7 @@ const presidentialScheduleOrderRoute = createRoute({
 
 const presidentialOrdersRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: 'orders',
+  path: '/executive/orders',
   component: PresidentialActions,
   loader: ({ context: { queryClient } }) =>
     queryClient.ensureQueryData(executiveOrdersQueryOptions),

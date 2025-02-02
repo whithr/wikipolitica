@@ -1,5 +1,3 @@
-// import { Link } from '@tanstack/react-router'
-// import { KofiButton } from '@/components/KofiButton'
 import logo from '@/assets/large-logo-transparent.png'
 import { StatusPing } from '@/components/animations/StatusPing'
 import { useLoaderData } from '@tanstack/react-router'
