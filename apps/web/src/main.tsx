@@ -26,6 +26,7 @@ import { ItineraryOrderReader } from './components/president/itinerary-order-rea
 import { Overview } from './routes/home/Overview'
 import { FAQ } from './routes/faq/FAQ'
 import { Roadmap } from './routes/roadmap/Roadmap'
+import { Status } from './routes/status/Status'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -71,6 +72,12 @@ const faqRoute = createRoute({
   component: FAQ,
 })
 
+const statusRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'status',
+  component: Status,
+})
+
 const presidentialScheduleRoute = createRoute({
   getParentRoute: () => executiveRoute,
   path: 'president',
@@ -110,6 +117,7 @@ const routeTree = rootRoute.addChildren([
   presidentialOrdersRoute.addChildren([presidentialOrderReaderRoute]),
   roadmapRoute,
   faqRoute,
+  statusRoute,
   indexRoute,
 ])
 

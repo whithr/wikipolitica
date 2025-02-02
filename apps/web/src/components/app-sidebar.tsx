@@ -3,6 +3,7 @@ import {
   Gavel,
   Home,
   MessageCircleQuestion,
+  RadioTower,
   Scale,
   TrafficCone,
   // Settings2,
@@ -92,6 +93,7 @@ export const navItems = {
       icon: MessageCircleQuestion,
     },
     { title: 'Roadmap', url: '/roadmap', icon: TrafficCone },
+    { title: 'Status', url: '/status', icon: RadioTower },
   ],
 }
 

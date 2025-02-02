@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StatusStatusImport } from './routes/status/Status'
 import { Route as RoadmapRoadmapImport } from './routes/roadmap/Roadmap'
 import { Route as HomeOverviewImport } from './routes/home/Overview'
 import { Route as FaqFAQImport } from './routes/faq/FAQ'
@@ -50,6 +51,12 @@ const ExecutiveVicePresidentLazyRoute = ExecutiveVicePresidentLazyImport.update(
 ).lazy(() =>
   import('./routes/executive/vice-president.lazy').then((d) => d.Route),
 )
+
+const StatusStatusRoute = StatusStatusImport.update({
+  id: '/status/Status',
+  path: '/status/Status',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const RoadmapRoadmapRoute = RoadmapRoadmapImport.update({
   id: '/roadmap/Roadmap',
@@ -136,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoadmapRoadmapImport
       parentRoute: typeof rootRoute
     }
+    '/status/Status': {
+      id: '/status/Status'
+      path: '/status/Status'
+      fullPath: '/status/Status'
+      preLoaderRoute: typeof StatusStatusImport
+      parentRoute: typeof rootRoute
+    }
     '/executive/vice-president': {
       id: '/executive/vice-president'
       path: '/executive/vice-president'
@@ -156,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
+  '/status/Status': typeof StatusStatusRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -167,6 +182,7 @@ export interface FileRoutesByTo {
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
+  '/status/Status': typeof StatusStatusRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -179,6 +195,7 @@ export interface FileRoutesById {
   '/faq/FAQ': typeof FaqFAQRoute
   '/home/Overview': typeof HomeOverviewRoute
   '/roadmap/Roadmap': typeof RoadmapRoadmapRoute
+  '/status/Status': typeof StatusStatusRoute
   '/executive/vice-president': typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -192,6 +209,7 @@ export interface FileRouteTypes {
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
+    | '/status/Status'
     | '/executive/vice-president'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -202,6 +220,7 @@ export interface FileRouteTypes {
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
+    | '/status/Status'
     | '/executive/vice-president'
   id:
     | '__root__'
@@ -212,6 +231,7 @@ export interface FileRouteTypes {
     | '/faq/FAQ'
     | '/home/Overview'
     | '/roadmap/Roadmap'
+    | '/status/Status'
     | '/executive/vice-president'
   fileRoutesById: FileRoutesById
 }
@@ -224,6 +244,7 @@ export interface RootRouteChildren {
   FaqFAQRoute: typeof FaqFAQRoute
   HomeOverviewRoute: typeof HomeOverviewRoute
   RoadmapRoadmapRoute: typeof RoadmapRoadmapRoute
+  StatusStatusRoute: typeof StatusStatusRoute
   ExecutiveVicePresidentLazyRoute: typeof ExecutiveVicePresidentLazyRoute
 }
 
@@ -235,6 +256,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqFAQRoute: FaqFAQRoute,
   HomeOverviewRoute: HomeOverviewRoute,
   RoadmapRoadmapRoute: RoadmapRoadmapRoute,
+  StatusStatusRoute: StatusStatusRoute,
   ExecutiveVicePresidentLazyRoute: ExecutiveVicePresidentLazyRoute,
 }
 
@@ -255,6 +277,7 @@ export const routeTree = rootRoute
         "/faq/FAQ",
         "/home/Overview",
         "/roadmap/Roadmap",
+        "/status/Status",
         "/executive/vice-president"
       ]
     },
@@ -278,6 +301,9 @@ export const routeTree = rootRoute
     },
     "/roadmap/Roadmap": {
       "filePath": "roadmap/Roadmap.tsx"
+    },
+    "/status/Status": {
+      "filePath": "status/Status.tsx"
     },
     "/executive/vice-president": {
       "filePath": "executive/vice-president.lazy.tsx"

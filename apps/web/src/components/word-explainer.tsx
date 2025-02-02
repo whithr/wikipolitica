@@ -74,7 +74,7 @@ export const SingleWordExplainer = ({
       </PopoverTrigger>
       <PopoverContent
         className={cn(
-          'text-md w-fit max-w-64 border-none bg-foreground px-4 py-2 text-background',
+          'text-md w-fit max-w-64 border-none bg-foreground px-4 py-2 text-center text-background',
           className
         )}
       >
