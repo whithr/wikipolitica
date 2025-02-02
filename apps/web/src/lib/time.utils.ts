@@ -1,70 +1,3 @@
-export const getEasternDateTime = () => {
-  const now = new Date();
-
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hourCycle: "h23",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).formatToParts(now);
-
-  let year = 0,
-    month = 0,
-    day = 0,
-    hour = 0,
-    minute = 0,
-    second = 0;
-
-  for (const p of parts) {
-    switch (p.type) {
-      case "year":
-        year = parseInt(p.value, 10);
-        break;
-      case "month":
-        month = parseInt(p.value, 10);
-        break;
-      case "day":
-        day = parseInt(p.value, 10);
-        break;
-      case "hour":
-        hour = parseInt(p.value, 10);
-        break;
-      case "minute":
-        minute = parseInt(p.value, 10);
-        break;
-      case "second":
-        second = parseInt(p.value, 10);
-        break;
-    }
-  }
-  return { year, month, day, hour, minute, second };
-};
-
-export const isEasternToday = (yyyy_mm_dd: string) => {
-  // Example yyyy_mm_dd = "2025-01-23"
-  const { year, month, day } = getEasternDateTime();
-  const [y, m, d] = yyyy_mm_dd.split("-").map(Number);
-  return y === year && m === month && d === day;
-};
-
-// export const parseTimeToMinutes = (timeString: string | null | undefined) => {
-//   if (!timeString) return null; // No time
-//   const [hh, mm] = timeString.split(":");
-//   if (!hh || !mm) return null;
-//   const hours = parseInt(hh, 10);
-//   const mins = parseInt(mm, 10);
-//   return hours * 60 + mins;
-// };
-
-export const getEasternNowInMinutes = (): number => {
-  const { hour, minute } = getEasternDateTime();
-  return hour * 60 + minute;
-};
-
 /**
  * Return true if yyyy_mm_dd matches the *user's local* date (today).
  * Example: "2025-01-24" => check if the local system date is 2025-01-24.
@@ -167,4 +100,24 @@ export function formatDateWithSuffix(dateString: string | null): string | null {
   return `${
     formattedMonthYear.split(" ")[0]
   } ${day}${suffix}, ${date.getFullYear()}`;
+}
+
+export function getEasternNowInMinutes(): number {
+  // Get the current time as seen in Eastern time (America/New_York)
+  const now = new Date();
+  // Format the current time in Eastern time using a locale that allows us to extract hours and minutes.
+  // Note: This returns a string like "06:40" (24-hour format) if configured correctly.
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+
+  // Use Intl.DateTimeFormat to get the time string in Eastern time.
+  const timeString = new Intl.DateTimeFormat("en-US", options).format(now);
+  const [hourStr, minuteStr] = timeString.split(":");
+  const hours = parseInt(hourStr, 10);
+  const minutes = parseInt(minuteStr, 10);
+  return hours * 60 + minutes;
 }

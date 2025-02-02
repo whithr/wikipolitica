@@ -91,7 +91,10 @@ export const Overview = () => {
             daily schedule
           </Link>{' '}
           of the President of the United States or the{' '}
-          <Link to='/' className='text-blue-600 dark:text-blue-300'>
+          <Link
+            to='/executive/orders'
+            className='text-blue-600 dark:text-blue-300'
+          >
             list of executive orders
           </Link>{' '}
           that have been signed by the current administration.

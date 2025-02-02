@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { isAfter, isBefore } from "date-fns";
-import { getLocalNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils";
+import { getEasternNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils";
 import { DateRange } from "react-day-picker";
 import {
   PoolReportSchedule,
@@ -183,8 +183,8 @@ export function useFilteredCalendarData(
     let highlightTime: number | null = null;
 
     const localToday = formatYMD(new Date());
-    // Example offset for PST vs. EST, if needed:
-    const localNowInMinutes = getLocalNowInMinutes() + 180;
+    // Get the current time in Eastern time (in minutes)
+    const easternNowInMinutes = getEasternNowInMinutes();
 
     if (sortedDays.length > 0) {
       // If today's date is among the sorted days
@@ -195,7 +195,7 @@ export function useFilteredCalendarData(
         // Find the most recent event that started <= current time
         for (const evt of dayEvents) {
           const evtMins = parseTimeToMinutes(evt.time);
-          if (evtMins !== null && evtMins <= localNowInMinutes) {
+          if (evtMins !== null && evtMins <= easternNowInMinutes) {
             highlightDay = localToday;
             highlightTime = evtMins;
             foundOne = true;
