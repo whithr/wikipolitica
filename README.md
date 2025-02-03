@@ -17,6 +17,8 @@ The app is split into 3 parts:
 
 **Steps for setting up Database**
 
+Install supabase globally, https://supabase.com/docs/guides/local-development/cli/getting-started
+
 1. cd into /apps/database
 2. run `supabase start`
 3. take note of the `anon key` and `service_role key` and `api_url` for the `.env` file we will need to make
