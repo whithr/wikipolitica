@@ -36,7 +36,8 @@ export function NavMain({
     }[]
   }[]
 }) {
-  const { state, isMobile } = useSidebar()
+  const { state, isMobile, setOpenMobile } = useSidebar()
+
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -53,14 +54,15 @@ export function NavMain({
                   className={cx(
                     'text-nowrap',
                     item.wip &&
-                      state === 'collapsed' &&
-                      'hover:cursor-not-allowed hover:!bg-transparent'
+                    state === 'collapsed' &&
+                    'hover:cursor-not-allowed hover:!bg-transparent'
                   )}
                 >
                   <Link
                     to={item.url}
                     className='text-nowrap'
                     disabled={item.wip}
+                    onClick={() => setOpenMobile(false)}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -84,8 +86,8 @@ export function NavMain({
                         className={cx(
                           'text-nowrap',
                           item.wip &&
-                            state === 'expanded' &&
-                            'hover:cursor-not-allowed hover:!bg-transparent'
+                          state === 'expanded' &&
+                          'hover:cursor-not-allowed hover:!bg-transparent'
                         )}
                       >
                         {item.icon && <item.icon />}
@@ -129,6 +131,7 @@ export function NavMain({
                                     subItem.wip && 'opacity-50'
                                   )}
                                   disabled={subItem.wip}
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   <span>{subItem.title}</span>
                                 </Link>
@@ -148,7 +151,11 @@ export function NavMain({
                 asChild
                 tooltip={item.wip ? `${item.title} work` : item.title}
               >
-                <Link to={item.url} className='text-nowrap'>
+                <Link
+                  to={item.url}
+                  className='text-nowrap'
+                  onClick={() => setOpenMobile(false)}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
