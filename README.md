@@ -2,10 +2,6 @@
 
 a free non-partisan and open-source political knowledge base for the United States
 
-# wikipolitica
-
-a free non-partisan and open-source political knowledge base for the United States
-
 **Dev Setup instructions**
 
 Thanks for your interest in contributing! Here's how to get started.
