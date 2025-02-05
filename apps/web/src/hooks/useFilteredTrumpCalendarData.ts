@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import { isAfter, isBefore } from "date-fns";
-import { getEasternNowInMinutes, parseTimeToMinutes } from "@/lib/time.utils";
+import {
+  getEasternNowInMinutes,
+  getEasternToday,
+  parseTimeToMinutes,
+} from "@/lib/time.utils";
 import { DateRange } from "react-day-picker";
 import {
   PoolReportSchedule,
@@ -182,7 +186,8 @@ export function useFilteredCalendarData(
     let highlightDay: string | null = null;
     let highlightTime: number | null = null;
 
-    const localToday = formatYMD(new Date());
+    const localToday = getEasternToday();
+
     // Get the current time in Eastern time (in minutes)
     const easternNowInMinutes = getEasternNowInMinutes();
 

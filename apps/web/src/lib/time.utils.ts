@@ -121,3 +121,16 @@ export function getEasternNowInMinutes(): number {
   const minutes = parseInt(minuteStr, 10);
   return hours * 60 + minutes;
 }
+
+export const getEasternToday = () => {
+  const easternDate = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  // Convert from MM/DD/YYYY to YYYY-MM-DD
+  const [month, day, year] = easternDate.split("/");
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
