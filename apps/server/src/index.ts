@@ -3,7 +3,7 @@ import "dotenv/config.js";
 import "./fetches/schedule-fetch";
 import "./fetches/executive-actions";
 import "./fetches/executive-orders";
-
+import "./fetches/debt-by-day";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
