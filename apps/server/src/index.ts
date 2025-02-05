@@ -3,12 +3,14 @@ import "dotenv/config.js";
 import "./fetches/schedule-fetch";
 import "./fetches/executive-actions";
 import "./fetches/executive-orders";
+import "./fetches/debt_by_day";
 
 import "./fetches/debt-by-day";
 
 
 // Commenting out for now - most of these are not going to be meant to be ran regularily.
 // import "./fetches/congress/congress";
+// import "./fetches/congress/members";
 
 
 const app = express();

@@ -125,4 +125,4 @@ export async function fetchAndStoreCongress(): Promise<void> {
   }
 }
 
-fetchAndStoreCongress();
+// fetchAndStoreCongress();

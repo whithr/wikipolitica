@@ -1,6 +1,6 @@
 CREATE TABLE congress (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    number INT NOT NULL,                 -- e.g., 116
+    congress_number INT NOT NULL,                 -- e.g., 116
     name VARCHAR(50) NOT NULL,           -- e.g., "116th Congress"
     start_year INT,                      -- e.g., 2019
     end_year INT,                        -- e.g., 2020
@@ -155,4 +155,11 @@ CREATE TABLE bill_actions (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+ALTER TABLE public.members
+  ADD CONSTRAINT unique_bioguide_id
+  UNIQUE (bioguide_id);
+
+ALTER TABLE public.member_congress
+  ADD CONSTRAINT member_congress_unique
+  UNIQUE (member_id, congress_id, chamber);
 
