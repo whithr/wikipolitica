@@ -164,7 +164,7 @@ schedule.scheduleJob("0 0 * * *", async () => {
 });
 
 // ==========================================
-// 8) Run once on startup for testing
+// Run once on startup for testing
 // ==========================================
 // async () => {
 //     const jobName = "debt_by_day_fetcher";
@@ -185,5 +185,4 @@ schedule.scheduleJob("0 0 * * *", async () => {
 //     }
 
 // }
-
 
