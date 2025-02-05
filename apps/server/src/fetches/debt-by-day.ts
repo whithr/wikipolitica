@@ -166,14 +166,24 @@ schedule.scheduleJob("0 0 * * *", async () => {
 // ==========================================
 // 8) Run once on startup for testing
 // ==========================================
+// async () => {
+//     const jobName = "debt_by_day_fetcher";
+//     try {
+//         console.log(
+//             "[Scheduled Task] Fetching debt data...",
+//         );
+//         const lastDate = await getLastDateFromSupabase();
+//         const debtData = await fetchDebtData(lastDate);
+//         const cleanedData = extractDebtData(debtData);
+//         await insertDebtData(cleanedData);
+//         console.log("[Scheduled Task] Done.");
+//     } catch (err) {
+//         console.error(`[Scheduled Task] ${jobName} error:`, err);
+//         await updateJobStatus(jobName, {
+//             errorMsg: "error fetching debt data",
+//         }, supabase);
+//     }
 
-(async () => {
-    const jobName = "debt_by_day_fetcher";
-    const lastDate = await getLastDateFromSupabase();
-    const debtData = await fetchDebtData(lastDate);
-    const cleanedData = extractDebtData(debtData);
-    await insertDebtData(cleanedData);
-
-})();
+// }
 
 
