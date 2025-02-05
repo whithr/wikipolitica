@@ -153,6 +153,7 @@ schedule.scheduleJob("0 0 * * *", async () => {
         const debtData = await fetchDebtData(lastDate);
         const cleanedData = extractDebtData(debtData);
         await insertDebtData(cleanedData);
+        await updateJobStatus(jobName, { rowChanged: true }, supabase);
         console.log("[Scheduled Task] Done.");
     } catch (err) {
         console.error(`[Scheduled Task] ${jobName} error:`, err);
