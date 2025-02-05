@@ -4,6 +4,9 @@ import "./fetches/schedule-fetch";
 import "./fetches/executive-actions";
 import "./fetches/executive-orders";
 
+// Commenting out for now - most of these are not going to be meant to be ran regularily.
+// import "./fetches/congress/congress";
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
