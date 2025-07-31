@@ -65,7 +65,7 @@ function extractCoreTitle(title: string): string {
 
 // Helper to remove spaces and force lowercase
 function normalize(str: string): string {
-  return str.toLowerCase().replace(/\s+/g, "");
+  return str?.toLowerCase()?.replace(/\s+/g, "");
 }
 
 // ==========================================
@@ -96,12 +96,12 @@ async function upsertPresidencyProjectRecords(records: DocumentData[]) {
     //    (Choose whichever logic suits you best: `.includes()` or exact `===`)
     const match = localList.find((eo) => {
       const normalizedDbTitle = normalize(eo.title || "");
-      return normalizedDbTitle.includes(normalizedCore);
+      return normalizedDbTitle?.includes(normalizedCore);
     });
 
     const matchWithItself = localList.find((eo) => {
       const normalizedDbTitle = normalize(eo.presidency_project_title);
-      return normalizedDbTitle.includes(
+      return normalizedDbTitle?.includes(
         normalize(record.presidency_project_title),
       );
     });
@@ -169,8 +169,6 @@ async function fetchAndStoreExecutiveOrders() {
         `conditions%5Bcorrection%5D=0&` +
         `conditions%5Bpresident%5D=donald-trump&` +
         `conditions%5Bpresidential_document_type%5D=executive_order&` +
-        `conditions%5Bsigning_date%5D%5Bgte%5D=01%2F20%2F2025&` +
-        `conditions%5Bsigning_date%5D%5Blte%5D=02%2F01%2F2025&` +
         `conditions%5Btype%5D%5B%5D=PRESDOCU&` +
         `fields%5B%5D=citation&` +
         `fields%5B%5D=document_number&` +
@@ -354,45 +352,74 @@ async function fetchAndStoreExecutiveOrders() {
 // ==========================================
 async function fetchAndStorePresidencyProjectOrders() {
   try {
-    const url =
-      "https://www.presidency.ucsb.edu/advanced-search?field-keywords=&field-keywords2=&field-keywords3=&from%5Bdate%5D=&to%5Bdate%5D=&person2=375125&category2%5B0%5D=58&items_per_page=50&order=field_docs_start_date_time_value&sort=desc";
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.error(
-        "[Error] Failed to fetch Presidency Project page:",
-        response.statusText,
-      );
-      return;
-    }
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const records: DocumentData[] = [];
+    const allRecords: DocumentData[] = [];
+    let page = 0;
+    const itemsPerPage = 50;
+    let hasMorePages = true;
 
-    $("tbody tr").each((index, element) => {
-      const date = $(element)
-        .find("td.views-field-field-docs-start-date-time-value")
-        .text()
-        .trim();
-      const titleAnchor = $(element).find("td.views-field-title a");
-      const title = titleAnchor.text().trim();
-      let docUrl = titleAnchor.attr("href") || "";
-      if (docUrl && !docUrl.startsWith("http")) {
-        docUrl = `https://www.presidency.ucsb.edu${docUrl}`;
+    while (hasMorePages) {
+      const url =
+        `https://www.presidency.ucsb.edu/advanced-search?field-keywords=&field-keywords2=&field-keywords3=&from%5Bdate%5D=&to%5Bdate%5D=&person2=375125&category2%5B0%5D=58&items_per_page=${itemsPerPage}&page=${page}&order=field_docs_start_date_time_value&sort=desc`;
+
+      console.log(`[Info] Fetching Presidency Project page ${page + 1}...`);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error(
+          `[Error] Failed to fetch Presidency Project page ${page + 1}:`,
+          response.statusText,
+        );
+        break;
       }
-      if (date && title && docUrl) {
-        records.push({
-          date,
-          title,
-          url: docUrl,
-          presidency_project_title: title,
-        });
+
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      const pageRecords: DocumentData[] = [];
+
+      $("tbody tr").each((index, element) => {
+        const date = $(element)
+          .find("td.views-field-field-docs-start-date-time-value")
+          .text()
+          .trim();
+        const titleAnchor = $(element).find("td.views-field-title a");
+        const title = titleAnchor.text().trim();
+        let docUrl = titleAnchor.attr("href") || "";
+        if (docUrl && !docUrl.startsWith("http")) {
+          docUrl = `https://www.presidency.ucsb.edu${docUrl}`;
+        }
+        if (date && title && docUrl) {
+          pageRecords.push({
+            date,
+            title,
+            url: docUrl,
+            presidency_project_title: title,
+          });
+        }
+      });
+
+      if (pageRecords.length === 0) {
+        // No records found on this page, we've reached the end
+        hasMorePages = false;
+      } else {
+        allRecords.push(...pageRecords);
+        console.log(
+          `[Info] Found ${pageRecords.length} records on page ${page + 1}`,
+        );
+
+        // Check if there's a next page link
+        const nextPageLink = $('a[title="Go to next page"]').length > 0;
+        if (!nextPageLink || pageRecords.length < itemsPerPage) {
+          hasMorePages = false;
+        } else {
+          page++;
+        }
       }
-    });
+    }
 
     console.log(
-      `[Info] Fetched ${records.length} records from Presidency Project.`,
+      `[Info] Fetched a total of ${allRecords.length} records from Presidency Project.`,
     );
-    await upsertPresidencyProjectRecords(records);
+    await upsertPresidencyProjectRecords(allRecords);
   } catch (error) {
     console.error("[Error] fetchAndStorePresidencyProjectOrders:", error);
   }
